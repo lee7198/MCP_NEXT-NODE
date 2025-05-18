@@ -9,21 +9,40 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@azure/app-configuration": "^1.9.0",
+    "@azure/identity": "^4.10.0",
+    "@azure/keyvault-secrets": "^4.9.0",
     "@phosphor-icons/react": "^2.1.8",
+    "@tanstack/react-query": "^5.76.1",
     "lts": "^2.0.0",
     "next": "15.3.2",
+    "oci-objectstorage": "^2.109.0",
+    "oci-secrets": "^2.109.0",
+    "ollama": "^0.5.15",
+    "oracledb": "^6.8.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-time-ago": "^7.3.3",
+    "zustand": "^5.0.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@eslint/js": "^9.27.0",
     "@tailwindcss/postcss": "^4",
+    "@tanstack/eslint-plugin-query": "^5.74.7",
     "@types/node": "^20",
+    "@types/oracledb": "^6.6.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
+    "eslint": "^9.27.0",
     "eslint-config-next": "15.3.2",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.1.0",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "^8.32.1"
   }
 }

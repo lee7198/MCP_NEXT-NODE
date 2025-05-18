@@ -1,0 +1,28 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "airbnb",
+    "airbnb-typescript",
+    "eslint:recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
+    "react/require-default-props": 0,
+    "jsx-a11y/media-has-caption": 0,
+    "react/jsx-props-no-spreading": 0,
+    "jsx-a11y/label-has-associated-control": [
+      2,
+      {
+        "labelAttributes": ["htmlFor"]
+      }
+    ],
+    "import/prefer-default-export": "off",
+    "react/no-array-index-key": 0
+  },
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "ignorePatterns": ["next.config.js", "postcss.config.js", "/out"]
+}
