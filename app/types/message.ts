@@ -1,5 +1,5 @@
 export interface Message {
-  id?: string | number;
+  ID?: string | number;
   USER_ID: string;
   CONTENT: string;
   CREATED_AT: Date;
@@ -16,7 +16,25 @@ export interface ChatRes extends Message {
 }
 
 export interface ChatReq {
-  content: string;
+  CONTENT: string;
   USER_ID: string;
-  id: string;
+  ID?: string;
+}
+
+export interface AIResponse {
+  ID: number;
+  MESSAGE_ID: number;
+  CONTENT: string;
+  CREATED_AT: Date;
+}
+
+export interface AIResponseResponse {
+  response: AIResponse | null;
+}
+
+export interface SaveAIResponseRes {
+  id: number;
+  success: boolean;
+  messageId: number;
+  content: string;
 }

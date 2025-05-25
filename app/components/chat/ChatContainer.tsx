@@ -8,6 +8,7 @@ import {
   ChatReq,
   Message,
   MessagesResponse,
+  SaveAIResponseRes,
   SaveChatRes,
 } from '@/app/types';
 import ChatInput from '@/app/components/chat/ChatInput';
@@ -18,6 +19,8 @@ import Spinner from '@/app/components/common/Spinner';
 import { useUserStore } from '@/app/store/userStore';
 import { messageApi } from '@/app/services/api';
 import { ChatResponse } from 'ollama';
+import LoadingResponse from './LoadingResponse';
+import ErrorResponse from './ErrorResponse';
 
 export default function ChatContainer() {
   const [isMounted, setIsMounted] = useState(false);
@@ -45,17 +48,40 @@ export default function ChatContainer() {
   const saveMessageMutation = useMutation<SaveChatRes, Error, ChatReq>({
     mutationFn: (content) => messageApi.saveMessage(content),
     onSuccess: (res) => {
-      console.log('DB: ', res.id);
       queryClient.invalidateQueries({ queryKey: ['messages'] });
+      aiRequestMutation.mutateAsync(res);
     },
   });
 
   // AI 요청 mutation
   const aiRequestMutation = useMutation<AIChatRes, Error, SaveChatRes>({
     mutationFn: (content) => messageApi.requestAI(content),
+    onSuccess: (resAI) => {
+      // queryClient.invalidateQueries({ queryKey: ['messages'] });
+      saveAIResponseMutation.mutateAsync({
+        id: resAI.id,
+        success: true,
+        messageId: resAI.id,
+        content: resAI.message.content,
+      });
+    },
+  });
+
+  // AI 응답 저장 mutation
+  const saveAIResponseMutation = useMutation<
+    SaveAIResponseRes,
+    Error,
+    SaveAIResponseRes
+  >({
+    mutationFn: (content) => messageApi.saveAIResponse(content),
     onSuccess: (res) => {
-      console.log('AI: ', res);
-      queryClient.invalidateQueries({ queryKey: ['messages'] });
+      console.log('AI 응답 저장 완료: ', res);
+      if (res.id && saveAIResponseMutation.isSuccess) {
+        queryClient.invalidateQueries({ queryKey: ['aiResponse', res.id] });
+        queryClient.refetchQueries({ queryKey: ['aiResponse', res.id] });
+      } else {
+        console.error('AI 응답 저장 실패: ', res);
+      }
     },
   });
 
@@ -68,9 +94,7 @@ export default function ChatContainer() {
   const handleSendMessage = async (req: ChatReq) => {
     try {
       // 메시지 저장
-      const saveDB = await saveMessageMutation.mutateAsync(req);
-      // AI 요청
-      await aiRequestMutation.mutateAsync(saveDB);
+      await saveMessageMutation.mutateAsync(req);
     } catch (error) {
       console.error('메시지 전송 중 오류 발생:', error);
     }
@@ -93,12 +117,12 @@ export default function ChatContainer() {
   }
 
   return (
-    <div className="mx-auto flex h-[calc(100svh-3rem)] max-w-2xl flex-col px-2 pb-8">
-      <div className="h-full flex-1 space-y-4 overflow-y-auto px-4">
+    <div className="mx-auto flex h-[calc(100svh-3rem)] max-w-3xl flex-col px-2 pb-8">
+      <div className="flex h-full flex-col gap-2 space-y-4 overflow-y-auto px-4">
         {isMessagesLoading ? (
-          <ChatMessage message="alert" />
+          <LoadingResponse />
         ) : isError ? (
-          <ChatMessage message="error" />
+          <ErrorResponse />
         ) : (
           <MessageList
             messages={req_data?.messages || []}
@@ -110,7 +134,9 @@ export default function ChatContainer() {
       <ChatInput
         onSendMessage={handleSendMessage}
         isDisabled={
-          saveMessageMutation.isPending || aiRequestMutation.isPending
+          saveMessageMutation.isPending ||
+          aiRequestMutation.isPending ||
+          saveAIResponseMutation.isPending
         }
         USER_ID={userId}
       />

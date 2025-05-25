@@ -39,7 +39,7 @@ export default function MessageList({
           const isUser = message.USER_ID === userId;
 
           return (
-            <React.Fragment key={message.id || idx}>
+            <React.Fragment key={message.ID || idx}>
               {currentDate !== prevDate && <DateDivider date={currentDate} />}
               <ChatMessage message={{ ...message, isUser }} />
             </React.Fragment>

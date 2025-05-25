@@ -53,3 +53,58 @@ export async function getChatMessages(userId: string, limit = 50) {
     await connection.close();
   }
 }
+
+// AI 응답 메시지 저장
+export async function saveAIResponse(messageId: number, content: string) {
+  const connection = await getOracleConnection();
+  try {
+    const sql = `INSERT INTO AI_RESPONSES (message_id, content, created_at) 
+                 VALUES (:messageId, :content, SYSDATE) 
+                 RETURNING id INTO :id`;
+    const result = await connection.execute(
+      sql,
+      {
+        messageId,
+        content,
+        id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+      },
+      { autoCommit: true }
+    );
+    return result.outBinds?.id[0];
+  } finally {
+    await connection.close();
+  }
+}
+
+// AI 응답 메시지 불러오기
+export async function getAIResponse(messageId: number) {
+  const connection = await getOracleConnection();
+  try {
+    const sql = `SELECT ID, MESSAGE_ID, CONTENT, CREATED_AT 
+                 FROM AI_RESPONSES 
+                 WHERE message_id = :messageId`;
+
+    const result = await connection.execute(
+      sql,
+      { messageId },
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    if (!result.rows || result.rows.length === 0) {
+      return null;
+    }
+
+    const row = result.rows[0];
+    // CLOB 데이터를 문자열로 변환
+    if (row.CONTENT && typeof row.CONTENT.getData === 'function') {
+      row.CONTENT = await row.CONTENT.getData();
+    }
+
+    return row;
+  } catch (err) {
+    console.error('AI 응답 조회 중 오류 발생:', err);
+    throw new Error('AI 응답 조회에 실패했습니다.');
+  } finally {
+    await connection.close();
+  }
+}

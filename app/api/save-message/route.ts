@@ -3,18 +3,18 @@ import { saveChatMessage } from '@/app/lib/db/queries';
 
 export async function POST(req: NextRequest) {
   try {
-    const { USER_ID, content } = await req.json();
-    if (!USER_ID || !content) {
+    const { USER_ID, CONTENT } = await req.json();
+    if (!USER_ID || !CONTENT) {
       return NextResponse.json(
         { error: 'userId와 content는 필수입니다.' },
         { status: 400 }
       );
     }
-    const messageId = await saveChatMessage(USER_ID, content);
+    const messageId = await saveChatMessage(USER_ID, CONTENT);
     return NextResponse.json({
       success: true,
       id: messageId,
-      content,
+      CONTENT,
       USER_ID,
     });
   } catch (err) {

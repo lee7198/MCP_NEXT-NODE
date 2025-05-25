@@ -15,7 +15,7 @@ export default function ChatInput({
 
   const sendMessage = () => {
     if (message.trim() && !isDisabled) {
-      onSendMessage({ content: message.trim(), USER_ID });
+      onSendMessage({ CONTENT: message.trim(), USER_ID });
       setMessage('');
     }
   };

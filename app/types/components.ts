@@ -1,8 +1,7 @@
-import { ChatReq } from './api';
-import { Message } from './message';
+import { Message, ChatReq } from './message';
 
 export interface ChatMessageProps {
-  message: Message | 'alert' | 'error';
+  message: Message;
 }
 
 export interface ChatInputProps {
@@ -21,16 +20,13 @@ export interface MessageListProps {
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export interface ChatMessageProps {
-  message: Message | 'alert' | 'error';
-}
-
 export interface MessageListProps {
   messages: Message[];
   userId: string;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export interface ChatMessageProps {
-  message: Message | 'alert' | 'error';
+export interface AIResponseChatProps {
+  CONTENT: string;
+  CREATED_AT: Date;
 }

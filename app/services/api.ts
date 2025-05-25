@@ -1,8 +1,10 @@
 import {
   AIChatRes,
+  AIResponse,
   ChatReq,
   Message,
   MessagesResponse,
+  SaveAIResponseRes,
   SaveChatRes,
 } from '@/app/types';
 import { ChatResponse } from 'ollama';
@@ -36,11 +38,31 @@ export const messageApi = {
       body: JSON.stringify(data),
     });
 
-    console.log('requestAI: ', data);
-
     const con: ChatResponse = await res.json();
 
     if (!res.ok) throw new Error('AI 응답 생성 실패');
     return { ...con, id: data.id, USER_ID: data.USER_ID };
+  },
+
+  // AI 응답 저장
+  saveAIResponse: async (
+    data: SaveAIResponseRes
+  ): Promise<SaveAIResponseRes> => {
+    const res = await fetch(`${API_BASE_URL}/save-ai-response`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('AI 응답 저장 실패');
+    return res.json();
+  },
+
+  // AI 응답 조회
+  getAIResponse: async (messageId: number): Promise<AIResponse> => {
+    const res = await fetch(
+      `${API_BASE_URL}/get-ai-response?messageId=${messageId}`
+    );
+    if (!res.ok) throw new Error('AI 응답 조회 실패');
+    return res.json();
   },
 };

@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server';
 import { Ollama } from 'ollama';
 
 export async function POST(req: Request) {
-  const { content, USER_ID, id } = await req.json();
-  const prompt = content;
+  const { CONTENT, USER_ID, id } = await req.json();
+  const prompt = CONTENT;
   try {
     const ollama = new Ollama({ host: 'http://127.0.0.1:11434' });
 
