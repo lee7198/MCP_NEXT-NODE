@@ -3,7 +3,7 @@
 import ChatContainer from '@/app/components/chat/ChatContainer';
 import { useUserStore } from '@/app/store/userStore';
 import Avatar from 'boring-avatars';
-import { avatarColor } from '@/app/lib/avatarColors';
+import { avatarColor } from '@/app/lib/common';
 
 export default function Home() {
   const userId = useUserStore((state) => state.userId);

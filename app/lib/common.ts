@@ -5,3 +5,9 @@ export const avatarColor = [
   '#f6e2bb',
   '#71d682',
 ];
+
+export const initReqState = {
+  messageId: 0,
+  isAIRes: false,
+  isAIResSave: false,
+};

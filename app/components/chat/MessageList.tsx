@@ -9,6 +9,8 @@ export default function MessageList({
   messages,
   userId,
   messagesEndRef,
+  reqState,
+  setReqState,
 }: MessageListProps) {
   if (!messages || messages.length === 0) {
     return (
@@ -41,7 +43,11 @@ export default function MessageList({
           return (
             <React.Fragment key={message.ID || idx}>
               {currentDate !== prevDate && <DateDivider date={currentDate} />}
-              <ChatMessage message={{ ...message, isUser }} />
+              <ChatMessage
+                message={{ ...message, isUser }}
+                reqState={reqState}
+                setReqState={setReqState}
+              />
             </React.Fragment>
           );
         })}

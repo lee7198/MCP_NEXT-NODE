@@ -9,7 +9,7 @@ import AIResponseItem from './AIResponseItem';
 import LoadingResponse from './LoadingResponse';
 import ErrorResponse from './ErrorResponse';
 
-export default function ChatMessage({ message }: ChatMessageProps) {
+export default function ChatMessage({ message, reqState }: ChatMessageProps) {
   const { ID } = message as Message;
   const messageId = ID as number;
 
@@ -18,6 +18,7 @@ export default function ChatMessage({ message }: ChatMessageProps) {
     data: aiResponse,
     isError,
     isPending,
+    refetch,
   } = useQuery<AIResponse, Error>({
     queryKey: ['aiResponse', messageId],
     queryFn: () => messageApi.getAIResponse(messageId),
@@ -25,10 +26,8 @@ export default function ChatMessage({ message }: ChatMessageProps) {
   });
 
   useEffect(() => {
-    if (isPending) {
-      console.log('Peinging!');
-    }
-  }, [isPending]);
+    if (reqState.isAIResSave && reqState.isAIRes) refetch();
+  }, [reqState]);
 
   return (
     <>

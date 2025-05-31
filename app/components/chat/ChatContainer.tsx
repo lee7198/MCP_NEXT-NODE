@@ -5,8 +5,8 @@ import { useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   AIChatRes,
+  AIReqState,
   ChatReq,
-  Message,
   MessagesResponse,
   SaveAIResponseRes,
   SaveChatRes,
@@ -14,16 +14,16 @@ import {
 import ChatInput from '@/app/components/chat/ChatInput';
 import UserIdInput from '@/app/components/chat/UserIdInput';
 import MessageList from '@/app/components/chat/MessageList';
-import ChatMessage from '@/app/components/chat/ChatMessage';
 import Spinner from '@/app/components/common/Spinner';
 import { useUserStore } from '@/app/store/userStore';
 import { messageApi } from '@/app/services/api';
-import { ChatResponse } from 'ollama';
 import LoadingResponse from './LoadingResponse';
 import ErrorResponse from './ErrorResponse';
+import { initReqState } from '@/app/lib/common';
 
 export default function ChatContainer() {
   const [isMounted, setIsMounted] = useState(false);
+  const [reqState, setReqState] = useState<AIReqState>(initReqState);
   const userId = useUserStore((state) => state.userId);
   const isUserLoading = useUserStore((state) => state.isLoading);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -48,8 +48,13 @@ export default function ChatContainer() {
   const saveMessageMutation = useMutation<SaveChatRes, Error, ChatReq>({
     mutationFn: (content) => messageApi.saveMessage(content),
     onSuccess: (res) => {
+      setReqState(initReqState);
       queryClient.invalidateQueries({ queryKey: ['messages'] });
       aiRequestMutation.mutateAsync(res);
+      setReqState((prev) => ({
+        ...prev,
+        messageId: res.id,
+      }));
     },
   });
 
@@ -64,6 +69,10 @@ export default function ChatContainer() {
         messageId: resAI.id,
         content: resAI.message.content,
       });
+      setReqState((prev) => ({
+        ...prev,
+        isAIRes: true,
+      }));
     },
   });
 
@@ -74,22 +83,20 @@ export default function ChatContainer() {
     SaveAIResponseRes
   >({
     mutationFn: (content) => messageApi.saveAIResponse(content),
-    onSuccess: (res) => {
-      console.log('AI 응답 저장 완료: ', res);
-      if (res.id && saveAIResponseMutation.isSuccess) {
-        queryClient.invalidateQueries({ queryKey: ['aiResponse', res.id] });
-        queryClient.refetchQueries({ queryKey: ['aiResponse', res.id] });
-      } else {
-        console.error('AI 응답 저장 실패: ', res);
-      }
+    onSuccess: () => {
+      setReqState((prev) => ({
+        ...prev,
+        isAIResSave: true,
+      }));
     },
   });
 
   useEffect(() => {
+    // 가장 하단 위치로 스크롤 (메세지 불러올때, AI 응답 받을 때)
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [req_data]);
+  }, [req_data, reqState]);
 
   const handleSendMessage = async (req: ChatReq) => {
     try {
@@ -128,6 +135,8 @@ export default function ChatContainer() {
             messages={req_data?.messages || []}
             userId={userId}
             messagesEndRef={messagesEndRef}
+            reqState={reqState}
+            setReqState={setReqState}
           />
         )}
       </div>
