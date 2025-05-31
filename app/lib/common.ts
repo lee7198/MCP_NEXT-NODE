@@ -11,3 +11,8 @@ export const initReqState = {
   isAIRes: false,
   isAIResSave: false,
 };
+
+export const pages = [
+  { name: 'chat', path: '/' },
+  { name: 'setting', path: '/setting' },
+];

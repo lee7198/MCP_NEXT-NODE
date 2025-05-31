@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { Message, MessageListProps } from '@/app/types';
-import ChatMessage from '@/app/components/chat/ChatMessage';
-import DateDivider from '@/app/components/common/DateDivider';
+import ChatMessage from '@/app/(main)/components/chat/ChatMessage';
+import DateDivider from '@/app/(main)/components/common/DateDivider';
 
 export default function MessageList({
   messages,

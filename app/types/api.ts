@@ -1,4 +1,5 @@
 import { ChatResponse } from 'ollama';
+import { WebSocket } from 'ws';
 
 export interface ApiResponse<T> {
   data: T;
@@ -20,4 +21,9 @@ export interface SaveChatRes {
 export interface AIChatRes extends ChatResponse {
   id: number;
   USER_ID: string;
+}
+
+export interface SocketClient {
+  id: string;
+  ws: WebSocket;
 }

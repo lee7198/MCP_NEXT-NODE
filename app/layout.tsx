@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import ReactQueryProvider from '@/app/components/providers/ReactQueryProvider';
+import ReactQueryProvider from '@/app/(main)/components/providers/ReactQueryProvider';
 
 export const metadata: Metadata = {
   title: 'MCP_TEST',
@@ -14,7 +14,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="antialiased">
+      <body
+        suppressHydrationWarning={process.env.NODE_ENV === 'development'}
+        className="antialiased"
+      >
         <ReactQueryProvider>{children}</ReactQueryProvider>
       </body>
     </html>

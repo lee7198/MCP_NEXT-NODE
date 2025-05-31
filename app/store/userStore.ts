@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface UserState {
   userId: string | null;
@@ -7,17 +8,20 @@ interface UserState {
   setLoading: (isLoading: boolean) => void;
 }
 
-export const useUserStore = create<UserState>()((set) => ({
-  userId: null,
-  isLoading: true,
-  setUserId: (userId: string) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('userId', userId);
+export const useUserStore = create<UserState>()(
+  persist(
+    (set) => ({
+      userId: null,
+      isLoading: true,
+      setUserId: (userId: string) => set({ userId, isLoading: false }),
+      setLoading: (isLoading: boolean) => set({ isLoading }),
+    }),
+    {
+      name: 'user-storage',
+      partialize: (state) => ({ userId: state.userId }),
     }
-    set({ userId, isLoading: false });
-  },
-  setLoading: (isLoading: boolean) => set({ isLoading }),
-}));
+  )
+);
 
 if (typeof window !== 'undefined') {
   const storedUserId = localStorage.getItem('userId');

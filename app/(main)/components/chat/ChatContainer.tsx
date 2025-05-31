@@ -11,10 +11,10 @@ import {
   SaveAIResponseRes,
   SaveChatRes,
 } from '@/app/types';
-import ChatInput from '@/app/components/chat/ChatInput';
-import UserIdInput from '@/app/components/chat/UserIdInput';
-import MessageList from '@/app/components/chat/MessageList';
-import Spinner from '@/app/components/common/Spinner';
+import ChatInput from '@/app/(main)/components/chat/ChatInput';
+import UserIdInput from '@/app/(main)/components/chat/UserIdInput';
+import MessageList from '@/app/(main)/components/chat/MessageList';
+import Spinner from '@/app/(main)/components/common/Spinner';
 import { useUserStore } from '@/app/store/userStore';
 import { messageApi } from '@/app/services/api';
 import LoadingResponse from './LoadingResponse';
@@ -124,7 +124,7 @@ export default function ChatContainer() {
   }
 
   return (
-    <div className="mx-auto flex h-[calc(100svh-3rem)] max-w-3xl flex-col px-2 pb-8">
+    <div className="mx-auto flex h-[calc(100svh-3rem)] max-w-6xl flex-col px-2 pb-8">
       <div className="flex h-full flex-col gap-2 space-y-4 overflow-y-auto px-4">
         {isMessagesLoading ? (
           <LoadingResponse />

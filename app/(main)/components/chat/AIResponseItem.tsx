@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { AIResponseChatProps } from '@/app/types';
 import TimeAgo from 'javascript-time-ago';
 import ko from 'javascript-time-ago/locale/ko';
-import MultiToSpan from '@/app/components/common/MultiToSpan';
-import MarkdownStyle from '@/app/components/common/MarkdownStyle';
+import MultiToSpan from '@/app/(main)/components/common/MultiToSpan';
+import MarkdownStyle from '@/app/(main)/components/common/MarkdownStyle';
 import {
   CaretDownIcon,
   CaretUpIcon,
