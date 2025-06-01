@@ -1,6 +1,7 @@
+import React from 'react';
 import type { Metadata } from 'next';
-import './globals.css';
 import ReactQueryProvider from '@/app/(main)/components/providers/ReactQueryProvider';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'MCP_TEST',

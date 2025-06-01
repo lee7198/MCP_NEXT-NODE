@@ -2,7 +2,6 @@ import {
   AIChatRes,
   AIResponse,
   ChatReq,
-  Message,
   MessagesResponse,
   SaveAIResponseRes,
   SaveChatRes,

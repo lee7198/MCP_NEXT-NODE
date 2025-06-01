@@ -1,3 +1,4 @@
+import React from 'react';
 import { Message, ChatReq } from './message';
 
 export interface ChatMessageProps {

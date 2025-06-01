@@ -17,7 +17,6 @@ export default function ChatMessage({ message, reqState }: ChatMessageProps) {
   const {
     data: aiResponse,
     isError,
-    isPending,
     refetch,
   } = useQuery<AIResponse, Error>({
     queryKey: ['aiResponse', messageId],

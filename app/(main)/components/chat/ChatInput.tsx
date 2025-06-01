@@ -1,7 +1,7 @@
 'use client';
 
 import { PaperPlaneTiltIcon } from '@phosphor-icons/react';
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import type { ChatInputProps } from '@/app/types';
 
 export default function ChatInput({
