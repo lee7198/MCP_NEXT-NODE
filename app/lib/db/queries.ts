@@ -108,3 +108,29 @@ export async function getAIResponse(messageId: number) {
     await connection.close();
   }
 }
+
+export async function getServerList() {
+  const connection = await getOracleConnection();
+  try {
+    const sql = `SELECT * FROM SERVERS`;
+
+    const result = await connection.execute(
+      sql,
+      {},
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      }
+    );
+
+    if (!result.rows || result.rows.length === 0) {
+      return [];
+    }
+
+    return result.rows;
+  } catch (err) {
+    console.error('서버 리스트 조회 중 오류 발생:', err);
+    throw new Error('서버 리스트 조회에 실패했습니다.');
+  } finally {
+    await connection.close();
+  }
+}

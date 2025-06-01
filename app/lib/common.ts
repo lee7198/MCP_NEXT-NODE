@@ -14,5 +14,5 @@ export const initReqState = {
 
 export const pages = [
   { name: 'chat', path: '/' },
-  { name: 'setting', path: '/setting' },
+  { name: 'settings', path: '/settings' },
 ];

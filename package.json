@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "tsx ./socket/server.ts & next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint --fix",
@@ -17,7 +17,9 @@
     "@phosphor-icons/react": "^2.1.8",
     "@tanstack/react-query": "^5.76.1",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "@types/socket.io-client": "^1.4.36",
     "boring-avatars": "^1.11.2",
+    "express": "^5.1.0",
     "lts": "^2.0.0",
     "next": "15.3.2",
     "oci-objectstorage": "^2.109.0",
@@ -30,6 +32,8 @@
     "react-syntax-highlighter": "^15.6.1",
     "react-time-ago": "^7.3.3",
     "remark-gfm": "^4.0.1",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "zustand": "^5.0.4"
   },
   "devDependencies": {
@@ -39,7 +43,8 @@
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.16",
     "@tanstack/eslint-plugin-query": "^5.74.7",
-    "@types/node": "^20",
+    "@types/express": "^5.0.2",
+    "@types/node": "^20.17.57",
     "@types/oracledb": "^6.6.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -54,8 +59,11 @@
     "lint-staged": "^16.1.0",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
+    "source-map-loader": "^5.0.0",
     "tailwindcss": "^4",
-    "typescript": "^5",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.0"
   },
   "lint-staged": {

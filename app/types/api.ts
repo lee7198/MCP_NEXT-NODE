@@ -21,3 +21,9 @@ export interface AIChatRes extends ChatResponse {
   id: number;
   USER_ID: string;
 }
+
+export interface ServerList {
+  SERVERNAME: string;
+  COMMENT: string;
+  RESPONSED_AT: Date;
+}

@@ -35,3 +35,7 @@ export interface AIReqState {
   isAIRes: boolean;
   isAIResSave: boolean;
 }
+
+export interface StatusPingProps {
+  status: boolean;
+}

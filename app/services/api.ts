@@ -5,6 +5,7 @@ import {
   MessagesResponse,
   SaveAIResponseRes,
   SaveChatRes,
+  ServerList,
 } from '@/app/types';
 import { ChatResponse } from 'ollama';
 
@@ -62,6 +63,14 @@ export const messageApi = {
       `${API_BASE_URL}/get-ai-response?messageId=${messageId}`
     );
     if (!res.ok) throw new Error('AI 응답 조회 실패');
+    return res.json();
+  },
+};
+
+export const server_management = {
+  getServers: async (): Promise<ServerList[]> => {
+    const res = await fetch(`${API_BASE_URL}/get-servers`);
+    if (!res.ok) throw new Error('서버 목록 조회 실패');
     return res.json();
   },
 };
