@@ -9,6 +9,7 @@ import StatusPing from './components/StatusPing';
 import TimeAgo from 'javascript-time-ago';
 import ko from 'javascript-time-ago/locale/ko';
 import { CheckIcon } from '@phosphor-icons/react';
+import Link from 'next/link';
 
 export default function SettingsPage() {
   const [clients, setClients] = useState<ClientInfo[]>([]);
@@ -38,7 +39,6 @@ export default function SettingsPage() {
 
     // 클라이언트 업데이트 이벤트 리스너
     socket.on('clients_update', (updatedClients: ClientInfo[]) => {
-      console.log('updatedClients', updatedClients);
       setClients(updatedClients);
     });
 
@@ -66,7 +66,12 @@ export default function SettingsPage() {
   return (
     <div className="container mx-auto flex flex-col gap-12 p-4">
       <div>
-        <h1 className="mb-4 text-2xl font-black">SERVER LIST</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="mb-4 text-2xl font-black">SERVER LIST</h1>
+          <Link href="/settings/new" className="px-2">
+            NEW
+          </Link>
+        </div>
 
         <div className="flex flex-wrap gap-4">
           {isGetServers

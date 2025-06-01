@@ -8,6 +8,7 @@ import {
   ServerList,
 } from '@/app/types';
 import { ChatResponse } from 'ollama';
+import { SaveServerForm } from '../types/server';
 
 const API_BASE_URL = '/api';
 
@@ -72,5 +73,16 @@ export const server_management = {
     const res = await fetch(`${API_BASE_URL}/get-servers`);
     if (!res.ok) throw new Error('서버 목록 조회 실패');
     return res.json();
+  },
+
+  saveServer: async (data: SaveServerForm): Promise<{ success: boolean }> => {
+    const response = await fetch(`${API_BASE_URL}/save-server`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) throw new Error('서버 등록에 실패했습니다.');
+    return response.json();
   },
 };

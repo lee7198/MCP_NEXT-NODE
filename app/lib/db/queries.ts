@@ -134,3 +134,37 @@ export async function getServerList() {
     await connection.close();
   }
 }
+
+export async function saveServer(SERVERNAME: string, COMMENT: string) {
+  const connection = await getOracleConnection();
+  try {
+    // 중복 체크
+    const checkResult = await connection.execute(
+      'SELECT COUNT(*) as count FROM SERVERS WHERE SERVERNAME = :1',
+      [SERVERNAME],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    if (checkResult.rows && checkResult.rows[0].COUNT > 0) {
+      throw new Error('이미 존재하는 서버명입니다.');
+    }
+
+    // 서버 등록
+    await connection.execute(
+      'INSERT INTO SERVERS (SERVERNAME, "COMMENT", RESPONSED_AT) VALUES (:1, :2, SYSDATE)',
+      [SERVERNAME, COMMENT],
+      { autoCommit: true }
+    );
+
+    return {
+      success: true,
+      SERVERNAME,
+      COMMENT,
+    };
+  } catch (err) {
+    console.error('서버 등록 중 오류 발생:', err);
+    throw err instanceof Error ? err : new Error('서버 등록에 실패했습니다.');
+  } finally {
+    await connection.close();
+  }
+}
