@@ -197,3 +197,39 @@ export async function getServerDetail(serverId: string) {
     await connection.close();
   }
 }
+
+export async function deleteServer(serverId: string) {
+  const connection = await getOracleConnection();
+  try {
+    await connection.execute(
+      'DELETE FROM SERVERS WHERE SERVERNAME = :1',
+      [serverId],
+      { autoCommit: true }
+    );
+    return { success: true };
+  } catch (err) {
+    console.error('서버 삭제 중 오류 발생:', err);
+    throw err instanceof Error ? err : new Error('서버 삭제에 실패했습니다.');
+  } finally {
+    await connection.close();
+  }
+}
+
+export async function updateServer(serverId: string, comment: string) {
+  const connection = await getOracleConnection();
+  try {
+    await connection.execute(
+      'UPDATE SERVERS SET "COMMENT" = :1 WHERE SERVERNAME = :2',
+      [comment, serverId],
+      { autoCommit: true }
+    );
+    return { success: true };
+  } catch (err) {
+    console.error('서버 정보 수정 중 오류 발생:', err);
+    throw err instanceof Error
+      ? err
+      : new Error('서버 정보 수정에 실패했습니다.');
+  } finally {
+    await connection.close();
+  }
+}

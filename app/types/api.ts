@@ -1,5 +1,6 @@
 import { ChatResponse } from 'ollama';
 
+// API 응답 및 에러 처리 관련 타입 정의
 export interface ApiResponse<T> {
   data: T;
   error?: string;

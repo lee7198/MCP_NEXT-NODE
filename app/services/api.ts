@@ -92,4 +92,30 @@ export const server_management = {
     if (!res.ok) throw new Error('서버 조회 실패');
     return res.json();
   },
+
+  deleteServer: async (serverId: string): Promise<{ success: boolean }> => {
+    const response = await fetch(
+      `${API_BASE_URL}/delete-server?serverId=${serverId}`,
+      {
+        method: 'DELETE',
+      }
+    );
+
+    if (!response.ok) throw new Error('서버 삭제에 실패했습니다.');
+    return response.json();
+  },
+
+  updateServer: async (
+    serverId: string,
+    comment: string
+  ): Promise<{ success: boolean }> => {
+    const response = await fetch(`${API_BASE_URL}/update-server`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ serverId, comment }),
+    });
+
+    if (!response.ok) throw new Error('서버 정보 수정에 실패했습니다.');
+    return response.json();
+  },
 };

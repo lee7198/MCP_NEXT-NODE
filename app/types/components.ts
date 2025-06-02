@@ -1,6 +1,7 @@
 import React from 'react';
 import { Message, ChatReq } from './message';
 import { ClientInfo } from './socket';
+import { ServerList } from './api';
 
 export interface ChatMessageProps {
   message: Message;
@@ -55,19 +56,13 @@ export interface ServerCardSkeletonProps {
   index: number;
 }
 
-export interface ServerDetailPageProps {
-  params: Promise<{ serverName: string }>;
-}
-
-export interface ServerListProps {
-  servers: Array<{
-    SERVERNAME: string;
-  }>;
-  isGetServers: boolean;
-}
-
 export interface ServerCardWrapperProps {
   serverName: string;
   onTestPing: (serverName: string) => void;
   pingStatus: pingStatus;
+}
+
+export interface ServerListProps {
+  servers: ServerList[];
+  isGetServers: boolean;
 }

@@ -1,3 +1,4 @@
+// 채팅 메시지 관련 타입 정의
 export interface Message {
   ID?: string | number;
   USER_ID: string;
@@ -11,14 +12,14 @@ export interface MessagesResponse {
   messages: Message[];
 }
 
-export interface ChatRes extends Message {
-  res: string;
-}
-
 export interface ChatReq {
   CONTENT: string;
   USER_ID: string;
   ID?: string;
+}
+
+export interface ChatRes extends Message {
+  res: string;
 }
 
 export interface AIResponse {
