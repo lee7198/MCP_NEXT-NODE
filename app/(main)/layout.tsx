@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from './components/Header';
+import { ToastContainer } from 'react-toastify';
 
 export default function RootLayout({
   children,
@@ -11,6 +12,19 @@ export default function RootLayout({
       <Header />
       <div className="pt-12" />
       {children}
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        // transition={Bounce}
+      />
     </div>
   );
 }

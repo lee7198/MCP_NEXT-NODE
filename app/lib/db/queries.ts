@@ -168,3 +168,32 @@ export async function saveServer(SERVERNAME: string, COMMENT: string) {
     await connection.close();
   }
 }
+
+export async function getServerDetail(serverId: string) {
+  if (!serverId) {
+    throw new Error('SERVER ID가 필요합니다.');
+  }
+  const connection = await getOracleConnection();
+  try {
+    const sql = `SELECT SERVERNAME, "COMMENT", RESPONSED_AT FROM SERVERS WHERE SERVERNAME = :serverId`;
+
+    const result = await connection.execute(
+      sql,
+      { serverId },
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      }
+    );
+
+    if (!result.rows || result.rows.length === 0) {
+      return [];
+    }
+
+    return result.rows;
+  } catch (err) {
+    console.error('서버 상세 조회 중 오류 발생:', err);
+    throw new Error('서버 상세 조회에 실패했습니다.');
+  } finally {
+    await connection.close();
+  }
+}

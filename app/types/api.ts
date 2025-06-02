@@ -24,6 +24,11 @@ export interface AIChatRes extends ChatResponse {
 
 export interface ServerList {
   SERVERNAME: string;
+  RESPONSED_AT: Date;
+}
+
+export interface ServerDetail {
+  SERVERNAME: string;
   COMMENT: string;
   RESPONSED_AT: Date;
 }

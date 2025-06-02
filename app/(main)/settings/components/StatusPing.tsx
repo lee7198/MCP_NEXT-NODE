@@ -4,7 +4,13 @@ import React from 'react';
 import { StatusPingProps } from '@/app/types';
 
 export default function StatusPing({ status }: StatusPingProps) {
-  if (!status)
+  if (status === 'loading')
+    return (
+      <div className="size-3 rounded-full bg-yellow-500">
+        <div className="size-full rounded-full bg-yellow-500" />
+      </div>
+    );
+  if (status === 'offline')
     return (
       <div className="size-3 rounded-full bg-red-500">
         <div className="size-full rounded-full bg-red-500" />

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { SaveServerForm } from '@/app/types/server';
 import { useMutation } from '@tanstack/react-query';
 import { server_management } from '@/app/services/api';
+import { toast } from 'react-toastify';
 
 export default function New() {
   const router = useRouter();
@@ -16,8 +17,12 @@ export default function New() {
   const saveServerMutation = useMutation({
     mutationFn: (data: SaveServerForm) => server_management.saveServer(data),
     onSuccess: () => {
+      toast.success('저장이 완료되었습니다');
       router.push('/settings');
       router.refresh();
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
@@ -38,7 +43,7 @@ export default function New() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="mb-8 text-2xl font-black">신규 서버 등록</h1>
+      <h1 className="mb-4 text-2xl font-black">신규 서버 등록</h1>
 
       <form onSubmit={handleSubmit} className="max-w-lg space-y-6">
         <div>
@@ -80,14 +85,6 @@ export default function New() {
             maxLength={100}
           />
         </div>
-
-        {saveServerMutation.isError && (
-          <div className="rounded-md bg-red-50 p-4">
-            <div className="text-sm text-red-700">
-              {saveServerMutation.error?.message || '서버 등록에 실패했습니다.'}
-            </div>
-          </div>
-        )}
 
         <div className="flex justify-end gap-4">
           <button

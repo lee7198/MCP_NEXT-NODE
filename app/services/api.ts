@@ -5,6 +5,7 @@ import {
   MessagesResponse,
   SaveAIResponseRes,
   SaveChatRes,
+  ServerDetail,
   ServerList,
 } from '@/app/types';
 import { ChatResponse } from 'ollama';
@@ -84,5 +85,11 @@ export const server_management = {
 
     if (!response.ok) throw new Error('서버 등록에 실패했습니다.');
     return response.json();
+  },
+
+  getServer: async (serverId: string): Promise<ServerDetail> => {
+    const res = await fetch(`${API_BASE_URL}/get-server?serverId=${serverId}`);
+    if (!res.ok) throw new Error('서버 조회 실패');
+    return res.json();
   },
 };
