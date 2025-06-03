@@ -1,7 +1,7 @@
 import React from 'react';
 import { Message, ChatReq } from './message';
 import { ClientInfo } from './socket';
-import { ServerList } from './api';
+import { McpRes, ServerRes } from './api';
 
 export interface ChatMessageProps {
   message: Message;
@@ -63,6 +63,17 @@ export interface ServerCardWrapperProps {
 }
 
 export interface ServerListProps {
-  servers: ServerList[];
+  servers: ServerRes[];
   isGetServers: boolean;
+}
+
+export interface McpToolProps {
+  serverId: string;
+  isGetMcps: boolean;
+  mcpTools: McpRes[] | undefined;
+}
+
+export interface McpToolSettingProps {
+  isGetMcps: boolean;
+  mcpTools: McpRes[] | undefined;
 }

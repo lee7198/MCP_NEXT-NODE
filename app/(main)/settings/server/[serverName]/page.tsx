@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeftIcon } from '@phosphor-icons/react/dist/ssr';
-import { server_management } from '@/app/services/api';
+import { mcp_management, server_management } from '@/app/services/api';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
@@ -11,6 +11,8 @@ import { ServerHeader } from './components/ServerHeader';
 import { ServerDescription } from './components/ServerDescription';
 import { ServerInfo } from './components/ServerInfo';
 import { ServerDetailPageProps } from '@/app/types/server';
+import McpTool from './components/McpTool';
+import McpToolSetting from './components/McpToolSetting';
 
 export default function ServerDetailPage({ params }: ServerDetailPageProps) {
   const router = useRouter();
@@ -82,6 +84,11 @@ export default function ServerDetailPage({ params }: ServerDetailPageProps) {
     }
   };
 
+  const { data: mcpTools, isSuccess: isGetMcps } = useQuery({
+    queryKey: ['mcp_list'],
+    queryFn: async () => mcp_management.getMcpTools(resolvedParams.serverName),
+  });
+
   useEffect(() => {
     if (isError)
       toast.error(
@@ -128,6 +135,12 @@ export default function ServerDetailPage({ params }: ServerDetailPageProps) {
               server?.RESPONSED_AT ? new Date(server.RESPONSED_AT) : undefined
             }
           />
+          <McpTool
+            serverId={resolvedParams.serverName}
+            isGetMcps={isGetMcps}
+            mcpTools={mcpTools}
+          />
+          <McpToolSetting mcpTools={mcpTools} isGetMcps={isGetMcps} />
         </div>
       </div>
     </div>

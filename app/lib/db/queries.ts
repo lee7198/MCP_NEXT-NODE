@@ -233,3 +233,88 @@ export async function updateServer(serverId: string, comment: string) {
     await connection.close();
   }
 }
+
+export async function getMcpList(serverId: string) {
+  const connection = await getOracleConnection();
+  try {
+    // const sql = `SELECT * FROM MCP_TOOL_MST`;
+    const sql = `
+    SELECT 
+    mtm.TOOLNAME AS TOOLNAME, 
+    mtm."COMMENT" AS TOOL_COMMENT, 
+    s.SERVERNAME, 
+    COALESCE(mtum.USE_YON, 'N') AS USE_YON
+FROM 
+    MCP_TOOL_MST mtm
+CROSS JOIN 
+    SERVERS s
+LEFT JOIN 
+    MCP_TOOL_USAGE_MST mtum 
+    ON mtm.TOOLNAME = mtum.TOOLNAME AND s.SERVERNAME = mtum.SERVERNAME
+WHERE
+    s.SERVERNAME = :serverId
+ORDER BY 
+    mtm.TOOLNAME, s.SERVERNAME
+    `;
+
+    const result = await connection.execute(
+      sql,
+      { serverId },
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      }
+    );
+
+    if (!result.rows || result.rows.length === 0) {
+      return [];
+    }
+
+    return result.rows;
+  } catch (err) {
+    console.error('MCP 정보 조회 중 오류 발생:', err);
+    throw new Error('MCP 정보 조회에 실패했습니다.');
+  } finally {
+    await connection.close();
+  }
+}
+
+export async function updateMcpToolUsage(
+  serverId: string,
+  toolName: string,
+  useYon: 'Y' | 'N'
+) {
+  const connection = await getOracleConnection();
+  try {
+    // 먼저 해당 레코드가 존재하는지 확인
+    const checkResult = await connection.execute(
+      'SELECT COUNT(*) as count FROM MCP_TOOL_USAGE_MST WHERE SERVERNAME = :1 AND TOOLNAME = :2',
+      [serverId, toolName],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    if (checkResult.rows && checkResult.rows[0].COUNT > 0) {
+      // 레코드가 존재하면 업데이트
+      await connection.execute(
+        'UPDATE MCP_TOOL_USAGE_MST SET USE_YON = :1 WHERE SERVERNAME = :2 AND TOOLNAME = :3',
+        [useYon, serverId, toolName],
+        { autoCommit: true }
+      );
+    } else {
+      // 레코드가 없으면 새로 삽입
+      await connection.execute(
+        'INSERT INTO MCP_TOOL_USAGE_MST (SERVERNAME, TOOLNAME, USE_YON) VALUES (:1, :2, :3)',
+        [serverId, toolName, useYon],
+        { autoCommit: true }
+      );
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error('MCP 도구 사용 여부 업데이트 중 오류 발생:', err);
+    throw err instanceof Error
+      ? err
+      : new Error('MCP 도구 사용 여부 업데이트에 실패했습니다.');
+  } finally {
+    await connection.close();
+  }
+}

@@ -23,7 +23,7 @@ export interface AIChatRes extends ChatResponse {
   USER_ID: string;
 }
 
-export interface ServerList {
+export interface ServerRes {
   SERVERNAME: string;
   RESPONSED_AT: Date;
 }
@@ -32,4 +32,11 @@ export interface ServerDetail {
   SERVERNAME: string;
   COMMENT: string;
   RESPONSED_AT: Date;
+}
+
+export interface McpRes {
+  TOOLNAME: string;
+  TOOL_COMMENT: string;
+  SERVERNAME: string;
+  USE_YON: 'Y' | 'N';
 }
