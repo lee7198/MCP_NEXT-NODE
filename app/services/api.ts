@@ -8,6 +8,7 @@ import {
   SaveChatRes,
   ServerDetail,
   ServerRes,
+  UserListRes,
 } from '@/app/types';
 import { ChatResponse } from 'ollama';
 import { SaveServerForm } from '../types/server';
@@ -145,6 +146,53 @@ export const mcp_management = {
       body: JSON.stringify({ serverId, toolName, useYon }),
     });
     if (!res.ok) throw new Error('MCP 툴 사용 여부 업데이트 실패');
+    return res.json();
+  },
+};
+
+export const common_management = {
+  getUserList: async (): Promise<UserListRes[]> => {
+    const res = await fetch(`${API_BASE_URL}/common/get-user-list`);
+    if (!res.ok) throw new Error('유저 목록 조회 실패');
+    return res.json();
+  },
+
+  updateUsers: async (users: UserListRes[]): Promise<{ success: boolean }> => {
+    const res = await fetch(`${API_BASE_URL}/common/update-users`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ users }),
+    });
+    if (!res.ok) throw new Error('사용자 정보 수정 실패');
+    return res.json();
+  },
+
+  addUser: async (
+    user: Partial<UserListRes>
+  ): Promise<{ success: boolean }> => {
+    const res = await fetch(`${API_BASE_URL}/common/add-user`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user }),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || '사용자 추가 실패');
+    }
+    return res.json();
+  },
+
+  deleteUser: async (email: string): Promise<{ success: boolean }> => {
+    const res = await fetch(`${API_BASE_URL}/common/delete-user`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || '사용자 삭제 실패');
+    }
     return res.json();
   },
 };

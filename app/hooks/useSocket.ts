@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import { ClientInfo } from '@/app/types/socket';
 import { pingStatus } from '../types';
 
-export const useSocket = (serverName: string) => {
+export const useSocket = (serverName?: string) => {
   const [socketInstance, setSocketInstance] = useState<ReturnType<
     typeof io
   > | null>(null);
@@ -44,7 +44,7 @@ export const useSocket = (serverName: string) => {
 
   // ping 테스트 핸들러
   const handleTestPing = () => {
-    if (socketInstance) {
+    if (serverName && socketInstance) {
       setPingStatus('loading');
       socketInstance.emit('test_ping', serverName);
 

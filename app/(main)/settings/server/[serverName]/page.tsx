@@ -13,12 +13,14 @@ import { ServerInfo } from './components/ServerInfo';
 import { ServerDetailPageProps } from '@/app/types/server';
 import McpTool from './components/McpTool';
 import McpToolSetting from './components/McpToolSetting';
+import { useSocket } from '@/app/hooks/useSocket';
 
 export default function ServerDetailPage({ params }: ServerDetailPageProps) {
   const router = useRouter();
   const resolvedParams = React.use(params);
   const [toggleEdit, setToggleEdit] = useState(false);
   const [editedComment, setEditedComment] = useState('');
+  const { clients } = useSocket();
 
   const {
     data: server,
@@ -89,6 +91,12 @@ export default function ServerDetailPage({ params }: ServerDetailPageProps) {
     queryFn: async () => mcp_management.getMcpTools(resolvedParams.serverName),
   });
 
+  const serverStatus = clients.some(
+    (client) => client.clientId === resolvedParams.serverName
+  )
+    ? 'success'
+    : 'offline';
+
   useEffect(() => {
     if (isError)
       toast.error(
@@ -114,6 +122,7 @@ export default function ServerDetailPage({ params }: ServerDetailPageProps) {
           isDeleting={deleteServerMutation.isPending}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          status={serverStatus}
         />
 
         <div className="grid gap-6 md:grid-cols-2">

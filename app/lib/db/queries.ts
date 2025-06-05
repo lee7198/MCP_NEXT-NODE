@@ -1,5 +1,6 @@
 import { getOracleConnection } from '@/app/lib/db/connection';
 import oracledb from 'oracledb';
+import { UserListRes } from '@/app/types';
 
 // 채팅 메시지 저장
 export async function saveChatMessage(userId: string, content: string) {
@@ -314,6 +315,120 @@ export async function updateMcpToolUsage(
     throw err instanceof Error
       ? err
       : new Error('MCP 도구 사용 여부 업데이트에 실패했습니다.');
+  } finally {
+    await connection.close();
+  }
+}
+
+export async function getUserList() {
+  const connection = await getOracleConnection();
+  try {
+    const sql = `SELECT * FROM USER_MST`;
+
+    const result = await connection.execute(
+      sql,
+      {},
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      }
+    );
+
+    if (!result.rows || result.rows.length === 0) {
+      return [];
+    }
+
+    return result.rows;
+  } catch (err) {
+    console.error('유저 리스트 조회 중 오류 발생:', err);
+    throw new Error('유저 리스트 조회에 실패했습니다.');
+  } finally {
+    await connection.close();
+  }
+}
+
+export async function updateUsers(users: UserListRes[]) {
+  const connection = await getOracleConnection();
+  try {
+    for (const user of users) {
+      await connection.execute(
+        'UPDATE USER_MST SET USERNAME = :1, USE_YON = :2 WHERE EMAIL = :3',
+        [user.USERNAME, user.USE_YON, user.EMAIL],
+        { autoCommit: true }
+      );
+    }
+    return { success: true };
+  } catch (err) {
+    console.error('사용자 정보 수정 중 오류 발생:', err);
+    throw err instanceof Error
+      ? err
+      : new Error('사용자 정보 수정에 실패했습니다.');
+  } finally {
+    await connection.close();
+  }
+}
+
+export async function addUser(user: Partial<UserListRes>) {
+  const connection = await getOracleConnection();
+  try {
+    const { USERNAME, EMAIL, USE_YON = 'Y' } = user;
+
+    // 중복 체크
+    const checkResult = await connection.execute(
+      'SELECT COUNT(*) as count FROM USER_MST WHERE EMAIL = :1',
+      [EMAIL],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    if (checkResult.rows && checkResult.rows[0].COUNT > 0) {
+      throw new Error('이미 존재하는 이메일입니다.');
+    }
+
+    // 사용자 추가
+    await connection.execute(
+      'INSERT INTO USER_MST (USERNAME, EMAIL, USE_YON) VALUES (:1, :2, :3)',
+      [USERNAME, EMAIL, USE_YON],
+      { autoCommit: true }
+    );
+
+    return { success: true };
+  } catch (err) {
+    console.error('사용자 추가 중 오류 발생:', err);
+    // 원본 에러 메시지를 유지
+    if (err instanceof Error && err.message === '이미 존재하는 이메일입니다.') {
+      throw err;
+    }
+    throw new Error('사용자 추가에 실패했습니다.');
+  } finally {
+    await connection.close();
+  }
+}
+
+export async function deleteUser(email: string) {
+  const connection = await getOracleConnection();
+  try {
+    // 사용자 존재 여부 확인
+    const checkResult = await connection.execute(
+      'SELECT COUNT(*) as count FROM USER_MST WHERE EMAIL = :1',
+      [email],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    if (checkResult.rows && checkResult.rows[0].COUNT === 0) {
+      throw new Error('존재하지 않는 사용자입니다.');
+    }
+
+    // 사용자 삭제
+    await connection.execute('DELETE FROM USER_MST WHERE EMAIL = :1', [email], {
+      autoCommit: true,
+    });
+
+    return { success: true };
+  } catch (err) {
+    console.error('사용자 삭제 중 오류 발생:', err);
+    if (err instanceof Error && err.message === '존재하지 않는 사용자입니다.') {
+      throw err;
+    }
+    throw new Error('사용자 삭제에 실패했습니다.');
   } finally {
     await connection.close();
   }

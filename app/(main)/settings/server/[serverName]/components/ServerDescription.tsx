@@ -14,7 +14,7 @@ export const ServerDescription = ({
     <div className="rounded-lg bg-gray-50 p-4">
       <h2 className="mb-4 text-lg font-semibold">서버 설명</h2>
       {isLoading ? (
-        <div className="h-4 w-3/4 animate-pulse rounded-lg bg-gray-400" />
+        <div className="h-6 w-3/4 animate-pulse rounded-lg bg-gray-400" />
       ) : toggleEdit ? (
         <div className="space-y-4">
           <textarea

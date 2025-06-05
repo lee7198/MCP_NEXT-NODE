@@ -15,11 +15,12 @@ export const ServerHeader = ({
   isDeleting,
   onEdit,
   onDelete,
+  status,
 }: ServerHeaderProps) => {
   return (
     <div className="mb-6 flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <StatusPing status="success" />
+        <StatusPing status={status} />
         <h1 className="text-2xl font-bold">{serverName}</h1>
       </div>
 
@@ -28,7 +29,7 @@ export const ServerHeader = ({
           type="button"
           onClick={onEdit}
           disabled={isEditing}
-          className="cursor-pointer rounded-lg px-4 py-2 hover:bg-gray-300 active:ring-blue-500"
+          className="cursor-pointer rounded-lg px-4 py-2 hover:bg-gray-300 active:ring-gray-500"
         >
           {toggleEdit ? (
             <XIcon size={20} color="#4b5563" />

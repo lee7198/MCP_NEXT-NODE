@@ -40,3 +40,11 @@ export interface McpRes {
   SERVERNAME: string;
   USE_YON: 'Y' | 'N';
 }
+
+export interface UserListRes {
+  USERNAME: string;
+  EMAIL: string;
+  USE_YON: 'Y' | 'N';
+  LAST_LOGIN_AT: Date;
+  ROLE: string;
+}

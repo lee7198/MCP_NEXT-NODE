@@ -42,11 +42,11 @@ export default function New() {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto max-w-xl p-4">
       <h1 className="mb-4 text-2xl font-black">신규 서버 등록</h1>
 
-      <form onSubmit={handleSubmit} className="max-w-lg space-y-6">
-        <div>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="w-full">
           <label
             htmlFor="SERVERNAME"
             className="block text-sm font-medium text-gray-700"

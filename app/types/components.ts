@@ -63,8 +63,12 @@ export interface ServerCardWrapperProps {
 }
 
 export interface ServerListProps {
+  clients: ClientInfo[];
   servers: ServerRes[];
   isGetServers: boolean;
+  serverStatuses: Record<string, serverStatus>;
+  pingStatuses: Record<string, pingStatus>;
+  handleTestPing: (serverName: string) => void;
 }
 
 export interface McpToolProps {
