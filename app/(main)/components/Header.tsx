@@ -1,44 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useUserStore } from '@/app/store/userStore';
-import Avatar from 'boring-avatars';
-import { avatarColor, pages } from '@/app/lib/common';
+import { pages } from '@/app/lib/common';
 import Link from 'next/link';
 import UserInfo from './common/UserInfo';
+import Image from 'next/image';
+import { GoogleLogoIcon } from '@phosphor-icons/react/dist/ssr';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 const Header = React.memo(function Header() {
-  const userId = useUserStore((state) => state.userId);
+  const { data: session } = useSession();
   const [openHover, setOpenHover] = useState(false);
-
-  // const userSection = useMemo(() => {
-  //   if (userId) {
-  //     return (
-  //       <div className="flex items-center gap-2">
-  //         {/* <div className="text-xl font-extrabold">{userId}</div> */}
-  //         <button onClick={() => setOpenHover(true)}>
-  //           <Avatar
-  //             colors={avatarColor}
-  //             size={32}
-  //             variant="beam"
-  //             name={userId}
-  //           />
-  //         </button>
-  //         <UserInfo
-  //           userId={userId}
-  //           openHover={openHover}
-  //           setOpenHover={setOpenHover}
-  //         />
-  //       </div>
-  //     );
-  //   }
-  //   return (
-  //     <div className="flex animate-pulse items-center gap-2 transition-all">
-  //       <div className="size-8 rounded-full bg-gray-400" />
-  //       {/* <div className="h-4 w-14 rounded-lg bg-gray-400" /> */}
-  //     </div>
-  //   );
-  // }, [userId]);
 
   return (
     <div className="absolute top-0 z-[9999] w-screen border-b bg-gray-50">
@@ -51,32 +23,40 @@ const Header = React.memo(function Header() {
             </Link>
           ))}
         </div>
-        {/* {userSection} */}
-        {userId ? (
-          <div className="flex items-center gap-2">
-            {/* <div className="text-xl font-extrabold">{userId}</div> */}
+        {session?.user ? (
+          <div className="relative flex items-center gap-2">
             <button
               className="cursor-pointer"
               onClick={() => setOpenHover(!openHover)}
             >
-              <Avatar
-                colors={avatarColor}
-                size={32}
-                variant="beam"
-                name={userId}
-              />
+              {session.user.image ? (
+                <Image
+                  width={32}
+                  height={32}
+                  src={session.user.image}
+                  alt="profile_image"
+                />
+              ) : (
+                <div className="size-8 animate-pulse rounded-full bg-gray-300" />
+              )}
             </button>
             <UserInfo
-              userId={userId}
+              userId={session.user.name || ''}
+              email={session.user.email || ''}
               openHover={openHover}
               setOpenHover={setOpenHover}
+              onSignOut={() => signOut()}
             />
           </div>
         ) : (
-          <div className="flex animate-pulse items-center gap-2 transition-all">
-            <div className="size-8 rounded-full bg-gray-400" />
-            {/* <div className="h-4 w-14 rounded-lg bg-gray-400" /> */}
-          </div>
+          <>
+            <button
+              onClick={() => signIn('google')}
+              className="flex cursor-pointer items-center gap-2 rounded-md border px-4 py-1 text-sm hover:bg-gray-200"
+            >
+              <GoogleLogoIcon size={16} weight="bold" /> 구글 계정으로 로그인
+            </button>
+          </>
         )}
       </div>
     </div>

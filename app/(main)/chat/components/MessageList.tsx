@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Message, MessageListProps } from '@/app/types';
-import ChatMessage from '@/app/(main)/components/chat/ChatMessage';
+import ChatMessage from '@/app/(main)/chat/components/ChatMessage';
 import DateDivider from '@/app/(main)/components/common/DateDivider';
 
 export default function MessageList({

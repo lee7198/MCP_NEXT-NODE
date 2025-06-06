@@ -11,17 +11,17 @@ import {
   SaveAIResponseRes,
   SaveChatRes,
 } from '@/app/types';
-import ChatInput from '@/app/(main)/components/chat/ChatInput';
-import UserIdInput from '@/app/(main)/components/chat/UserIdInput';
-import MessageList from '@/app/(main)/components/chat/MessageList';
+import ChatInput from '@/app/(main)/chat/components/ChatInput';
+import UserIdInput from '@/app/(main)/chat/components/UserIdInput';
+import MessageList from '@/app/(main)/chat/components/MessageList';
 import Spinner from '@/app/(main)/components/common/Spinner';
 import { useUserStore } from '@/app/store/userStore';
 import { messageApi } from '@/app/services/api';
-import LoadingResponse from './LoadingResponse';
-import ErrorResponse from './ErrorResponse';
+import LoadingResponse from './components/LoadingResponse';
+import ErrorResponse from './components/ErrorResponse';
 import { initReqState } from '@/app/lib/common';
 
-export default function ChatContainer() {
+export default function Chat() {
   const [isMounted, setIsMounted] = useState(false);
   const [reqState, setReqState] = useState<AIReqState>(initReqState);
   const userId = useUserStore((state) => state.userId);

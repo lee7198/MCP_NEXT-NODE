@@ -1,7 +1,24 @@
 'use client';
 
-import ChatContainer from '@/app/(main)/components/chat/ChatContainer';
+import React, { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  return <ChatContainer />;
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session) router.push('/');
+  }, [session]);
+
+  return (
+    <div className="flex h-screen w-screen items-center justify-center">
+      <div className="">
+        <h1 className="text-center text-7xl font-black">
+          MCP 통합 관리 SYSTEM
+        </h1>
+      </div>
+    </div>
+  );
 }

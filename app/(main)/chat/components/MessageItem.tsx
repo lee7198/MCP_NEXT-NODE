@@ -4,7 +4,7 @@ import TimeAgo from 'javascript-time-ago';
 import ko from 'javascript-time-ago/locale/ko';
 import Avatar from 'boring-avatars';
 import { avatarColor } from '@/app/lib/common';
-import MultiToSpan from '../common/MultiToSpan';
+import MultiToSpan from '../../components/common/MultiToSpan';
 
 export default function MessageItem({
   CONTENT,
