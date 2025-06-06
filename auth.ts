@@ -52,9 +52,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return true;
       }
 
-      if (!isLoggedIn) {
-        return false;
-      }
+      if (!isLoggedIn) return false;
 
       return true;
     },

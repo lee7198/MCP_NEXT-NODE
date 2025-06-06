@@ -433,3 +433,24 @@ export async function deleteUser(email: string) {
     await connection.close();
   }
 }
+
+export async function getCheckUser(email: string) {
+  const connection = await getOracleConnection();
+  try {
+    const checkResult = await connection.execute(
+      'SELECT COUNT(*) as count FROM USER_MST WHERE EMAIL = :1',
+      [email],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    if (checkResult.rows && checkResult.rows[0].COUNT === 0)
+      return { success: false };
+
+    return { success: true };
+  } catch (err) {
+    console.error('유저 조회 중 오류 발생:', err);
+    throw new Error('유저 조회에 실패했습니다.');
+  } finally {
+    await connection.close();
+  }
+}
