@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getChatMessages } from '@/app/lib/db/queries';
+import { message_query_management } from '@/app/lib/db/queries';
 
 export async function GET(req: NextRequest) {
   try {
@@ -14,8 +14,11 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const rows = await getChatMessages(userId, limit);
-    return NextResponse.json({ messages: rows });
+    const messages = await message_query_management.getChatMessages(
+      userId,
+      limit
+    );
+    return NextResponse.json({ messages: messages });
   } catch (err) {
     console.error('메시지 조회 실패:', err);
     const errorMessage =

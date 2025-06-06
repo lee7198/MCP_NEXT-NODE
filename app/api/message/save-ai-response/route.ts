@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { saveAIResponse } from '@/app/lib/db/queries';
+import { message_query_management } from '@/app/lib/db/queries';
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,7 +10,10 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    const responseId = await saveAIResponse(messageId, content);
+    const responseId = await message_query_management.saveAIResponse(
+      messageId,
+      content
+    );
     return NextResponse.json({
       success: true,
       id: responseId,

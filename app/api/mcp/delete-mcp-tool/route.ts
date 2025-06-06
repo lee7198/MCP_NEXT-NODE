@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { deleteMcpTool } from '@/app/lib/db/queries';
+import { mcp_query_management } from '@/app/lib/db/queries';
 
 export async function DELETE(req: NextRequest) {
   try {
@@ -13,7 +13,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    await deleteMcpTool(TOOLNAME);
+    await mcp_query_management.deleteMcpTool(TOOLNAME);
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err) {
     console.error('tool 삭제 실패:', err);

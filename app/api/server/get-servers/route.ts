@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { getServerList } from '@/app/lib/db/queries';
+import { server_query_management } from '@/app/lib/db/queries';
 
 export async function GET() {
   try {
-    const rows = await getServerList();
+    const rows = await server_query_management.getServerList();
     return NextResponse.json(rows);
   } catch (err) {
     console.error('서버 리스트 조회 실패:', err);

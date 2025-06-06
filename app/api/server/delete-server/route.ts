@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { deleteServer } from '@/app/lib/db/queries';
+import { server_query_management } from '@/app/lib/db/queries';
 
 export async function DELETE(req: NextRequest) {
   try {
@@ -13,7 +13,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    await deleteServer(serverId);
+    await server_query_management.deleteServer(serverId);
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err) {
     console.error('서버 삭제 실패:', err);

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { addUser } from '@/app/lib/db/queries';
+import { common_query_management } from '@/app/lib/db/queries';
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    await addUser(user);
+    await common_query_management.addUser(user);
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err) {
     console.error('사용자 추가 실패:', err);

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { addMcpTool } from '@/app/lib/db/queries';
+import { mcp_query_management } from '@/app/lib/db/queries';
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    await addMcpTool({ TOOLNAME, COMMENT });
+    await mcp_query_management.addMcpTool({ TOOLNAME, COMMENT });
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err) {
     console.error('Tool 등록 실패:', err);

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { deleteUser } from '@/app/lib/db/queries';
+import { common_query_management } from '@/app/lib/db/queries';
 
 export async function DELETE(req: NextRequest) {
   try {
@@ -12,7 +12,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    await deleteUser(email);
+    await common_query_management.deleteUser(email);
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err) {
     console.error('사용자 삭제 실패:', err);

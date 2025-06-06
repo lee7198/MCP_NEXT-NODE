@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { saveChatMessage } from '@/app/lib/db/queries';
+import { message_query_management } from '@/app/lib/db/queries';
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,7 +10,10 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    const messageId = await saveChatMessage(USER_ID, CONTENT);
+    const messageId = await message_query_management.saveChatMessage(
+      USER_ID,
+      CONTENT
+    );
     return NextResponse.json({
       success: true,
       id: messageId,

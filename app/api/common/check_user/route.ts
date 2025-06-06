@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCheckUser } from '@/app/lib/db/queries';
+import { common_query_management } from '@/app/lib/db/queries';
 
 export async function GET(req: NextRequest) {
   try {
@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
         { status: 400 }
       );
     }
-    const res = await getCheckUser(email);
+    const res = await common_query_management.getCheckUser(email);
     return NextResponse.json(res);
   } catch (err) {
     console.error('유저 리스트 조회 실패:', err);

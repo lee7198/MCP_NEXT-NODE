@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { saveServer } from '@/app/lib/db/queries';
+import { server_query_management } from '@/app/lib/db/queries';
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,7 +12,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    await saveServer(SERVERNAME, COMMENT);
+    await server_query_management.saveServer(SERVERNAME, COMMENT);
+
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err) {
     console.error('서버 등록 실패:', err);

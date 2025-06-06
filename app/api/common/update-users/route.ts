@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { updateUsers } from '@/app/lib/db/queries';
+import { common_query_management } from '@/app/lib/db/queries';
 
 export async function PUT(req: NextRequest) {
   try {
@@ -12,7 +12,7 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    await updateUsers(users);
+    await common_query_management.updateUsers(users);
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err) {
     console.error('사용자 정보 수정 실패:', err);

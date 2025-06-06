@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerDetail } from '@/app/lib/db/queries';
+import { server_query_management } from '@/app/lib/db/queries';
 
 export async function GET(req: NextRequest) {
   try {
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const res = await getServerDetail(serverId);
+    const res = await server_query_management.getServerDetail(serverId);
 
     return NextResponse.json(res[0]);
   } catch (err) {

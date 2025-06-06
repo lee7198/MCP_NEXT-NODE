@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAIResponse } from '@/app/lib/db/queries';
+import { message_query_management } from '@/app/lib/db/queries';
 
 export async function GET(req: NextRequest) {
   try {
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const response = await getAIResponse(messageId);
+    const response = await message_query_management.getAIResponse(messageId);
     return NextResponse.json(response);
   } catch (err) {
     console.error('AI 응답 조회 실패:', err);
