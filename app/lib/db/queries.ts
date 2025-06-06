@@ -1,6 +1,7 @@
 import { getOracleConnection } from '@/app/lib/db/connection';
 import oracledb from 'oracledb';
 import { UserListRes } from '@/app/types';
+import { McpToolRes } from '@/app/types/management';
 
 // 채팅 메시지 저장
 export async function saveChatMessage(userId: string, content: string) {
@@ -235,7 +236,7 @@ export async function updateServer(serverId: string, comment: string) {
   }
 }
 
-export async function getMcpList(serverId: string) {
+export async function getMcpListUsage(serverId: string) {
   const connection = await getOracleConnection();
   try {
     // const sql = `SELECT * FROM MCP_TOOL_MST`;
@@ -438,8 +439,8 @@ export async function getCheckUser(email: string) {
   const connection = await getOracleConnection();
   try {
     const checkResult = await connection.execute(
-      'SELECT COUNT(*) as count FROM USER_MST WHERE EMAIL = :1',
-      [email],
+      'SELECT COUNT(*) as count FROM USER_MST WHERE EMAIL = :1 AND USE_YON = :2',
+      [email, 'Y'],
       { outFormat: oracledb.OUT_FORMAT_OBJECT }
     );
 
@@ -450,6 +451,84 @@ export async function getCheckUser(email: string) {
   } catch (err) {
     console.error('유저 조회 중 오류 발생:', err);
     throw new Error('유저 조회에 실패했습니다.');
+  } finally {
+    await connection.close();
+  }
+}
+
+export async function getMcpList() {
+  const connection = await getOracleConnection();
+  try {
+    const sql = `SELECT * FROM MCP_TOOL_MST`;
+
+    const result = await connection.execute(
+      sql,
+      {},
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      }
+    );
+
+    if (!result.rows || result.rows.length === 0) {
+      return [];
+    }
+
+    return result.rows;
+  } catch (err) {
+    console.error('MCP 리스트 조회 중 오류 발생:', err);
+    throw new Error('MCP 리스트 조회에 실패했습니다.');
+  } finally {
+    await connection.close();
+  }
+}
+
+export async function addMcpTool(req: Partial<McpToolRes>) {
+  const { TOOLNAME, COMMENT } = req;
+  const connection = await getOracleConnection();
+  try {
+    // 중복 체크
+    const checkResult = await connection.execute(
+      'SELECT COUNT(*) as count FROM MCP_TOOL_MST WHERE TOOLNAME = :1',
+      [TOOLNAME],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    if (checkResult.rows && checkResult.rows[0].COUNT > 0) {
+      throw new Error('이미 존재하는 Tool 입니다.');
+    }
+
+    // tool 추가
+    await connection.execute(
+      'INSERT INTO MCP_TOOL_MST (TOOLNAME, "COMMENT") VALUES (:1, :2)',
+      [TOOLNAME, COMMENT],
+      { autoCommit: true }
+    );
+
+    return { success: true };
+  } catch (err) {
+    console.error('Tool 추가 중 오류 발생:', err);
+    // 원본 에러 메시지를 유지
+    if (err instanceof Error && err.message === '이미 존재하는 Tool 입니다.') {
+      throw err;
+    }
+    throw new Error('Tool 추가에 실패했습니다.');
+  } finally {
+    await connection.close();
+  }
+}
+
+export async function deleteMcpTool(TOOLNAME: string) {
+  const connection = await getOracleConnection();
+  try {
+    await connection.execute(
+      'DELETE FROM MCP_TOOL_MST WHERE TOOLNAME = :1',
+      [TOOLNAME],
+      { autoCommit: true }
+    );
+    return { success: true };
+  } catch (err) {
+    console.error('tool 삭제 중 오류 발생:', err);
+    throw err instanceof Error ? err : new Error('tool 삭제에 실패했습니다.');
   } finally {
     await connection.close();
   }

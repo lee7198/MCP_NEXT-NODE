@@ -88,7 +88,8 @@ export default function ServerDetailPage({ params }: ServerDetailPageProps) {
 
   const { data: mcpTools, isSuccess: isGetMcps } = useQuery({
     queryKey: ['mcp_list'],
-    queryFn: async () => mcp_management.getMcpTools(resolvedParams.serverName),
+    queryFn: async () =>
+      mcp_management.getMcpToolUsage(resolvedParams.serverName),
   });
 
   const serverStatus = clients.some(

@@ -12,6 +12,7 @@ import {
 } from '@/app/types';
 import { ChatResponse } from 'ollama';
 import { SaveServerForm } from '../types/server';
+import { McpToolRes } from '../types/management';
 
 const API_BASE_URL = '/api';
 
@@ -87,7 +88,7 @@ export const server_management = {
       body: JSON.stringify(data),
     });
 
-    if (!response.ok) throw new Error('서버 등록에 실패했습니다.');
+    if (!response.ok) throw new Error('서버 등록 실패');
     return response.json();
   },
 
@@ -107,7 +108,7 @@ export const server_management = {
       }
     );
 
-    if (!response.ok) throw new Error('서버 삭제에 실패했습니다.');
+    if (!response.ok) throw new Error('서버 삭제 실패');
     return response.json();
   },
 
@@ -121,32 +122,87 @@ export const server_management = {
       body: JSON.stringify({ serverId, comment }),
     });
 
-    if (!response.ok) throw new Error('서버 정보 수정에 실패했습니다.');
+    if (!response.ok) throw new Error('서버 정보 수정 실패');
     return response.json();
   },
 };
 
 export const mcp_management = {
-  getMcpTools: async (serverId: string): Promise<McpRes[]> => {
-    const res = await fetch(
-      `${API_BASE_URL}/mcp/get-mcp-tools?serverId=${serverId}`
-    );
-    if (!res.ok) throw new Error('MCP 툴 목록 조회 실패');
-    return res.json();
+  getMcpTools: async () => {
+    const response = await fetch(`${API_BASE_URL}/mcp/get-mcp-tools`);
+    if (!response.ok) {
+      throw new Error('MCP 정보 조회 실패');
+    }
+    return response.json();
   },
-
+  updateMcpTools: async (tools: McpToolRes[]) => {
+    const response = await fetch(`${API_BASE_URL}/mcp/update-mcp-tools`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ tools }),
+    });
+    if (!response.ok) {
+      throw new Error('MCP 정보 업데이트 실패');
+    }
+    return response.json();
+  },
+  addMcpTool: async (tool: McpToolRes) => {
+    const response = await fetch(`${API_BASE_URL}/mcp/add-mcp-tool`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(tool),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'MCP 정보 추가 실패');
+    }
+    return response.json();
+  },
+  deleteMcpTool: async (TOOLNAME: string) => {
+    const response = await fetch(
+      `${API_BASE_URL}/mcp/delete-mcp-tool?TOOLNAME=${TOOLNAME}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'MCP 정보 삭제 실패');
+    }
+    return response.json();
+  },
+  getMcpToolUsage: async (serverId: string): Promise<McpRes[]> => {
+    const response = await fetch(
+      `${API_BASE_URL}/mcp/get-mcp-tool-usage?serverId=${serverId}`
+    );
+    if (!response.ok) {
+      throw new Error('MCP 툴 사용 현황 조회 실패');
+    }
+    return response.json();
+  },
   updateMcpToolUsage: async (
     serverId: string,
     toolName: string,
     useYon: 'Y' | 'N'
-  ): Promise<{ success: boolean }> => {
-    const res = await fetch(`${API_BASE_URL}/mcp/update-mcp-tool-usage`, {
+  ) => {
+    const response = await fetch(`${API_BASE_URL}/mcp/update-mcp-tool-usage`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ serverId, toolName, useYon }),
     });
-    if (!res.ok) throw new Error('MCP 툴 사용 여부 업데이트 실패');
-    return res.json();
+    if (!response.ok) {
+      throw new Error('MCP 툴 사용 현황 업데이트 실패');
+    }
+    return response.json();
   },
 };
 
