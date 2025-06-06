@@ -13,7 +13,7 @@ export default function Home() {
   }, [session]);
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center">
+    <div className="flex h-[calc(100svh-3rem)] w-screen items-center justify-center">
       <div className="">
         <h1 className="text-center text-7xl font-black">
           MCP 통합 관리 SYSTEM

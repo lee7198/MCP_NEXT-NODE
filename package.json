@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx ./socket/server.ts & next dev --turbopack",
+    "dev": "lsof -i :3001 & tsx ./socket/server.ts & next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint --fix",
