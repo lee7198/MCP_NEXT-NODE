@@ -1,9 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { auth as middleware } from '@/auth';
 
-export function middleware(request: NextRequest) {
-  return NextResponse.redirect(new URL('/', request.url));
-}
+export default middleware((req) => {
+  if (!req.auth && req.nextUrl.pathname !== '/') {
+    const newUrl = new URL('/', req.nextUrl.origin);
+    return Response.redirect(newUrl);
+  }
+});
 
 export const config = {
-  matcher: ['/settings/:id*', '/chat/":id*'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };
