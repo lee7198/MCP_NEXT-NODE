@@ -4,11 +4,12 @@ import React, { useState } from 'react';
 import { common_management } from '@/app/services/api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { UserTable } from '@/app/components/management/UserTable';
-import { AddUserForm } from '@/app/components/management/AddUserForm';
-import { UserListRes } from '@/app/types';
 
-export default function Management() {
+import { UserListRes } from '@/app/types';
+import { AddUserForm } from './components/AddUserForm';
+import { UserTable } from './components/UserTable';
+
+export default function User_mng() {
   const queryClient = useQueryClient();
   const [editedUsers, setEditedUsers] = useState<Record<string, UserListRes>>(
     {}
@@ -108,7 +109,7 @@ export default function Management() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl p-6">
+    <div className="container mx-auto p-6">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">사용자 관리</h1>
         <div className="flex gap-2">
@@ -140,24 +141,15 @@ export default function Management() {
         />
       )}
 
-      {isPending ? (
-        <div className="grid grid-cols-4 gap-4 p-4">
-          <div className="my-1 h-4 w-12 animate-pulse rounded-lg bg-gray-300" />
-          <div className="my-1 h-4 w-24 animate-pulse rounded-lg bg-gray-300" />
-          <div className="my-1 h-4 w-10 animate-pulse rounded-lg bg-gray-300" />
-          <div className="my-1 h-4 w-26 animate-pulse rounded-lg bg-gray-300" />
-        </div>
-      ) : (
-        isSuccess && (
-          <UserTable
-            users={users}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            editedUsers={editedUsers}
-            setEditedUsers={setEditedUsers}
-          />
-        )
-      )}
+      <UserTable
+        users={isSuccess ? users : []}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        editedUsers={editedUsers}
+        setEditedUsers={setEditedUsers}
+        isSuccess={isSuccess}
+        isPending={isPending}
+      />
     </div>
   );
 }

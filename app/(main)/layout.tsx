@@ -12,6 +12,8 @@ export default function RootLayout({
       <Header />
       <div className="pt-12" />
       {children}
+
+      {/* alert 발송 */}
       <ToastContainer
         position="bottom-right"
         autoClose={5000}

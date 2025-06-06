@@ -34,7 +34,7 @@ export default function McpTool({
   };
 
   return (
-    <div className="rounded-lg bg-gray-50 p-4">
+    <div className="rounded-lg bg-gray-50 p-4 md:col-span-2">
       <h2 className="mb-4 text-lg font-semibold">
         MCP(Model Context Protocol) 정보
       </h2>

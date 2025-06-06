@@ -14,6 +14,8 @@ export interface UserTableProps {
   setEditedUsers: React.Dispatch<
     React.SetStateAction<Record<string, UserListRes>>
   >;
+  isSuccess: boolean;
+  isPending: boolean;
 }
 
 export interface AddUserFormProps {

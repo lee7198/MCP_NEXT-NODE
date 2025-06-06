@@ -1,97 +1,40 @@
-'use client';
-
-import { server_management } from '@/app/services/api';
-import { useQuery } from '@tanstack/react-query';
+import React from 'react';
+import { HardDrivesIcon, UsersIcon, Robot } from '@phosphor-icons/react/ssr';
 import Link from 'next/link';
-import ServerList from './components/ServerList';
-import { useSocket } from '@/app/hooks/useSocket';
-import { useEffect, useState } from 'react';
-import { pingStatus, serverStatus } from '@/app/types';
 
-export default function SettingsPage() {
-  const [pingStatuses, setPingStatuses] = useState<Record<string, pingStatus>>(
-    {}
-  );
-  const [serverStatuses, setServerStatuses] = useState<
-    Record<string, serverStatus>
-  >({});
-
-  const { data: servers, isSuccess: isGetServers } = useQuery({
-    queryKey: ['server_list'],
-    queryFn: async () => server_management.getServers(),
-  });
-
-  const { clients, handleTestPing: pingTest } = useSocket();
-
-  const handleTestPing = (serverName: string) => {
-    setPingStatuses((prev) => ({ ...prev, [serverName]: 'loading' }));
-    pingTest();
-
-    setTimeout(() => {
-      setPingStatuses((prev) => ({ ...prev, [serverName]: 'success' }));
-      setTimeout(() => {
-        setPingStatuses((prev) => ({ ...prev, [serverName]: 'idle' }));
-      }, 500);
-    }, 1500);
-  };
-  useEffect(() => {
-    // 초기 상태
-    if (servers)
-      servers.forEach((server) => {
-        const isOnLine = clients.some(
-          (client) => client.clientId === server.SERVERNAME
-        );
-        setServerStatuses((prev) => ({
-          ...prev,
-          [server.SERVERNAME]: isOnLine ? 'success' : 'loading',
-        }));
-      });
-  }, [servers]);
-
-  // 클라이언트 갱신
-  useEffect(() => {
-    if (clients.length > 0) {
-      const client = clients[0];
-      if (client) {
-        setServerStatuses((prev) => ({
-          ...prev,
-          [client.clientId]: client ? 'success' : 'offline',
-        }));
-      }
-    }
-    if (servers)
-      servers.forEach((server) => {
-        if (clients.some((client) => client.clientId === server.SERVERNAME))
-          setServerStatuses((prev) => ({
-            ...prev,
-            [server.SERVERNAME]: 'success',
-          }));
-        else
-          setServerStatuses((prev) => ({
-            ...prev,
-            [server.SERVERNAME]: 'offline',
-          }));
-      });
-  }, [clients]);
-
+export default function Setting() {
+  const menuList = [
+    {
+      name: '사용자 관리',
+      path: '/settings/user_mng',
+      icon: <UsersIcon size={48} />,
+    },
+    {
+      name: '서버(클라이언트) 관리',
+      path: '/settings/servers',
+      icon: <HardDrivesIcon size={48} />,
+    },
+    {
+      name: 'MCP 마스터 관리',
+      path: '/settings/mcp_mng',
+      icon: <Robot size={48} />,
+    },
+  ];
   return (
-    <div className="container mx-auto flex flex-col gap-12 p-4">
-      <div>
-        <div className="mb-4 flex items-center justify-between">
-          <h1 className="text-2xl font-black">SERVER LIST</h1>
-          <Link href="/settings/new" className="px-2">
-            NEW
-          </Link>
-        </div>
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold">시스템 설정</h1>
 
-        <ServerList
-          servers={servers || []}
-          isGetServers={isGetServers}
-          pingStatuses={pingStatuses}
-          serverStatuses={serverStatuses}
-          handleTestPing={handleTestPing}
-          clients={clients}
-        />
+      <div className="grid grid-cols-1 gap-4 py-8 sm:grid-cols-2 lg:grid-cols-3">
+        {menuList.map((item) => (
+          <Link
+            href={item.path}
+            key={item.name}
+            className="grid cursor-pointer grid-cols-4 items-center rounded-lg border p-4 hover:bg-gray-200"
+          >
+            <div>{item.icon}</div>
+            <div className="col-span-3 text-xl font-bold">{item.name}</div>
+          </Link>
+        ))}
       </div>
     </div>
   );

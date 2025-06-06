@@ -24,6 +24,7 @@
     "express": "^5.1.0",
     "lts": "^2.0.0",
     "next": "15.3.2",
+    "next-auth": "^5.0.0-beta.28",
     "oci-objectstorage": "^2.109.0",
     "oci-secrets": "^2.109.0",
     "ollama": "^0.5.15",

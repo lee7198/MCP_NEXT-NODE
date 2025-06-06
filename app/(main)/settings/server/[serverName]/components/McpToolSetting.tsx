@@ -6,7 +6,7 @@ export default function McpToolSetting({
   isGetMcps,
 }: McpToolSettingProps) {
   return (
-    <div className="p-4 pt-0">
+    <div className="p-4 pt-0 md:col-span-2">
       <h2 className="mb-4 text-lg font-semibold">MCP Tool 설정</h2>
       <div className="flex flex-wrap gap-2">
         {isGetMcps && mcpTools ? (

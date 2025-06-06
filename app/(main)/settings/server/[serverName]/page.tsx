@@ -107,11 +107,11 @@ export default function ServerDetailPage({ params }: ServerDetailPageProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       <Link
-        href="/settings"
+        href="/settings/servers"
         className="mb-6 inline-flex items-center gap-2 text-gray-600 hover:text-gray-900"
       >
         <ArrowLeftIcon size={20} />
-        <span>설정으로 돌아가기</span>
+        <span>돌아가기</span>
       </Link>
 
       <div className="rounded-lg bg-white p-6 shadow-lg">
