@@ -25,8 +25,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const isLoggedIn = !!auth;
       const isApiRoute = request.nextUrl.pathname.startsWith('/api');
       const isAuthRoute = request.nextUrl.pathname.startsWith('/api/auth');
+      const isCheckUser = request.nextUrl.pathname.startsWith(
+        '/api/common/check_user'
+      );
 
-      if (isApiRoute && !isAuthRoute) {
+      if (isApiRoute && !isAuthRoute && !isCheckUser) {
         // 세션이 있는 경우 세션 기반 인증 허용
         if (isLoggedIn) return true;
 
@@ -42,7 +45,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         // Authorization 헤더가 있는 경우에만 Bearer 토큰 검증
         const authHeader = request.headers.get('authorization');
-        if (authHeader && !authHeader.startsWith('Bearer ')) {
+        const isValidBearer =
+          authHeader && authHeader.startsWith('Bearer ') && token;
+
+        // 토큰이 없거나 Bearer 형식이 아니면 거부
+        if (!isLoggedIn && !isValidBearer) {
           return NextResponse.json(
             { error: 'Bearer 토큰이 필요합니다.' },
             { status: 401 }

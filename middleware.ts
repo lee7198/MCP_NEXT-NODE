@@ -6,20 +6,31 @@ export default middleware(async (req) => {
   const isRoleMng = req.nextUrl.pathname.startsWith('/no_role');
 
   if (!isRoleMng) {
-    // 등록되지 않은 유저 확인
+    //  미등록 유저는 /no_role로 redirect
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
     if (token?.email) {
       const checkUserRes = await fetch(
-        `${req.nextUrl.origin}/api/common/check_user?email=${token.email}`
+        `${req.nextUrl.origin}/api/common/check_user?email=${token.email}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.jwt}`,
+          },
+        }
       );
-      const checkUserData = await checkUserRes.json();
 
-      if (!checkUserData.success) {
-        return NextResponse.redirect(new URL('/no_role', req.url));
+      if (!checkUserRes.ok) {
+        console.error(
+          'API 응답 에러:',
+          checkUserRes.status,
+          checkUserRes.statusText
+        );
+        const newUrl = new URL('/no_role', req.url);
+        return NextResponse.redirect(newUrl);
       }
     }
   }
-
+  // 로그인 안 된 사용자는 모두 root로 redirect
   if (!req.auth && req.nextUrl.pathname !== '/') {
     const newUrl = new URL('/', req.nextUrl.origin);
     return Response.redirect(newUrl);
@@ -27,5 +38,5 @@ export default middleware(async (req) => {
 });
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|api/auth).*)'],
 };

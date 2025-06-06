@@ -445,7 +445,7 @@ export async function getCheckUser(email: string) {
     );
 
     if (checkResult.rows && checkResult.rows[0].COUNT === 0)
-      return { success: false };
+      return Error('등록된 유저가 아닙니다.');
 
     return { success: true };
   } catch (err) {
