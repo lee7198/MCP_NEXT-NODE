@@ -124,7 +124,7 @@ export default function Chat() {
   }
 
   return (
-    <div className="mx-auto flex h-[calc(100svh-3rem)] max-w-6xl flex-col px-2 pb-8">
+    <div className="container mx-auto flex h-[calc(100svh-3rem)] flex-col px-2 pb-8">
       <div className="flex h-full flex-col gap-2 space-y-4 overflow-y-auto px-4">
         {isMessagesLoading ? (
           <LoadingResponse />
@@ -139,6 +139,10 @@ export default function Chat() {
             setReqState={setReqState}
           />
         )}
+        {/* TODO: 추천 요청 */}
+        {/* <div>
+          <h3>추천 요청 (최근 3개월 메세지 분석)</h3>
+        </div> */}
       </div>
       <ChatInput
         onSendMessage={handleSendMessage}

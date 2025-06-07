@@ -684,13 +684,20 @@ export const common_query_management = {
         { outFormat: oracledb.OUT_FORMAT_OBJECT }
       );
 
-      if (checkResult.rows && checkResult.rows[0].COUNT === 0)
-        return Error('등록된 유저가 아닙니다.');
+      if (checkResult.rows && checkResult.rows[0].COUNT === 0) {
+        throw new Error('등록된 유저가 아닙니다.');
+      }
+
+      await connection.execute(
+        'UPDATE USER_MST SET LAST_LOGIN_AT = SYSDATE WHERE EMAIL = :1',
+        [email],
+        { autoCommit: true }
+      );
 
       return { success: true };
     } catch (err) {
       console.error('유저 조회 중 오류 발생:', err);
-      throw new Error('유저 조회에 실패했습니다.');
+      throw err instanceof Error ? err : new Error('유저 조회에 실패했습니다.');
     } finally {
       await connection.close();
     }

@@ -216,7 +216,9 @@ export default function McpToolSetting({
       {/* tools parameter */}
       <div className="rounded-lg bg-gray-50 p-4 md:col-span-2">
         <div className="flex justify-between">
-          <h2 className="text-lg font-semibold">MCP Tool Parameter 정보</h2>
+          <h2 className="mb-2 text-lg font-semibold">
+            MCP Tool Parameter 정보
+          </h2>
           {Object.keys(editedParam).length > 0 && (
             <button
               onClick={handleBulkUpdate}
@@ -227,17 +229,17 @@ export default function McpToolSetting({
           )}
         </div>
         {/* grid header */}
-        <div className="grid grid-cols-8 items-center justify-center border-b p-2 text-sm">
-          <div className="row-span-2 text-center">No.</div>
-          <div className="col-span-7 text-center">Value</div>
-          <div className="col-span-5 text-center">설명</div>
+        <div className="grid grid-cols-8 items-center justify-center gap-1 border-b bg-gray-300 p-2 text-sm lg:grid-cols-12">
+          <div className="row-span-2 text-center lg:row-span-1">No.</div>
+          <div className="col-span-7 lg:col-span-4">Value</div>
+          <div className="col-span-5">설명</div>
           <div className="col-span-2 text-center">작업</div>
         </div>
-        <div className="grid grid-cols-8 items-center justify-center divide-y p-2 text-sm">
+        <div className="grid grid-cols-8 items-center justify-center divide-y text-sm lg:grid-cols-12">
           {paramPending || !paramSuccess ? (
-            <div className="col-span-8 grid grid-cols-8 items-center gap-1 p-2">
-              <div className="row-span-2 h-5 w-8 animate-pulse rounded-md bg-gray-300" />
-              <div className="col-span-7 h-5 w-72 animate-pulse rounded-md bg-gray-300" />
+            <div className="col-span-8 grid grid-cols-8 items-center gap-1 p-2 lg:col-span-12 lg:grid-cols-12">
+              <div className="row-span-2 h-5 w-8 animate-pulse rounded-md bg-gray-300 lg:row-span-1" />
+              <div className="col-span-7 h-5 w-72 animate-pulse rounded-md bg-gray-300 lg:col-span-4" />
               <div className="col-span-5 h-5 w-56 animate-pulse rounded-md bg-gray-300" />
               <div className="col-span-2 h-5 w-16 animate-pulse rounded-md bg-gray-300" />
             </div>
@@ -246,9 +248,9 @@ export default function McpToolSetting({
             toolParams.map((item) => (
               <div
                 key={item.ORDER_NO}
-                className="col-span-8 grid grid-cols-8 items-center gap-1 p-2"
+                className="col-span-8 grid grid-cols-8 items-center gap-1 p-2 lg:col-span-12 lg:grid-cols-12"
               >
-                <div className="row-span-2 text-center">
+                <div className="text-cente row-span-2 text-center lg:row-span-1">
                   {editedParam[item.ORDER_NO] ? (
                     <input
                       type="number"
@@ -261,7 +263,7 @@ export default function McpToolSetting({
                     item.ORDER_NO
                   )}
                 </div>
-                <div className="col-span-7 font-bold">
+                <div className="col-span-7 font-bold lg:col-span-4">
                   {editedParam[item.ORDER_NO] ? (
                     <input
                       type="text"
@@ -306,18 +308,12 @@ export default function McpToolSetting({
                       </button>
                     </div>
                   ) : (
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 lg:mx-auto lg:w-1/2">
                       <button
                         onClick={() => handleEditClick(item)}
                         className="w-full cursor-pointer rounded bg-gray-200 px-2 py-1 hover:bg-gray-300"
                       >
                         수정
-                      </button>
-                      <button
-                        onClick={() => handleDelete(item)}
-                        className="w-full cursor-pointer rounded bg-red-200 px-2 py-1 hover:bg-red-300"
-                      >
-                        삭제
                       </button>
                     </div>
                   )}
@@ -327,9 +323,9 @@ export default function McpToolSetting({
           )}
           {/* add parameter */}
           {isAddingNew ? (
-            <div className="col-span-8 grid grid-cols-8 items-center gap-2 bg-amber-50 px-2 py-4">
-              <div className="row-span-2 text-center">New</div>
-              <div className="col-span-7">
+            <div className="col-span-8 grid grid-cols-8 items-center justify-center gap-2 bg-amber-50 px-2 py-4 lg:col-span-12 lg:grid-cols-12">
+              <div className="row-span-2 text-center lg:row-span-1">New</div>
+              <div className="col-span-7 lg:col-span-4">
                 <input
                   type="text"
                   value={newParam.ARGUMENT || ''}
@@ -371,7 +367,7 @@ export default function McpToolSetting({
           ) : (
             <button
               onClick={handleAddNew}
-              className="col-span-8 mt-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-gray-200 p-2 hover:bg-gray-300"
+              className="col-span-8 mt-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-gray-200 p-2 hover:bg-gray-300 lg:col-span-12 lg:mx-auto lg:w-1/3"
             >
               Add <PlusIcon size={16} />
             </button>

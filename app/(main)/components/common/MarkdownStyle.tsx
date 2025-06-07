@@ -13,17 +13,22 @@ export default function MarkdownStyle({ input }: { input: string }) {
         table: ({ ...props }) => (
           <table
             {...props}
-            className="my-2 w-full text-left text-sm text-gray-500 rtl:text-right dark:text-gray-400"
+            className="my-2 w-full rounded-md text-left text-sm text-gray-500 rtl:text-right"
           />
         ),
         thead: ({ ...props }) => (
           <thead
             {...props}
-            className="rounded-lg bg-gray-200 text-xs text-gray-700 uppercase dark:bg-gray-700 dark:text-gray-400"
+            className="rounded-lg border-b bg-gray-200 text-xs text-gray-700 uppercase"
           />
         ),
-        th: ({ ...props }) => <th {...props} className="px-3 py-1" />,
-        td: ({ ...props }) => <td {...props} className="px-3 py-1" />,
+        tbody: ({ ...props }) => <tbody {...props} className="border-b" />,
+        th: ({ ...props }) => (
+          <th {...props} className="px-3 py-1 text-center" />
+        ),
+        td: ({ ...props }) => (
+          <td {...props} className="px-3 py-1 text-center" />
+        ),
         h1: ({ ...props }) => <h1 {...props} className="py-1 text-2xl" />,
         h2: ({ ...props }) => <h2 {...props} className="py-1 text-xl" />,
         h3: ({ ...props }) => <h3 {...props} className="py-1 text-lg" />,
