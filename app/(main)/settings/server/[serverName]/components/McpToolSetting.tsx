@@ -14,7 +14,6 @@ export default function McpToolSetting({
   const [editedParam, setEditedParam] = useState<Record<number, McpParamsRes>>(
     {}
   );
-  const [editingId, setEditingId] = useState<number | null>(null);
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [newParam, setNewParam] = useState<Partial<McpParamsRes>>({
     ARGUMENT: '',
@@ -42,7 +41,6 @@ export default function McpToolSetting({
         queryKey: ['mcpTools', serverId, settingTool],
       });
       toast.success('파라미터가 성공적으로 수정되었습니다.');
-      setEditingId(null);
       setEditedParam({});
     },
     onError: (error: Error) => {
@@ -84,28 +82,23 @@ export default function McpToolSetting({
     },
   });
 
-  useEffect(() => {
-    if (mcpTools) {
-      const filtedTool = mcpTools.filter((item) => item.USE_YON === 'Y');
-      if (filtedTool.length > 0) setSettingTool(filtedTool[0].TOOLNAME);
-    }
-  }, [mcpTools]);
-
-  useEffect(() => {
-    if (settingTool) refetch();
-  }, [settingTool]);
-
   const handleEditClick = (param: McpParamsRes) => {
-    setEditingId(param.ORDER_NO);
     setEditedParam((prev) => ({
       ...prev,
       [param.ORDER_NO]: { ...param },
     }));
   };
 
-  const handleCancel = () => {
-    setEditingId(null);
-    setEditedParam({});
+  const handleCancel = (orderNo?: number) => {
+    if (orderNo) {
+      setEditedParam((prev) => {
+        const newState = { ...prev };
+        delete newState[orderNo];
+        return newState;
+      });
+    } else {
+      setEditedParam({});
+    }
   };
 
   const handleInputChange = (
@@ -163,9 +156,26 @@ export default function McpToolSetting({
       };
       updateParamMutation.mutate(updatedParam);
     });
-    setEditingId(null);
     setEditedParam({});
   };
+
+  useEffect(() => {
+    if (mcpTools) {
+      const filtedTool = mcpTools.filter((item) => item.USE_YON === 'Y');
+      if (filtedTool.length > 1) {
+        const filtedTool2 = filtedTool.filter(
+          (item) => item.TOOLNAME === settingTool
+        );
+        if (filtedTool2.length === 0) setSettingTool(filtedTool[0].TOOLNAME);
+      } else {
+        if (filtedTool[0]) setSettingTool(filtedTool[0].TOOLNAME);
+      }
+    }
+  }, [mcpTools]);
+
+  useEffect(() => {
+    if (settingTool) refetch();
+  }, [settingTool]);
 
   return (
     <div className="flex flex-col gap-4 md:col-span-2">
@@ -217,26 +227,29 @@ export default function McpToolSetting({
           )}
         </div>
         {/* grid header */}
-        <div className="grid grid-cols-8 items-center justify-center gap-2 border-b p-2 text-sm">
+        <div className="grid grid-cols-8 items-center justify-center border-b p-2 text-sm">
           <div className="row-span-2 text-center">No.</div>
           <div className="col-span-7 text-center">Value</div>
           <div className="col-span-5 text-center">설명</div>
           <div className="col-span-2 text-center">작업</div>
         </div>
-        <div className="grid grid-cols-8 items-center justify-center gap-2 p-2 text-sm">
+        <div className="grid grid-cols-8 items-center justify-center divide-y p-2 text-sm">
           {paramPending || !paramSuccess ? (
-            <>
+            <div className="col-span-8 grid grid-cols-8 items-center gap-1 p-2">
               <div className="row-span-2 h-5 w-8 animate-pulse rounded-md bg-gray-300" />
               <div className="col-span-7 h-5 w-72 animate-pulse rounded-md bg-gray-300" />
               <div className="col-span-5 h-5 w-56 animate-pulse rounded-md bg-gray-300" />
               <div className="col-span-2 h-5 w-16 animate-pulse rounded-md bg-gray-300" />
-            </>
+            </div>
           ) : (
             toolParams &&
             toolParams.map((item) => (
-              <React.Fragment key={item.ORDER_NO}>
+              <div
+                key={item.ORDER_NO}
+                className="col-span-8 grid grid-cols-8 items-center gap-1 p-2"
+              >
                 <div className="row-span-2 text-center">
-                  {editingId === item.ORDER_NO ? (
+                  {editedParam[item.ORDER_NO] ? (
                     <input
                       type="number"
                       value={editedParam[item.ORDER_NO]?.ORDER_NO || ''}
@@ -248,8 +261,8 @@ export default function McpToolSetting({
                     item.ORDER_NO
                   )}
                 </div>
-                <div className="col-span-7">
-                  {editingId === item.ORDER_NO ? (
+                <div className="col-span-7 font-bold">
+                  {editedParam[item.ORDER_NO] ? (
                     <input
                       type="text"
                       value={editedParam[item.ORDER_NO]?.ARGUMENT || ''}
@@ -262,8 +275,8 @@ export default function McpToolSetting({
                     item.ARGUMENT
                   )}
                 </div>
-                <div className="col-span-5">
-                  {editingId === item.ORDER_NO ? (
+                <div className="col-span-5 text-gray-700 italic">
+                  {editedParam[item.ORDER_NO] ? (
                     <input
                       type="text"
                       value={editedParam[item.ORDER_NO]?.COMMENT || ''}
@@ -277,7 +290,7 @@ export default function McpToolSetting({
                   )}
                 </div>
                 <div className="col-span-2">
-                  {editingId === item.ORDER_NO ? (
+                  {editedParam[item.ORDER_NO] ? (
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleDelete(item)}
@@ -286,7 +299,7 @@ export default function McpToolSetting({
                         삭제
                       </button>
                       <button
-                        onClick={handleCancel}
+                        onClick={() => handleCancel(item.ORDER_NO)}
                         className="w-full cursor-pointer rounded bg-gray-300 px-2 py-1 hover:bg-gray-400"
                       >
                         취소
@@ -300,15 +313,21 @@ export default function McpToolSetting({
                       >
                         수정
                       </button>
+                      <button
+                        onClick={() => handleDelete(item)}
+                        className="w-full cursor-pointer rounded bg-red-200 px-2 py-1 hover:bg-red-300"
+                      >
+                        삭제
+                      </button>
                     </div>
                   )}
                 </div>
-              </React.Fragment>
+              </div>
             ))
           )}
           {/* add parameter */}
           {isAddingNew ? (
-            <div className="col-span-8 grid grid-cols-8 items-center gap-2">
+            <div className="col-span-8 grid grid-cols-8 items-center gap-2 bg-amber-50 px-2 py-4">
               <div className="row-span-2 text-center">New</div>
               <div className="col-span-7">
                 <input
@@ -317,7 +336,7 @@ export default function McpToolSetting({
                   onChange={(e) =>
                     handleNewInputChange('ARGUMENT', e.target.value)
                   }
-                  className="w-full rounded border bg-amber-50 px-1"
+                  className="w-full rounded border px-1"
                   placeholder="Value 입력"
                 />
               </div>
@@ -328,7 +347,7 @@ export default function McpToolSetting({
                   onChange={(e) =>
                     handleNewInputChange('COMMENT', e.target.value)
                   }
-                  className="w-full rounded border bg-amber-50 px-1"
+                  className="w-full rounded border px-1"
                   placeholder="설명 입력"
                 />
               </div>
@@ -352,7 +371,7 @@ export default function McpToolSetting({
           ) : (
             <button
               onClick={handleAddNew}
-              className="col-span-8 flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-gray-200 p-2 hover:bg-gray-300"
+              className="col-span-8 mt-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-gray-200 p-2 hover:bg-gray-300"
             >
               Add <PlusIcon size={16} />
             </button>

@@ -11,14 +11,6 @@ export const UserTable: React.FC<UserTableProps> = ({
 }) => {
   return (
     <div className="overflow-auto rounded-lg bg-white shadow">
-      {/* Grid Header */}
-      <div className="grid grid-cols-8 gap-4 bg-gray-50 p-4 text-xs font-medium tracking-wider text-gray-500 uppercase">
-        <div className="col-span-2">이름</div>
-        <div className="col-span-2">이메일</div>
-        <div>사용유무</div>
-        <div className="col-span-2">마지막 접속시간</div>
-      </div>
-
       {isPending ? (
         <div className="grid grid-cols-4 gap-4 p-4">
           <div className="my-1 h-4 w-12 animate-pulse rounded-lg bg-gray-300" />
@@ -90,7 +82,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                     </span>
                   )}
                 </div>
-                <div className="col-span-2 flex items-center justify-between">
+                <div className="flex items-center justify-between">
                   <div className="text-sm text-gray-500">
                     {currentUser.LAST_LOGIN_AT &&
                       currentUser.LAST_LOGIN_AT.toLocaleString('ko-KR', {
@@ -98,7 +90,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                       })}
                   </div>
                 </div>
-                <div className="flex justify-between gap-2">
+                <div className="col-span-2 flex justify-between gap-2">
                   <button
                     onClick={() => onEdit(currentUser)}
                     className="w-full cursor-pointer rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600 hover:bg-gray-200"

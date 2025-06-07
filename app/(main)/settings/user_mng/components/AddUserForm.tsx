@@ -58,8 +58,8 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
           <option value="N">비활성</option>
         </select>
       </div>
-      <div className="col-span-2 flex items-center justify-end gap-2"></div>
-      <div className="flex justify-between gap-2">
+      <div className="flex items-center justify-end gap-2"></div>
+      <div className="col-span-2 flex justify-between gap-2">
         <button
           onClick={onCancel}
           className="w-full cursor-pointer rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600 hover:bg-gray-200"
