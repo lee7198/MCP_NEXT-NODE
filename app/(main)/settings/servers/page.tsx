@@ -7,6 +7,7 @@ import ServerList from '../components/ServerList';
 import { useSocket } from '@/app/hooks/useSocket';
 import { useEffect, useState } from 'react';
 import { pingStatus, serverStatus } from '@/app/types';
+import { CaretLeftIcon } from '@phosphor-icons/react/dist/ssr';
 
 export default function Servers() {
   const [pingStatuses, setPingStatuses] = useState<Record<string, pingStatus>>(
@@ -78,8 +79,16 @@ export default function Servers() {
     <div className="container mx-auto flex flex-col gap-12 p-6">
       <div>
         <div className="mb-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold">서버(클라이언트) 관리</h1>
-          <Link href="/settings/new" className="px-2">
+          <h1 className="flex items-center gap-2 text-2xl font-bold">
+            <Link href="/settings">
+              <CaretLeftIcon size={24} weight="bold" />
+            </Link>
+            <span>서버(클라이언트) 관리</span>
+          </h1>
+          <Link
+            href="/settings/new"
+            className="cursor-pointer rounded-md bg-gray-600 px-4 py-2 text-xs font-medium text-white hover:bg-gray-700"
+          >
             NEW
           </Link>
         </div>

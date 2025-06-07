@@ -80,4 +80,5 @@ export interface McpToolProps {
 export interface McpToolSettingProps {
   isGetMcps: boolean;
   mcpTools: McpRes[] | undefined;
+  serverId: string;
 }

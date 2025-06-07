@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import { UserListRes } from '@/app/types';
 import { AddUserForm } from './components/AddUserForm';
 import { UserTable } from './components/UserTable';
+import Link from 'next/link';
+import { CaretLeftIcon } from '@phosphor-icons/react/dist/ssr';
 
 export default function User_mng() {
   const queryClient = useQueryClient();
@@ -111,7 +113,12 @@ export default function User_mng() {
   return (
     <div className="container mx-auto p-6">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">사용자 관리</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-bold">
+          <Link href="/settings">
+            <CaretLeftIcon size={24} weight="bold" />
+          </Link>
+          <span>사용자 관리</span>
+        </h1>
         <div className="flex gap-2">
           {Object.keys(editedUsers).length === 0 && !isAddingUser && (
             <button

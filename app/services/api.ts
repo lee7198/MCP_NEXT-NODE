@@ -2,6 +2,7 @@ import {
   AIChatRes,
   AIResponse,
   ChatReq,
+  McpParamsRes,
   McpRes,
   MessagesResponse,
   SaveAIResponseRes,
@@ -137,7 +138,7 @@ export const mcp_management = {
   },
   updateMcpTools: async (tools: McpToolRes[]) => {
     const response = await fetch(`${API_BASE_URL}/mcp/update-mcp-tools`, {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -201,6 +202,61 @@ export const mcp_management = {
     });
     if (!response.ok) {
       throw new Error('MCP 툴 사용 현황 업데이트 실패');
+    }
+    return response.json();
+  },
+
+  getMcpToolParams: async (
+    SERVERNAME: string,
+    TOOLNAME: string
+  ): Promise<McpParamsRes[]> => {
+    const response = await fetch(
+      `${API_BASE_URL}/mcp/get-mcp-tool-params?SERVERNAME=${SERVERNAME}&TOOLNAME=${TOOLNAME}`
+    );
+    if (!response.ok) {
+      throw new Error('MCP 툴 사용 현황 조회 실패');
+    }
+    return response.json();
+  },
+
+  updateMcpToolParams: async (param: McpParamsRes) => {
+    const response = await fetch(`${API_BASE_URL}/mcp/update-mcp-tool-params`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(param),
+    });
+    if (!response.ok) {
+      throw new Error('MCP 툴 파라미터 업데이트 실패');
+    }
+    return response.json();
+  },
+
+  addMcpToolParam: async (param: Partial<McpParamsRes>) => {
+    const response = await fetch(`${API_BASE_URL}/mcp/add-mcp-tool-param`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(param),
+    });
+    if (!response.ok) {
+      throw new Error('MCP 툴 파라미터 추가 실패');
+    }
+    return response.json();
+  },
+
+  deleteMcpToolParams: async (param: McpParamsRes) => {
+    const response = await fetch(`${API_BASE_URL}/mcp/delete-mcp-tool-params`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(param),
+    });
+    if (!response.ok) {
+      throw new Error('MCP 툴 파라미터 삭제 실패');
     }
     return response.json();
   },

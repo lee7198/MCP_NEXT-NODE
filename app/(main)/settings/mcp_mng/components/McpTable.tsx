@@ -41,7 +41,7 @@ export const McpTable: React.FC<McpTableProps> = ({
                           ...prev,
                           [tool.TOOLNAME]: {
                             ...currentTool,
-                            TOOL_COMMENT: e.target.value,
+                            COMMENT: e.target.value,
                           },
                         }))
                       }

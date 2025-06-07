@@ -1,25 +1,24 @@
-import { NextResponse } from 'next/server';
-import { sql } from '@vercel/postgres';
+import { mcp_query_management } from '@/app/lib/db/queries';
+import { McpToolRes } from '@/app/types/management';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request: Request) {
+export async function PUT(request: NextRequest) {
   try {
-    const { tools } = await request.json();
+    const { tools }: { tools: McpToolRes[] } = await request.json();
 
-    for (const tool of tools) {
-      await sql`
-        UPDATE MCP_TOOL_MST
-        SET TOOLNAME = ${tool.TOOLNAME},
-            TOOL_COMMENT = ${tool.TOOL_COMMENT}
-        WHERE TOOLNAME = ${tool.TOOLNAME}
-      `;
+    if (!tools || !Array.isArray(tools)) {
+      return NextResponse.json(
+        { error: 'tools 배열은 필수입니다.' },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Error updating MCP tools:', error);
-    return NextResponse.json(
-      { error: 'Failed to update MCP tools' },
-      { status: 500 }
-    );
+    mcp_query_management.updateMcpTools(tools);
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (err) {
+    console.error('사용자 정보 수정 실패:', err);
+    const errorMessage =
+      err instanceof Error ? err.message : '사용자 정보 수정 실패';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

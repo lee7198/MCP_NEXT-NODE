@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 import { McpToolRes } from '@/app/types/management';
 import { AddMcpForm } from './components/AddMcpForm';
 import { McpTable } from './components/McpTable';
+import Link from 'next/link';
+import { CaretLeftIcon } from '@phosphor-icons/react/dist/ssr';
 
 export default function Mcp_mng() {
   const [editedTools, setEditedTools] = useState<Record<string, McpToolRes>>(
@@ -30,8 +32,8 @@ export default function Mcp_mng() {
       return mcp_management.updateMcpTools(tools);
     },
     onSuccess: () => {
-      toast.success('성공적으로 수정되었습니다.');
       refetchTools();
+      toast.success('성공적으로 수정되었습니다.');
       setEditedTools({});
     },
   });
@@ -41,16 +43,14 @@ export default function Mcp_mng() {
       return mcp_management.addMcpTool(tool as McpToolRes);
     },
     onSuccess: () => {
-      toast.success('Tool이 성공적으로 추가되었습니다.');
       refetchTools();
+      toast.success('Tool이 성공적으로 추가되었습니다.');
       setIsAddingTool(false);
     },
     onError: (error: Error) => {
-      if (error.message === '이미 존재하는 Tool입니다.') {
+      if (error.message === '이미 존재하는 Tool입니다.')
         toast.error('이미 존재하는 Tool입니다.');
-      } else {
-        toast.error('Tool 추가에 실패했습니다.');
-      }
+      else toast.error('Tool 추가에 실패했습니다.');
     },
   });
 
@@ -64,11 +64,9 @@ export default function Mcp_mng() {
       setEditedTools({});
     },
     onError: (error: Error) => {
-      if (error.message === '존재하지 않는 Tool입니다.') {
+      if (error.message === '존재하지 않는 Tool입니다.')
         toast.error('존재하지 않는 Tool입니다.');
-      } else {
-        toast.error('Tool 삭제에 실패했습니다.');
-      }
+      else toast.error('Tool 삭제에 실패했습니다.');
     },
   });
 
@@ -89,9 +87,7 @@ export default function Mcp_mng() {
 
   const handleSave = () => {
     const toolsToUpdate = Object.values(editedTools);
-    if (toolsToUpdate.length > 0) {
-      updateMcpToolMutation.mutate(toolsToUpdate);
-    }
+    if (toolsToUpdate.length > 0) updateMcpToolMutation.mutate(toolsToUpdate);
   };
 
   const handleAddTool = (tool: Partial<McpToolRes>) => {
@@ -103,15 +99,20 @@ export default function Mcp_mng() {
   };
 
   const handleDelete = (toolName: string) => {
-    if (window.confirm('정말로 이 Tool을 삭제하시겠습니까?')) {
+    if (window.confirm('정말로 이 Tool을 삭제하시겠습니까?'))
       deleteMcpToolMutation.mutate(toolName);
-    }
   };
 
   return (
     <div className="container mx-auto p-6">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">MCP 마스터 관리</h1>
+        {' '}
+        <h1 className="flex items-center gap-2 text-2xl font-bold">
+          <Link href="/settings">
+            <CaretLeftIcon size={24} weight="bold" />
+          </Link>
+          <span>MCP 마스터 관리</span>
+        </h1>
         <div className="flex gap-2">
           {Object.keys(editedTools).length === 0 && !isAddingTool && (
             <button

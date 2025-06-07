@@ -150,7 +150,11 @@ export default function ServerDetailPage({ params }: ServerDetailPageProps) {
             isGetMcps={isGetMcps}
             mcpTools={mcpTools}
           />
-          <McpToolSetting mcpTools={mcpTools} isGetMcps={isGetMcps} />
+          <McpToolSetting
+            serverId={resolvedParams.serverName}
+            mcpTools={mcpTools}
+            isGetMcps={isGetMcps}
+          />
         </div>
       </div>
     </div>

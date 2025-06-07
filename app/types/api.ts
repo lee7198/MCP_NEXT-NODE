@@ -48,3 +48,11 @@ export interface UserListRes {
   LAST_LOGIN_AT: Date;
   ROLE: string;
 }
+
+export interface McpParamsRes {
+  SERVERNAME: string;
+  TOOLNAME: string;
+  ARGUMENT: string;
+  ORDER_NO: number;
+  COMMENT: string;
+}

@@ -2,6 +2,7 @@ import { getOracleConnection } from '@/app/lib/db/connection';
 import oracledb from 'oracledb';
 import { UserListRes } from '@/app/types';
 import { McpToolRes } from '@/app/types/management';
+import { McpParamsRes } from '@/app/types/api';
 
 // 메시지 관리 관련 쿼리
 export const message_query_management = {
@@ -395,6 +396,158 @@ export const mcp_query_management = {
     } catch (err) {
       console.error('tool 삭제 중 오류 발생:', err);
       throw err instanceof Error ? err : new Error('tool 삭제에 실패했습니다.');
+    } finally {
+      await connection.close();
+    }
+  },
+
+  async updateMcpTools(mcpList: Partial<McpToolRes>[]) {
+    const connection = await getOracleConnection();
+    try {
+      for (const mcp of mcpList) {
+        if (mcp.TOOLNAME && mcp.COMMENT) {
+          await connection.execute(
+            'UPDATE MCP_TOOL_MST SET "COMMENT" = :1 WHERE TOOLNAME = :2',
+            [mcp.COMMENT, mcp.TOOLNAME],
+            { autoCommit: true }
+          );
+        }
+      }
+      return { success: true };
+    } catch (err) {
+      console.error('tool 정보 수정 중 오류 발생:', err);
+      throw err instanceof Error
+        ? err
+        : new Error('tool 정보 수정에 실패했습니다.');
+    } finally {
+      await connection.close();
+    }
+  },
+
+  async getMcpToolParams(serverName: string, toolName: string) {
+    const connection = await getOracleConnection();
+    try {
+      const sql = `SELECT * FROM MCP_TOOL_USAGE_DTL 
+                   WHERE SERVERNAME = :1 AND TOOLNAME = :2 
+                   ORDER BY ORDER_NO ASC`;
+
+      const result = await connection.execute(sql, [serverName, toolName], {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      });
+
+      if (!result.rows || result.rows.length === 0) {
+        return [];
+      }
+
+      return result.rows;
+    } catch (err) {
+      console.error('MCP Params 조회 중 오류 발생:', err);
+      throw new Error('MCP Params 조회에 실패했습니다.');
+    } finally {
+      await connection.close();
+    }
+  },
+
+  async updateMcpToolParams(param: McpParamsRes) {
+    const connection = await getOracleConnection();
+    try {
+      // ORDER_NO가 변경되는 경우 중복 체크
+      const checkResult = await connection.execute(
+        `SELECT COUNT(*) as count 
+         FROM MCP_TOOL_USAGE_DTL 
+         WHERE SERVERNAME = :1 
+         AND TOOLNAME = :2 
+         AND ORDER_NO = :3 
+         AND ORDER_NO != :4`,
+        [param.SERVERNAME, param.TOOLNAME, param.ORDER_NO, param.ORDER_NO],
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+
+      if (checkResult.rows && checkResult.rows[0].COUNT > 0) {
+        throw new Error('이미 존재하는 순서 번호입니다.');
+      }
+
+      await connection.execute(
+        `UPDATE MCP_TOOL_USAGE_DTL 
+         SET ARGUMENT = :1, "COMMENT" = :2, ORDER_NO = :3
+         WHERE SERVERNAME = :4 AND TOOLNAME = :5 AND ORDER_NO = :6`,
+        [
+          param.ARGUMENT,
+          param.COMMENT,
+          param.ORDER_NO,
+          param.SERVERNAME,
+          param.TOOLNAME,
+          param.ORDER_NO,
+        ],
+        { autoCommit: true }
+      );
+      return { success: true };
+    } catch (err) {
+      console.error('MCP 파라미터 수정 중 오류 발생:', err);
+      if (
+        err instanceof Error &&
+        err.message === '이미 존재하는 순서 번호입니다.'
+      ) {
+        throw err;
+      }
+      throw new Error('MCP 파라미터 수정에 실패했습니다.');
+    } finally {
+      await connection.close();
+    }
+  },
+
+  async addMcpToolParam(param: Partial<McpParamsRes>) {
+    const connection = await getOracleConnection();
+    try {
+      // 현재 최대 ORDER_NO 조회
+      const maxOrderResult = await connection.execute(
+        `SELECT NVL(MAX(ORDER_NO), 0) as max_order 
+         FROM MCP_TOOL_USAGE_DTL 
+         WHERE SERVERNAME = :1 AND TOOLNAME = :2`,
+        [param.SERVERNAME, param.TOOLNAME],
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+
+      const newOrderNo = (maxOrderResult.rows?.[0]?.MAX_ORDER || 0) + 1;
+
+      await connection.execute(
+        `INSERT INTO MCP_TOOL_USAGE_DTL 
+         (SERVERNAME, TOOLNAME, ARGUMENT, ORDER_NO, "COMMENT") 
+         VALUES (:1, :2, :3, :4, :5)`,
+        [
+          param.SERVERNAME,
+          param.TOOLNAME,
+          param.ARGUMENT,
+          newOrderNo,
+          param.COMMENT,
+        ],
+        { autoCommit: true }
+      );
+
+      return { success: true, orderNo: newOrderNo };
+    } catch (err) {
+      console.error('MCP 파라미터 추가 중 오류 발생:', err);
+      throw new Error('MCP 파라미터 추가에 실패했습니다.');
+    } finally {
+      await connection.close();
+    }
+  },
+
+  async deleteMcpToolParams(param: McpParamsRes) {
+    const connection = await getOracleConnection();
+    try {
+      await connection.execute(
+        `DELETE FROM MCP_TOOL_USAGE_DTL 
+         WHERE SERVERNAME = :1 
+         AND TOOLNAME = :2 
+         AND ORDER_NO = :3`,
+        [param.SERVERNAME, param.TOOLNAME, param.ORDER_NO],
+        { autoCommit: true }
+      );
+      return { success: true };
+    } catch (err) {
+      console.error('MCP 파라미터 삭제 중 오류 발생:', err);
+      throw new Error('MCP 파라미터 삭제에 실패했습니다.');
     } finally {
       await connection.close();
     }
