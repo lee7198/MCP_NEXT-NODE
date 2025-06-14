@@ -15,7 +15,6 @@ import {
   SaveAIResponseRes,
   SaveChatRes,
 } from '@/app/types';
-import ChatInput from '@/app/(main)/chat/components/ChatInput';
 import MessageList from '@/app/(main)/chat/components/MessageList';
 import Spinner from '@/app/(main)/components/common/Spinner';
 import { useUserStore } from '@/app/store/userStore';
@@ -24,6 +23,7 @@ import LoadingResponse from './components/LoadingResponse';
 import ErrorResponse from './components/ErrorResponse';
 import { initReqState } from '@/app/lib/common';
 import { useSession } from 'next-auth/react';
+import ChatInputSection from '@/app/(main)/chat/components/ChatInput';
 
 export default function Chat() {
   const [isMounted, setIsMounted] = useState(false);
@@ -93,6 +93,7 @@ export default function Chat() {
         success: true,
         messageId: resAI.id,
         content: resAI.message.content,
+        total_duration: resAI.total_duration,
       });
       setReqState((prev) => ({
         ...prev,
@@ -169,7 +170,7 @@ export default function Chat() {
           </div>
         )}
       </div>
-      <ChatInput
+      <ChatInputSection
         onSendMessage={handleSendMessage}
         isDisabled={
           saveMessageMutation.isPending ||

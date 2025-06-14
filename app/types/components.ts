@@ -39,18 +39,18 @@ export interface AIReqState {
   isAIResSave: boolean;
 }
 
-export type serverStatus = 'offline' | 'loading' | 'success';
-export type pingStatus = 'idle' | 'loading' | 'success';
+export type serverStatusType = 'offline' | 'loading' | 'success';
+export type pingStatusType = 'idle' | 'loading' | 'success';
 export interface StatusPingProps {
-  status: serverStatus;
+  status: serverStatusType;
   size?: number;
 }
 
 export interface ServerCardProps {
   serverName: string;
-  serverStatus: serverStatus;
+  serverStatus: serverStatusType;
   client?: ClientInfo;
-  pingStatus: pingStatus;
+  pingStatus: pingStatusType;
   onTestPing: (serverName: string) => void;
 }
 
@@ -61,15 +61,15 @@ export interface ServerCardSkeletonProps {
 export interface ServerCardWrapperProps {
   serverName: string;
   onTestPing: (serverName: string) => void;
-  pingStatus: pingStatus;
+  pingStatus: pingStatusType;
 }
 
 export interface ServerListProps {
   clients: ClientInfo[];
   servers: ServerRes[];
   isGetServers: boolean;
-  serverStatuses: Record<string, serverStatus>;
-  pingStatuses: Record<string, pingStatus>;
+  serverStatuses: Record<string, serverStatusType>;
+  pingStatuses: Record<string, pingStatusType>;
   handleTestPing: (serverName: string) => void;
 }
 
@@ -83,4 +83,30 @@ export interface McpToolSettingProps {
   isGetMcps: boolean;
   mcpTools: McpRes[] | undefined;
   serverId: string;
+}
+
+export interface McpSettingsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  selectedServer: string;
+  onServerSelect: (serverId: string) => void;
+  onClearSelection: () => void;
+  servers: ServerRes[] | undefined;
+  serverStatuses: Record<string, serverStatusType>;
+  mcps: McpRes[] | undefined;
+  isMcpParamsPending: boolean;
+}
+
+export interface ServerStatusProps {
+  isPending: boolean;
+  isSuccess: boolean;
+}
+
+export interface MessageInputProps {
+  message: string;
+  setMessage: (message: string) => void;
+  onSendMessage: () => void;
+  isDisabled: boolean;
+  textareaRef: React.RefObject<HTMLTextAreaElement | null>;
+  boxHeight: number;
 }

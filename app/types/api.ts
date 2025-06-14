@@ -16,6 +16,7 @@ export interface SaveChatRes {
   success: boolean;
   content: string;
   USER_ID: string;
+  total_duration: number;
 }
 
 export interface AIChatRes extends ChatResponse {

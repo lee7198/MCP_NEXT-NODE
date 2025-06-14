@@ -40,4 +40,11 @@ export interface SaveAIResponseRes {
   success: boolean;
   messageId: number;
   content: string;
+  total_duration: number;
+}
+
+export interface DurationData {
+  USERNAME: string;
+  CREATED_AT: Date;
+  TOTAL_DURATION: number;
 }

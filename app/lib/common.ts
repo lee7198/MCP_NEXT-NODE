@@ -13,6 +13,7 @@ export const initReqState = {
 };
 
 export const pages = [
+  { name: 'main', path: '/' },
   { name: 'chat', path: '/chat' },
   { name: 'settings', path: '/settings' },
 ];

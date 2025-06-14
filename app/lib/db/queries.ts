@@ -1,6 +1,6 @@
 import { getOracleConnection } from '@/app/lib/db/connection';
 import oracledb from 'oracledb';
-import { UserListRes } from '@/app/types';
+import { DurationData, UserListRes } from '@/app/types';
 import { McpToolRes } from '@/app/types/management';
 import { McpParamsRes } from '@/app/types/api';
 
@@ -79,11 +79,15 @@ export const message_query_management = {
   },
 
   // AI 응답 메시지 저장
-  async saveAIResponse(messageId: number, content: string) {
+  async saveAIResponse(
+    messageId: number,
+    content: string,
+    total_duration: number
+  ) {
     const connection = await getOracleConnection();
     try {
-      const sql = `INSERT INTO AI_RESPONSES (message_id, content, created_at) 
-                   VALUES (:messageId, :content, SYSDATE) 
+      const sql = `INSERT INTO AI_RESPONSES (message_id, content, created_at, total_duration) 
+                   VALUES (:messageId, :content, SYSDATE, :total_duration) 
                    RETURNING id INTO :id`;
       const result = await connection.execute(
         sql,
@@ -91,6 +95,7 @@ export const message_query_management = {
           messageId,
           content,
           id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+          total_duration,
         },
         { autoCommit: true }
       );
@@ -127,6 +132,41 @@ export const message_query_management = {
     } catch (err) {
       console.error('AI 응답 조회 중 오류 발생:', err);
       throw new Error('AI 응답 조회에 실패했습니다.');
+    } finally {
+      await connection.close();
+    }
+  },
+  async getMessagesDuration(): Promise<DurationData[]> {
+    const connection = await getOracleConnection();
+    try {
+      const sql = `
+SELECT 
+	um.USERNAME,
+	ar.CREATED_AT,
+	ar.TOTAL_DURATION
+FROM
+	CHAT_MESSAGES cm,
+	AI_RESPONSES  ar,
+	USER_MST um 
+WHERE
+	cm.USER_ID = um.EMAIL 
+	AND cm.ID = ar.MESSAGE_ID
+    AND ar.CREATED_AT >= ADD_MONTHS(SYSDATE, -1)
+ORDER BY ar.CREATED_AT DESC`;
+
+      const result = await connection.execute(
+        sql,
+        {},
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+
+      if (!result.rows || result.rows.length === 0) {
+        return [];
+      }
+      return result.rows;
+    } catch (err) {
+      console.error('메세지 응답시간 조회 중 오류 발생:', err);
+      throw new Error('메세지 응답시간 조회에 실패했습니다.');
     } finally {
       await connection.close();
     }

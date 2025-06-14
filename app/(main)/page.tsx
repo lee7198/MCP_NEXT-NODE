@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Dashboard from './components/dashboard';
 
 export default function Home() {
   const { data: session } = useSession();
@@ -18,6 +19,7 @@ export default function Home() {
         <h1 className="text-center text-7xl font-black">
           MCP 통합 관리 SYSTEM
         </h1>
+        <Dashboard />
       </div>
     </div>
   );

@@ -6,15 +6,15 @@ import Link from 'next/link';
 import ServerList from '../components/ServerList';
 import { useSocket } from '@/app/hooks/useSocket';
 import { useEffect, useState } from 'react';
-import { pingStatus, serverStatus } from '@/app/types';
+import { pingStatusType, serverStatusType } from '@/app/types';
 import { CaretLeftIcon } from '@phosphor-icons/react/dist/ssr';
 
 export default function Servers() {
-  const [pingStatuses, setPingStatuses] = useState<Record<string, pingStatus>>(
-    {}
-  );
+  const [pingStatuses, setPingStatuses] = useState<
+    Record<string, pingStatusType>
+  >({});
   const [serverStatuses, setServerStatuses] = useState<
-    Record<string, serverStatus>
+    Record<string, serverStatusType>
   >({});
 
   const { data: servers, isSuccess: isGetServers } = useQuery({
@@ -35,6 +35,7 @@ export default function Servers() {
       }, 500);
     }, 1500);
   };
+
   useEffect(() => {
     // 초기 상태
     if (servers)

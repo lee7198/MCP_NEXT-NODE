@@ -13,7 +13,12 @@ export async function POST(req: Request) {
       messages: [{ role: 'user', content: prompt }],
     });
 
-    return NextResponse.json({ ...res, USER_ID, id });
+    return NextResponse.json({
+      ...res,
+      USER_ID,
+      id,
+      total_duration: res.total_duration,
+    });
   } catch {
     return NextResponse.json(
       { error: 'AI 응답 생성 중 오류가 발생했습니다.' },

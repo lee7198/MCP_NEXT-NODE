@@ -2,6 +2,7 @@ import {
   AIChatRes,
   AIResponse,
   ChatReq,
+  DurationData,
   McpParamsRes,
   McpRes,
   MessagesResponse,
@@ -91,6 +92,14 @@ export const message_management = {
     );
     if (!res.ok) throw new Error('AI 응답 조회 실패');
     return res.json();
+  },
+
+  // ai 응답 시간 조회
+  getMessageDuration: async (): Promise<DurationData[]> => {
+    const response = await fetch(`${API_BASE_URL}/message/get-durations`);
+
+    if (!response.ok) throw new Error('서버 정보 수정 실패');
+    return response.json();
   },
 };
 

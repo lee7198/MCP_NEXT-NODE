@@ -9,7 +9,7 @@ import { GoogleLogoIcon } from '@phosphor-icons/react/dist/ssr';
 import { signIn, signOut, useSession } from 'next-auth/react';
 
 const Header = React.memo(function Header() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [openHover, setOpenHover] = useState(false);
 
   return (
@@ -17,7 +17,12 @@ const Header = React.memo(function Header() {
       <div className="container mx-auto flex h-12 w-full items-center justify-between gap-2 px-4">
         {/* links */}
 
-        {session?.user ? (
+        {status === 'loading' ? (
+          <div className="flex w-full items-center justify-between">
+            <div />
+            <div className="size-8 animate-pulse rounded-full bg-gray-300" />
+          </div>
+        ) : session?.user ? (
           <>
             <div className="flex gap-4 uppercase">
               {pages.map((item) => (

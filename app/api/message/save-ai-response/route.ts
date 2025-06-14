@@ -3,7 +3,7 @@ import { message_query_management } from '@/app/lib/db/queries';
 
 export async function POST(req: NextRequest) {
   try {
-    const { messageId, content } = await req.json();
+    const { messageId, content, total_duration } = await req.json();
     if (!messageId || !content) {
       return NextResponse.json(
         { error: 'messageId와 content는 필수입니다.' },
@@ -12,7 +12,8 @@ export async function POST(req: NextRequest) {
     }
     const responseId = await message_query_management.saveAIResponse(
       messageId,
-      content
+      content,
+      total_duration
     );
     return NextResponse.json({
       success: true,
