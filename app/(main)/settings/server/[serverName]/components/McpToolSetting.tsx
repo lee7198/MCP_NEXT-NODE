@@ -215,10 +215,8 @@ export default function McpToolSetting({
       </div>
       {/* tools parameter */}
       <div className="rounded-lg bg-gray-50 p-4 md:col-span-2">
-        <div className="flex justify-between">
-          <h2 className="mb-2 text-lg font-semibold">
-            MCP Tool Parameter 정보
-          </h2>
+        <div className="mb-2 flex justify-between">
+          <h2 className="text-lg font-semibold">MCP Tool Parameter 정보</h2>
           {Object.keys(editedParam).length > 0 && (
             <button
               onClick={handleBulkUpdate}

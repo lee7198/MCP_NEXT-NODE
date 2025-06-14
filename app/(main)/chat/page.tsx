@@ -91,12 +91,12 @@ export default function Chat() {
     },
   });
 
-  useEffect(() => {
-    // 가장 하단 위치로 스크롤 (메세지 불러올때, AI 응답 받을 때)
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [req_data, reqState]);
+  // useEffect(() => {
+  //   // 가장 하단 위치로 스크롤 (메세지 불러올때, AI 응답 받을 때)
+  //   if (messagesEndRef.current) {
+  //     messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+  //   }
+  // }, [req_data, reqState]);
 
   const handleSendMessage = async (req: ChatReq) => {
     try {
@@ -120,8 +120,8 @@ export default function Chat() {
   }
 
   return (
-    <div className="container mx-auto flex h-[calc(100svh-3rem)] flex-col px-2 pb-8">
-      <div className="flex h-full flex-col gap-2 space-y-4 overflow-y-auto px-4">
+    <div className="bg= container mx-auto flex h-[calc(100svh-3rem)] flex-col px-2 pb-8">
+      <div className="flex h-full flex-col gap-4 overflow-y-auto p-4">
         {isMessagesLoading ? (
           <LoadingResponse />
         ) : isError ? (

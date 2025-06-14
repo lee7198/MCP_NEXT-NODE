@@ -37,7 +37,7 @@ export const message_query_management = {
     const connection = await getOracleConnection();
     try {
       const sql = `SELECT ID, USER_ID, DBMS_LOB.SUBSTR(CONTENT, 4000, 1) as CONTENT, CREATED_AT 
-      FROM (SELECT * FROM chat_messages WHERE user_id = :userId ORDER BY created_at DESC) 
+      FROM (SELECT * FROM chat_messages WHERE user_id = :userId ORDER BY created_at) 
       WHERE ROWNUM <= :limit`;
 
       const result = await connection.execute(

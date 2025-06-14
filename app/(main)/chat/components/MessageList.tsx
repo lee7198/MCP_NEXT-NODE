@@ -22,35 +22,39 @@ export default function MessageList({
 
   return (
     <>
-      {messages
-        .sort(
-          (a: Message, b: Message) =>
-            new Date(a.CREATED_AT).getTime() - new Date(b.CREATED_AT).getTime()
-        )
-        .map((message: Message, idx: number, messages: Message[]) => {
-          const currentDate = new Date(message.CREATED_AT).toLocaleDateString(
-            'ko-KR'
-          );
-          const prevDate =
-            idx > 0
-              ? new Date(messages[idx - 1].CREATED_AT).toLocaleDateString(
-                  'ko-KR'
-                )
-              : null;
-
-          const isUser = message.USER_ID === userId;
-
-          return (
-            <React.Fragment key={message.ID || idx}>
-              {currentDate !== prevDate && <DateDivider date={currentDate} />}
-              <ChatMessage
-                message={{ ...message, isUser }}
-                reqState={reqState}
-                setReqState={setReqState}
-              />
-            </React.Fragment>
-          );
-        })}
+      {Object.entries(
+        messages
+          .sort(
+            (a: Message, b: Message) =>
+              new Date(b.CREATED_AT).getTime() -
+              new Date(a.CREATED_AT).getTime()
+          )
+          .reduce((acc: { [key: string]: Message[] }, message: Message) => {
+            const date = new Date(message.CREATED_AT).toLocaleDateString(
+              'ko-KR'
+            );
+            if (!acc[date]) {
+              acc[date] = [];
+            }
+            acc[date].push(message);
+            return acc;
+          }, {})
+      ).map(([date, dateMessages]) => (
+        <div
+          key={date}
+          className="rounded-2xl border border-gray-400 bg-white p-4"
+        >
+          <DateDivider date={date} />
+          {dateMessages.map((message: Message) => (
+            <ChatMessage
+              key={message.ID}
+              message={{ ...message, isUser: message.USER_ID === userId }}
+              reqState={reqState}
+              setReqState={setReqState}
+            />
+          ))}
+        </div>
+      ))}
       <div ref={messagesEndRef} />
     </>
   );
