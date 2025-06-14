@@ -17,7 +17,30 @@ import { McpToolRes } from '../types/management';
 
 const API_BASE_URL = '/api';
 
-export const messageApi = {
+export const aiModel_management = {
+  // AI 요청
+  requestAI: async (data: SaveChatRes): Promise<AIChatRes> => {
+    const res = await fetch(`${API_BASE_URL}/model/ai-request`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    const con: ChatResponse = await res.json();
+
+    if (!res.ok) throw new Error('AI 응답 생성 실패');
+    return { ...con, id: data.id, USER_ID: data.USER_ID };
+  },
+
+  // ai ping
+  getModelPing: async () => {
+    const res = await fetch(`${API_BASE_URL}/model/status-ping`);
+    if (!res.ok) throw new Error('model ping 조회 실패');
+    return res.json();
+  },
+};
+
+export const message_management = {
   // 메시지 목록 조회
   getMessages: async (userId: string): Promise<MessagesResponse> => {
     const res = await fetch(
@@ -36,20 +59,6 @@ export const messageApi = {
     });
     if (!res.ok) throw new Error('메시지 저장 실패');
     return res.json();
-  },
-
-  // AI 요청
-  requestAI: async (data: SaveChatRes): Promise<AIChatRes> => {
-    const res = await fetch(`${API_BASE_URL}/model/ai-request`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-
-    const con: ChatResponse = await res.json();
-
-    if (!res.ok) throw new Error('AI 응답 생성 실패');
-    return { ...con, id: data.id, USER_ID: data.USER_ID };
   },
 
   // AI 응답 저장
@@ -208,11 +217,10 @@ export const mcp_management = {
 
   getMcpToolParams: async (
     SERVERNAME: string,
-    TOOLNAME: string
+    TOOLNAME?: string
   ): Promise<McpParamsRes[]> => {
-    const response = await fetch(
-      `${API_BASE_URL}/mcp/get-mcp-tool-params?SERVERNAME=${SERVERNAME}&TOOLNAME=${TOOLNAME}`
-    );
+    const url = `${API_BASE_URL}/mcp/${TOOLNAME ? 'get-mcp-tool-params' : 'get-mcp-tools-params'}?SERVERNAME=${SERVERNAME}${TOOLNAME ? '&TOOLNAME=' + TOOLNAME : ''}`;
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error('MCP 툴 사용 현황 조회 실패');
     }

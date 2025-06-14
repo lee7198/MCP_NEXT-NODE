@@ -21,7 +21,7 @@ export interface DateDividerProps {
 
 export interface MessageListProps {
   messages: Message[];
-  userId: string;
+  userId?: string;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
   reqState: AIReqState;
   setReqState: React.Dispatch<React.SetStateAction<AIReqState>>;
@@ -42,6 +42,7 @@ export type serverStatus = 'offline' | 'loading' | 'success';
 export type pingStatus = 'idle' | 'loading' | 'success';
 export interface StatusPingProps {
   status: serverStatus;
+  size?: number;
 }
 
 export interface ServerCardProps {

@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { AIResponse, ChatMessageProps, Message } from '@/app/types';
 import MessageItem from '@/app/(main)/chat/components/MessageItem';
 import { useQuery } from '@tanstack/react-query';
-import { messageApi } from '@/app/services/api';
+import { message_management } from '@/app/services/api';
 import AIResponseItem from './AIResponseItem';
 import LoadingResponse from './LoadingResponse';
 import ErrorResponse from './ErrorResponse';
@@ -20,7 +20,7 @@ export default function ChatMessage({ message, reqState }: ChatMessageProps) {
     refetch,
   } = useQuery<AIResponse, Error>({
     queryKey: ['aiResponse', messageId],
-    queryFn: () => messageApi.getAIResponse(messageId),
+    queryFn: () => message_management.getAIResponse(messageId),
     enabled: !!messageId,
   });
 

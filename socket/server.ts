@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import type { Socket } from 'socket.io';
 import type { Request, Response } from 'express';
 import { ClientInfo, ResponseClient } from '@/app/types/socket';
+import { McpParamsRes } from '@/app/types';
 
 // 연결된 클라이언트 정보를 저장할 Map
 export const connectedClients = new Map<string, ClientInfo>();
@@ -59,6 +60,7 @@ io.on('connection', (socket: Socket) => {
         console.log(
           `[Ping] ${clientInfo.clientId} (${socket.id}) is alive at ${clientInfo.lastActivity.toISOString()}`
         );
+        //TODO fetch함수로 마지막 접속시각 저장하기
         io.emit('clients_update', Array.from(connectedClients.values()));
       } else {
         console.log('Client info not found for socket:', socket.id);
@@ -89,6 +91,63 @@ io.on('connection', (socket: Socket) => {
     }
   });
 
+  // 메시지 전송 이벤트 처리
+  socket.on(
+    'send_message',
+    (data: {
+      targetClientId: string;
+      message: string;
+      arg: McpParamsRes[];
+    }) => {
+      try {
+        console.log('Message send requested:');
+        const targetClient = Array.from(connectedClients.values()).find(
+          (client) => client.clientId === data.targetClientId
+        );
+
+        if (targetClient) {
+          // 해당 클라이언트의 소켓에 메시지 전송
+          io.to(targetClient.uuid).emit('receive_message', {
+            from: socket.id,
+            message: data.message,
+            timestamp: new Date(),
+            arg: data.arg,
+          });
+          socket.emit('message_sent');
+          console.log('Message sent to client:', data.targetClientId);
+        } else {
+          socket.emit('message_error', new Error('Target client not found'));
+          console.log('Target client not found:', data.targetClientId);
+        }
+      } catch (err) {
+        console.error('Error handling send_message:', err);
+        socket.emit('message_error', err);
+      }
+    }
+  );
+
+  // MCP 응답 이벤트 처리
+  socket.on('mcp_response', (data: { clientId: string; response: string }) => {
+    try {
+      console.log('MCP response received from:', socket.id);
+      const targetClient = Array.from(connectedClients.values()).find(
+        (client) => client.clientId === data.clientId
+      );
+
+      if (targetClient) {
+        io.to(targetClient.uuid).emit('mcp_response', {
+          response: data.response,
+          timestamp: new Date(),
+        });
+        console.log('MCP response sent to client:', data.clientId);
+      } else {
+        console.log('Target client not found for MCP response:', data.clientId);
+      }
+    } catch (err) {
+      console.error('Error handling mcp_response:', err);
+    }
+  });
+
   // 클라이언트 연결 해제
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
@@ -105,8 +164,8 @@ expressApp.get('/api/clients', (req: Request, res: Response) => {
 const PORT = 3001;
 
 try {
-  server.listen(PORT, () => {
-    console.log(`> Socket.IO server ready on http://localhost:${PORT}`);
+  server.listen(PORT, '192.168.0.118', () => {
+    console.log(`> Socket.IO server ready on http://192.168.0.118:${PORT}`);
   });
 } catch (err) {
   if (err instanceof Error) {

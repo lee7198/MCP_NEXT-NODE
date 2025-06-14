@@ -12,27 +12,27 @@ import {
   SaveChatRes,
 } from '@/app/types';
 import ChatInput from '@/app/(main)/chat/components/ChatInput';
-import UserIdInput from '@/app/(main)/chat/components/UserIdInput';
 import MessageList from '@/app/(main)/chat/components/MessageList';
 import Spinner from '@/app/(main)/components/common/Spinner';
 import { useUserStore } from '@/app/store/userStore';
-import { messageApi } from '@/app/services/api';
+import { aiModel_management, message_management } from '@/app/services/api';
 import LoadingResponse from './components/LoadingResponse';
 import ErrorResponse from './components/ErrorResponse';
 import { initReqState } from '@/app/lib/common';
+import { useSession } from 'next-auth/react';
 
 export default function Chat() {
   const [isMounted, setIsMounted] = useState(false);
   const [reqState, setReqState] = useState<AIReqState>(initReqState);
-  const userId = useUserStore((state) => state.userId);
   const isUserLoading = useUserStore((state) => state.isLoading);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
+  const userId = session?.user?.email;
   // 메시지 목록 불러오기
   const {
     data: req_data,
@@ -40,13 +40,13 @@ export default function Chat() {
     isError,
   } = useQuery<MessagesResponse, Error>({
     queryKey: ['messages'],
-    queryFn: () => messageApi.getMessages(userId!),
+    queryFn: () => message_management.getMessages(userId!),
     enabled: !!userId && isMounted,
   });
 
   // 메시지 저장 mutation
   const saveMessageMutation = useMutation<SaveChatRes, Error, ChatReq>({
-    mutationFn: (content) => messageApi.saveMessage(content),
+    mutationFn: (content) => message_management.saveMessage(content),
     onSuccess: (res) => {
       setReqState(initReqState);
       queryClient.invalidateQueries({ queryKey: ['messages'] });
@@ -60,7 +60,7 @@ export default function Chat() {
 
   // AI 요청 mutation
   const aiRequestMutation = useMutation<AIChatRes, Error, SaveChatRes>({
-    mutationFn: (content) => messageApi.requestAI(content),
+    mutationFn: (content) => aiModel_management.requestAI(content),
     onSuccess: (resAI) => {
       // queryClient.invalidateQueries({ queryKey: ['messages'] });
       saveAIResponseMutation.mutateAsync({
@@ -82,7 +82,7 @@ export default function Chat() {
     Error,
     SaveAIResponseRes
   >({
-    mutationFn: (content) => messageApi.saveAIResponse(content),
+    mutationFn: (content) => message_management.saveAIResponse(content),
     onSuccess: () => {
       setReqState((prev) => ({
         ...prev,
@@ -119,10 +119,6 @@ export default function Chat() {
     );
   }
 
-  if (!userId) {
-    return <UserIdInput />;
-  }
-
   return (
     <div className="container mx-auto flex h-[calc(100svh-3rem)] flex-col px-2 pb-8">
       <div className="flex h-full flex-col gap-2 space-y-4 overflow-y-auto px-4">
@@ -133,7 +129,7 @@ export default function Chat() {
         ) : (
           <MessageList
             messages={req_data?.messages || []}
-            userId={userId}
+            userId={userId!}
             messagesEndRef={messagesEndRef}
             reqState={reqState}
             setReqState={setReqState}
@@ -151,7 +147,7 @@ export default function Chat() {
           aiRequestMutation.isPending ||
           saveAIResponseMutation.isPending
         }
-        USER_ID={userId}
+        USER_ID={userId!}
       />
     </div>
   );

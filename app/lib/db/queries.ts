@@ -424,16 +424,24 @@ export const mcp_query_management = {
     }
   },
 
-  async getMcpToolParams(serverName: string, toolName: string) {
+  async getMcpToolParams(serverName: string, toolName?: string) {
     const connection = await getOracleConnection();
     try {
-      const sql = `SELECT * FROM MCP_TOOL_USAGE_DTL 
+      const sql = toolName
+        ? `SELECT * FROM MCP_TOOL_USAGE_DTL 
                    WHERE SERVERNAME = :1 AND TOOLNAME = :2 
+                   ORDER BY ORDER_NO ASC`
+        : `SELECT * FROM MCP_TOOL_USAGE_DTL 
+                   WHERE SERVERNAME = :1 
                    ORDER BY ORDER_NO ASC`;
 
-      const result = await connection.execute(sql, [serverName, toolName], {
-        outFormat: oracledb.OUT_FORMAT_OBJECT,
-      });
+      const result = await connection.execute(
+        sql,
+        toolName ? [serverName, toolName] : [serverName],
+        {
+          outFormat: oracledb.OUT_FORMAT_OBJECT,
+        }
+      );
 
       if (!result.rows || result.rows.length === 0) {
         return [];
