@@ -46,7 +46,7 @@ export default function ChatInput({
   const { isPending, isSuccess } = useQuery({
     queryKey: ['model_server'],
     queryFn: () => aiModel_management.getModelPing(),
-    refetchInterval: 1000,
+    refetchInterval: 5000,
   });
 
   useEffect(() => {
