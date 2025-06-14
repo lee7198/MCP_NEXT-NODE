@@ -25,6 +25,7 @@ export interface MessageListProps {
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
   reqState: AIReqState;
   setReqState: React.Dispatch<React.SetStateAction<AIReqState>>;
+  lastMessageRef: (node: HTMLDivElement) => void;
 }
 
 export interface AIResponseChatProps {

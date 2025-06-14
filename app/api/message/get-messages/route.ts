@@ -5,7 +5,8 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
-    const limit = Number(searchParams.get('limit')) || 50;
+    const cursor = searchParams.get('cursor') || undefined;
+    const limit = Number(searchParams.get('limit')) || 20;
 
     if (!userId) {
       return NextResponse.json(
@@ -14,11 +15,14 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const messages = await message_query_management.getChatMessages(
-      userId,
-      limit
-    );
-    return NextResponse.json({ messages: messages });
+    const { messages, nextCursor } =
+      await message_query_management.getChatMessages(userId, limit, cursor);
+
+    return NextResponse.json({
+      messages,
+      nextCursor,
+      hasMore: !!nextCursor,
+    });
   } catch (err) {
     console.error('메시지 조회 실패:', err);
     const errorMessage =

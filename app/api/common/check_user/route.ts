@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { common_query_management } from '@/app/lib/db/queries';
 
 export async function GET(req: NextRequest) {
-  console.log('유저 CHECK');
   try {
     const searchParams = req.nextUrl.searchParams;
     const email = searchParams.get('email');

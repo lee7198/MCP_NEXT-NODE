@@ -42,10 +42,20 @@ export const aiModel_management = {
 
 export const message_management = {
   // 메시지 목록 조회
-  getMessages: async (userId: string): Promise<MessagesResponse> => {
-    const res = await fetch(
-      `${API_BASE_URL}/message/get-messages?userId=${userId}`
-    );
+  getMessages: async (
+    userId: string,
+    cursor?: string,
+    limit: number = 10
+  ): Promise<MessagesResponse> => {
+    const queryParams = new URLSearchParams({
+      userId,
+      limit: limit.toString(),
+    });
+    if (cursor) queryParams.append('cursor', cursor);
+
+    const url = `${API_BASE_URL}/message/get-messages?${queryParams.toString()}`;
+
+    const res = await fetch(url);
     if (!res.ok) throw new Error('메시지 조회 실패');
     return res.json();
   },

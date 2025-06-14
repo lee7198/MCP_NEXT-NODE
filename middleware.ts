@@ -10,7 +10,6 @@ export default middleware(async (req) => {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
     if (token?.email) {
-      console.log('hello', req.nextUrl.pathname);
       const checkUserRes = await fetch(
         `${req.nextUrl.origin}/api/common/check_user?email=${token.email}`,
         {

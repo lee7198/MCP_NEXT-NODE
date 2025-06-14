@@ -29,28 +29,47 @@ export const message_query_management = {
   },
 
   // 채팅 메시지 불러오기 (최신순)
-  async getChatMessages(userId: string, limit = 50) {
+  async getChatMessages(userId: string, limit = 20, cursor?: string) {
     if (!userId) {
       throw new Error('사용자 ID가 필요합니다.');
     }
 
     const connection = await getOracleConnection();
     try {
-      const sql = `SELECT ID, USER_ID, DBMS_LOB.SUBSTR(CONTENT, 4000, 1) as CONTENT, CREATED_AT 
-      FROM (SELECT * FROM chat_messages WHERE user_id = :userId ORDER BY created_at) 
-      WHERE ROWNUM <= :limit`;
+      const sql = `
+        SELECT ID, USER_ID, DBMS_LOB.SUBSTR(CONTENT, 4000, 1) as CONTENT, CREATED_AT 
+        FROM (
+          SELECT * FROM chat_messages 
+          WHERE user_id = :userId 
+          ${cursor ? 'AND CREATED_AT < :cursor' : ''}
+          ORDER BY created_at DESC
+        ) 
+        WHERE ROWNUM <= :limit
+      `;
 
-      const result = await connection.execute(
-        sql,
-        { userId, limit },
-        { outFormat: oracledb.OUT_FORMAT_OBJECT }
-      );
-
-      if (!result.rows || result.rows.length === 0) {
-        return [];
+      const params: { userId: string; limit: number; cursor?: Date } = {
+        userId,
+        limit,
+      };
+      if (cursor) {
+        params.cursor = new Date(cursor);
       }
 
-      return result.rows;
+      const result = await connection.execute(sql, params, {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      });
+
+      if (!result.rows || result.rows.length === 0) {
+        return { messages: [], nextCursor: null };
+      }
+
+      const messages = result.rows;
+      const nextCursor =
+        messages.length === limit
+          ? messages[messages.length - 1].CREATED_AT
+          : null;
+
+      return { messages, nextCursor };
     } catch (err) {
       console.error('메시지 조회 중 오류 발생:', err);
       throw new Error('메시지 조회에 실패했습니다.');

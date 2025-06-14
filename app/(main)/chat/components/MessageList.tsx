@@ -11,51 +11,51 @@ export default function MessageList({
   messagesEndRef,
   reqState,
   setReqState,
+  lastMessageRef,
 }: MessageListProps) {
   if (!messages || messages.length === 0) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <p className="text-gray-500">대화 내역이 없습니다.</p>
-      </div>
-    );
+    return null;
   }
 
+  // 날짜별로 메시지 그룹화
+  const messagesByDate = messages.reduce(
+    (acc, message) => {
+      const date = new Date(message.CREATED_AT).toLocaleDateString();
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(message);
+      return acc;
+    },
+    {} as Record<string, Message[]>
+  );
+
   return (
-    <>
-      {Object.entries(
-        messages
-          .sort(
-            (a: Message, b: Message) =>
-              new Date(b.CREATED_AT).getTime() -
-              new Date(a.CREATED_AT).getTime()
-          )
-          .reduce((acc: { [key: string]: Message[] }, message: Message) => {
-            const date = new Date(message.CREATED_AT).toLocaleDateString(
-              'ko-KR'
-            );
-            if (!acc[date]) {
-              acc[date] = [];
-            }
-            acc[date].push(message);
-            return acc;
-          }, {})
-      ).map(([date, dateMessages]) => (
+    <div className="flex flex-col gap-4">
+      {Object.entries(messagesByDate).map(([date, dateMessages]) => (
         <div
           key={date}
-          className="rounded-2xl border border-gray-400 bg-white p-4"
+          className="flex flex-col gap-4 rounded-2xl border border-gray-300 bg-white p-4"
         >
           <DateDivider date={date} />
-          {dateMessages.map((message: Message) => (
-            <ChatMessage
+
+          {dateMessages.map((message, index) => (
+            <div
               key={message.ID}
-              message={{ ...message, isUser: message.USER_ID === userId }}
-              reqState={reqState}
-              setReqState={setReqState}
-            />
+              ref={
+                index === dateMessages.length - 1 ? lastMessageRef : undefined
+              }
+            >
+              <ChatMessage
+                message={{ ...message, isUser: message.USER_ID === userId }}
+                reqState={reqState}
+                setReqState={setReqState}
+              />
+            </div>
           ))}
         </div>
       ))}
       <div ref={messagesEndRef} />
-    </>
+    </div>
   );
 }

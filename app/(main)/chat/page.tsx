@@ -1,8 +1,12 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useRef } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import {
   AIChatRes,
   AIReqState,
@@ -28,21 +32,43 @@ export default function Chat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   const { data: session } = useSession();
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
   const userId = session?.user?.email;
-  // 메시지 목록 불러오기
+
+  // 무한 스크롤을 위한 메시지 조회
   const {
-    data: req_data,
+    data,
     isLoading: isMessagesLoading,
     isError,
-  } = useQuery<MessagesResponse, Error>({
-    queryKey: ['messages'],
-    queryFn: () => message_management.getMessages(userId!),
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery<MessagesResponse, Error>({
+    queryKey: ['messages', userId],
+    queryFn: ({ pageParam }) =>
+      message_management.getMessages(userId!, pageParam as string),
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
     enabled: !!userId && isMounted,
+    initialPageParam: undefined,
   });
+
+  // 스크롤 감지
+  const lastMessageRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (isFetchingNextPage) return;
+      if (observerRef.current) observerRef.current.disconnect();
+
+      observerRef.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasNextPage) {
+          fetchNextPage();
+        }
+      });
+
+      if (node) observerRef.current.observe(node);
+    },
+    [isFetchingNextPage, hasNextPage, fetchNextPage]
+  );
 
   // 메시지 저장 mutation
   const saveMessageMutation = useMutation<SaveChatRes, Error, ChatReq>({
@@ -62,7 +88,6 @@ export default function Chat() {
   const aiRequestMutation = useMutation<AIChatRes, Error, SaveChatRes>({
     mutationFn: (content) => aiModel_management.requestAI(content),
     onSuccess: (resAI) => {
-      // queryClient.invalidateQueries({ queryKey: ['messages'] });
       saveAIResponseMutation.mutateAsync({
         id: resAI.id,
         success: true,
@@ -91,21 +116,21 @@ export default function Chat() {
     },
   });
 
-  // useEffect(() => {
-  //   // 가장 하단 위치로 스크롤 (메세지 불러올때, AI 응답 받을 때)
-  //   if (messagesEndRef.current) {
-  //     messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-  //   }
-  // }, [req_data, reqState]);
-
   const handleSendMessage = async (req: ChatReq) => {
     try {
-      // 메시지 저장
       await saveMessageMutation.mutateAsync(req);
     } catch (error) {
       console.error('메시지 전송 중 오류 발생:', error);
     }
   };
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    console.log('LOADING...');
+  }, [isMessagesLoading]);
 
   if (!isMounted) {
     return null;
@@ -119,6 +144,8 @@ export default function Chat() {
     );
   }
 
+  const messages = data?.pages.flatMap((page) => page.messages) || [];
+
   return (
     <div className="bg= container mx-auto flex h-[calc(100svh-3rem)] flex-col px-2 pb-8">
       <div className="flex h-full flex-col gap-4 overflow-y-auto p-4">
@@ -128,17 +155,19 @@ export default function Chat() {
           <ErrorResponse />
         ) : (
           <MessageList
-            messages={req_data?.messages || []}
+            messages={messages}
             userId={userId!}
             messagesEndRef={messagesEndRef}
             reqState={reqState}
             setReqState={setReqState}
+            lastMessageRef={lastMessageRef}
           />
         )}
-        {/* TODO: 추천 요청 */}
-        {/* <div>
-          <h3>추천 요청 (최근 3개월 메세지 분석)</h3>
-        </div> */}
+        {isFetchingNextPage && (
+          <div className="flex justify-center py-4">
+            <Spinner size={6} />
+          </div>
+        )}
       </div>
       <ChatInput
         onSendMessage={handleSendMessage}
