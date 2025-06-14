@@ -49,7 +49,7 @@ export default function AIResponseItem({
       {thinkMessage && (
         <>
           <button
-            className="active:bg-gray-20 flex w-full cursor-pointer flex-row items-center justify-between rounded-lg border border-gray-400 px-2 py-1 font-bold"
+            className="active:bg-gray-20 flex w-full cursor-pointer flex-row items-center justify-between rounded-lg border border-gray-400 px-2 py-1 font-bold lg:w-56"
             onClick={() => setIsThinkMessageOpen(!isThinkMessageOpen)}
           >
             <div className="text-sm">🤖 AI가 생각한 내용</div>

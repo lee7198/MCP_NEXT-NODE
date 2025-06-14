@@ -14,9 +14,9 @@ export default function Home() {
   }, [session]);
 
   return (
-    <div className="flex h-[calc(100svh-3rem)] w-screen items-center justify-center">
-      <div className="">
-        <h1 className="text-center text-7xl font-black">
+    <div className="container mx-auto flex h-[calc(100svh-3rem)] justify-center">
+      <div className="flex h-full flex-col overflow-y-scroll py-8">
+        <h1 className="my-16 text-center text-7xl font-black">
           MCP 통합 관리 SYSTEM
         </h1>
         <Dashboard />

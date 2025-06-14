@@ -24,7 +24,7 @@ export default function MessageInput({
         e.preventDefault();
         onSendMessage();
       }}
-      className={`flex items-end overflow-y-hidden ${message ? 'gap-2' : 'gap-0'}`}
+      className={`flex w-full items-end justify-center overflow-y-hidden lg:w-3/4 lg:max-w-5xl ${message ? 'gap-2' : 'gap-0'}`}
     >
       <textarea
         ref={textareaRef}

@@ -46,7 +46,7 @@ export const message_management = {
   getMessages: async (
     userId: string,
     cursor?: string,
-    limit: number = 10
+    limit: number = 5
   ): Promise<MessagesResponse> => {
     const queryParams = new URLSearchParams({
       userId,

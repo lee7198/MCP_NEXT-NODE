@@ -149,7 +149,7 @@ export default function Chat() {
 
   return (
     <div className="bg= container mx-auto flex h-[calc(100svh-3rem)] flex-col px-2 pb-8">
-      <div className="flex h-full flex-col gap-4 overflow-y-auto p-4">
+      <div className="flex h-full flex-col gap-6 overflow-y-auto p-4">
         {isMessagesLoading ? (
           <LoadingResponse />
         ) : isError ? (

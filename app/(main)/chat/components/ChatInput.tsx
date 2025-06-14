@@ -105,8 +105,8 @@ export default function ChatInputSection({
   }, [message]);
 
   return (
-    <div className="flex flex-col">
-      <div className="relative flex gap-4 border-t py-2">
+    <div className="flex w-full flex-col items-center border-t">
+      <div className="relative flex w-full gap-4 py-2 lg:w-3/4 lg:max-w-5xl">
         <button
           onClick={() => setIsMcpSettingsOpen(!isMcpSettingsOpen)}
           className={`cursor-pointer rounded-md px-2 text-sm ${selectServer ? 'border bg-green-500 text-black' : 'border bg-white'} `}

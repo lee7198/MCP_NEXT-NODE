@@ -1,5 +1,5 @@
 import React from 'react';
-import { Message, ChatReq } from './message';
+import { Message, ChatReq, DurationData } from './message';
 import { ClientInfo } from './socket';
 import { McpRes, ServerRes } from './api';
 
@@ -109,4 +109,10 @@ export interface MessageInputProps {
   isDisabled: boolean;
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
   boxHeight: number;
+}
+
+export interface ResponseTimeChartProps {
+  data: DurationData[];
+  selectedUsername: string;
+  isDataPending: boolean;
 }
