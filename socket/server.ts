@@ -5,6 +5,7 @@ import type { Socket } from 'socket.io';
 import type { Request, Response } from 'express';
 import { ClientInfo, ResponseClient } from '@/app/types/socket';
 import { McpParamsRes } from '@/app/types';
+import { message_management } from '@/app/services/api';
 
 // 연결된 클라이언트 정보를 저장할 Map
 export const connectedClients = new Map<string, ClientInfo>();
@@ -18,6 +19,7 @@ const io = new Server(server, {
     credentials: true,
   },
 });
+let reqMessageList: Array<number> = [];
 
 // Socket.IO 처리
 io.on('connection', (socket: Socket) => {
@@ -97,10 +99,13 @@ io.on('connection', (socket: Socket) => {
     (data: {
       targetClientId: string;
       message: string;
+      messageId: number;
       arg: McpParamsRes[];
     }) => {
       try {
         console.log('Message send requested:');
+        // 메세지 대기열 추가
+        if (data.messageId) reqMessageList.push(data.messageId);
         const targetClient = Array.from(connectedClients.values()).find(
           (client) => client.clientId === data.targetClientId
         );
@@ -110,6 +115,7 @@ io.on('connection', (socket: Socket) => {
           io.to(targetClient.uuid).emit('receive_message', {
             from: socket.id,
             message: data.message,
+            messageId: data.messageId,
             timestamp: new Date(),
             arg: data.arg,
           });
@@ -127,26 +133,64 @@ io.on('connection', (socket: Socket) => {
   );
 
   // MCP 응답 이벤트 처리
-  socket.on('mcp_response', (data: { clientId: string; response: string }) => {
-    try {
-      console.log('MCP response received from:', socket.id);
-      const targetClient = Array.from(connectedClients.values()).find(
-        (client) => client.clientId === data.clientId
-      );
+  socket.on(
+    'mcp_response',
+    async (data: {
+      clientId: string;
+      response: string;
+      to: string;
+      messageId: number;
+    }) => {
+      try {
+        console.log('MCP response received from:', socket.id);
+        //요청한 웹 클라이언트에게 전송
+        const targetClient = Array.from(connectedClients.values()).find(
+          (client) => {
+            console.log(client.uuid, data.to);
+            return client.uuid === data.to;
+          }
+        );
+        console.log('targetClient ', targetClient);
 
-      if (targetClient) {
-        io.to(targetClient.uuid).emit('mcp_response', {
-          response: data.response,
-          timestamp: new Date(),
-        });
-        console.log('MCP response sent to client:', data.clientId);
-      } else {
-        console.log('Target client not found for MCP response:', data.clientId);
+        console.log('💚 ', data.response);
+        console.log('💚 ', data.to);
+
+        if (
+          targetClient?.uuid ||
+          reqMessageList.some((item) => item === data.messageId)
+        ) {
+          // MCP 응답을 DB에 저장
+          try {
+            await message_management.saveMcpResponse({
+              messageId: data.messageId,
+              response: data.response,
+              clientId: data.clientId,
+            });
+            console.log('MCP response saved to database');
+          } catch (err) {
+            console.error('Error saving MCP response to database:', err);
+          }
+
+          io.emit('mcp_response_to_web', {
+            response: data.response,
+            timestamp: new Date(),
+            to: targetClient?.uuid,
+            messageId: data.messageId,
+          });
+          console.log('MCP response sent to client:', data.clientId);
+          // 해당하는 messageId array 내 삭제
+          reqMessageList = reqMessageList.filter((id) => id !== data.messageId);
+        } else {
+          console.log(
+            'Target client not found for MCP response:',
+            data.clientId
+          );
+        }
+      } catch (err) {
+        console.error('Error handling mcp_response:', err);
       }
-    } catch (err) {
-      console.error('Error handling mcp_response:', err);
     }
-  });
+  );
 
   // 클라이언트 연결 해제
   socket.on('disconnect', () => {
@@ -164,8 +208,8 @@ expressApp.get('/api/clients', (req: Request, res: Response) => {
 const PORT = 3001;
 
 try {
-  server.listen(PORT, '192.168.0.118', () => {
-    console.log(`> Socket.IO server ready on http://192.168.0.118:${PORT}`);
+  server.listen(PORT, () => {
+    console.log(`> Socket.IO server ready on http://localhost:${PORT}`);
   });
 } catch (err) {
   if (err instanceof Error) {

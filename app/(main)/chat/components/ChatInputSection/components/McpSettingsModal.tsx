@@ -62,10 +62,8 @@ export default function McpSettingsModal({
               </button>
             ))}
           </div>
-          <ul className="col-span-1 max-h-52 list-inside list-disc overflow-y-scroll">
-            <div className="font-bold">
-              {selectedServer && selectedServer + '서버 tool 정보'}
-            </div>
+          <ul className="col-span-1 max-h-52 space-y-2 overflow-y-scroll">
+            <div className="font-bold text-gray-700">TOOL(MCP) 정보</div>
             {selectedServer !== '' && isMcpParamsPending ? (
               <div className="flex items-center justify-center p-4">
                 <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-gray-500"></div>
@@ -74,9 +72,24 @@ export default function McpSettingsModal({
               mcps?.map((mcp) => (
                 <li
                   key={mcp.TOOLNAME}
-                  className="z-20 mr-2 rounded-lg px-2 py-1 text-sm"
+                  className="group relative rounded-lg border border-gray-100 bg-gray-50 p-2 text-sm transition-all hover:bg-gray-100"
                 >
-                  {mcp.TOOLNAME}
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-gray-800">
+                      {mcp.TOOLNAME}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {mcp.USE_YON === 'Y' ? '사용' : '미사용'}
+                    </span>
+                  </div>
+                  {mcp.USE_YON === 'Y' && (
+                    <div className="mt-1 pl-2 text-xs text-gray-600">
+                      <div className="flex items-center gap-1">
+                        <div className="h-1.5 w-1.5 rounded-full bg-green-500"></div>
+                        <span>활성화됨</span>
+                      </div>
+                    </div>
+                  )}
                 </li>
               ))
             )}

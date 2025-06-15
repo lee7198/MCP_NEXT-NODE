@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import { ClientInfo } from '@/app/types/socket';
-import { McpParamsRes, pingStatusType } from '../types';
+import { McpParamsRes, pingStatusType, SaveChatRes } from '../types';
 
 export const useSocket = (serverName?: string) => {
   const [socketInstance, setSocketInstance] = useState<ReturnType<
@@ -15,6 +15,7 @@ export const useSocket = (serverName?: string) => {
   const [mcpResponse, setMcpResponse] = useState<{
     response: string;
     timestamp: Date;
+    messageId: number;
   } | null>(null);
   const [currentTargetId, setCurrentTargetId] = useState<string | null>(null);
 
@@ -46,15 +47,21 @@ export const useSocket = (serverName?: string) => {
 
     // MCP 응답 구독
     socket.on(
-      'mcp_response',
-      (data: { response: string; timestamp: Date; clientId: string }) => {
-        console.log('mcp 응답 : ');
+      'mcp_response_to_web',
+      (data: {
+        response: string;
+        timestamp: Date;
+        to: string;
+        messageId: number;
+      }) => {
+        console.log('mcp 응답 : ', data);
         // 현재 타겟 클라이언트의 응답만 처리
-        if (currentTargetId && data.clientId === currentTargetId) {
+        if (currentTargetId && data.to === currentTargetId) {
           console.log('Received MCP response for target client:', data);
           setMcpResponse({
             response: data.response,
             timestamp: data.timestamp,
+            messageId: data.messageId,
           });
         }
       }
@@ -62,7 +69,7 @@ export const useSocket = (serverName?: string) => {
 
     return () => {
       socket.off('clients_update');
-      socket.off('mcp_response');
+      socket.off('mcp_response_to_web');
       socket.disconnect();
     };
   }, [currentTargetId]); // currentTargetId가 변경될 때마다 이펙트 재실행
@@ -83,17 +90,24 @@ export const useSocket = (serverName?: string) => {
   };
 
   // 메시지 전송 핸들러
-  const sendMessageWithMCP = (
-    targetClientId: string,
-    message: string,
-    arg: McpParamsRes[]
-  ) => {
-    if (socketInstance) {
+  const sendMessageWithMCP = ({
+    messageData,
+    arg,
+  }: {
+    // mcp agent id
+    messageData: SaveChatRes;
+    arg: McpParamsRes[];
+  }) => {
+    const targetClientId = messageData.MCP_SERVER;
+    if (socketInstance && targetClientId) {
       setCurrentTargetId(targetClientId); // 타겟 클라이언트 ID 설정
+
       setMessageStatus('sending');
+      //받는 agent, messageId, message, params
       socketInstance.emit('send_message', {
         targetClientId,
-        message,
+        messageId: messageData.id,
+        message: messageData.CONTENT,
         arg,
       });
 

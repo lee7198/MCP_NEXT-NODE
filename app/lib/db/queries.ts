@@ -7,22 +7,36 @@ import { McpParamsRes } from '@/app/types/api';
 // 메시지 관리 관련 쿼리
 export const message_query_management = {
   // 채팅 메시지 저장
-  async saveChatMessage(userId: string, content: string) {
+  async saveChatMessage(userId: string, content: string, MCP_SERVER?: string) {
     const connection = await getOracleConnection();
     try {
-      const sql = `INSERT INTO chat_messages (user_id, content, created_at) 
-                   VALUES (:userId, :content, SYSDATE) 
+      const sql = `INSERT INTO chat_messages (user_id, content, created_at, mcp_server) 
+                   VALUES (:userId, :content, SYSDATE, :mcp_server) 
                    RETURNING id INTO :id`;
+
       const result = await connection.execute(
         sql,
         {
           userId,
           content,
           id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+          mcp_server: MCP_SERVER || null,
         },
         { autoCommit: true }
       );
-      return result.outBinds?.id[0];
+
+      // 저장된 메시지의 mcp_server 값을 조회
+      const selectSql = `SELECT mcp_server FROM chat_messages WHERE id = :id`;
+      const selectResult = await connection.execute(
+        selectSql,
+        { id: result.outBinds?.id[0] },
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+
+      return {
+        id: result.outBinds?.id[0],
+        mcp_server: selectResult.rows?.[0]?.MCP_SERVER,
+      };
     } finally {
       await connection.close();
     }
@@ -136,6 +150,30 @@ export const message_query_management = {
       await connection.close();
     }
   },
+
+  // MCP 응답 메시지 저장
+  async saveMcpResponse(messageId: number, content: string, clientId: string) {
+    const connection = await getOracleConnection();
+    try {
+      const sql = `INSERT INTO AI_RESPONSES (message_id, content, created_at, client_id) 
+                   VALUES (:messageId, :content, SYSDATE, :clientId) 
+                   RETURNING id INTO :id`;
+      const result = await connection.execute(
+        sql,
+        {
+          messageId,
+          content,
+          clientId,
+          id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+        },
+        { autoCommit: true }
+      );
+      return result.outBinds?.id[0];
+    } finally {
+      await connection.close();
+    }
+  },
+
   async getMessagesDuration(): Promise<DurationData[]> {
     const connection = await getOracleConnection();
     try {

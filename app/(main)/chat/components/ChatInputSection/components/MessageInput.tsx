@@ -2,6 +2,7 @@
 
 import { PaperPlaneTiltIcon } from '@phosphor-icons/react';
 import { MessageInputProps } from '@/app/types';
+import { useState } from 'react';
 
 export default function MessageInput({
   message,
@@ -11,8 +12,10 @@ export default function MessageInput({
   textareaRef,
   boxHeight,
 }: MessageInputProps) {
+  const [isComposing, setIsComposing] = useState(false);
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
       e.preventDefault();
       onSendMessage();
     }
@@ -31,6 +34,8 @@ export default function MessageInput({
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={handleKeyDown}
+        onCompositionStart={() => setIsComposing(true)}
+        onCompositionEnd={() => setIsComposing(false)}
         placeholder="메시지를 입력하세요..."
         className={`focus:border-main/50 max-h-48 min-h-20 flex-1 resize-none overflow-y-auto rounded-lg border border-gray-300 p-2 leading-normal transition-all duration-300 focus:outline-none ${message ? 'mr-0 w-auto' : 'mr-0 w-full'} ${isDisabled ? 'bg-gray-300' : ''}`}
         rows={boxHeight}

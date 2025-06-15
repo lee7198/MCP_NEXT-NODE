@@ -30,6 +30,20 @@ export const aiModel_management = {
     const con: ChatResponse = await res.json();
 
     if (!res.ok) throw new Error('AI 응답 생성 실패');
+
+    // AI 응답을 비동기적으로 저장
+    message_management
+      .saveAIResponse({
+        id: data.id,
+        success: true,
+        messageId: data.id,
+        content: con.message.content,
+        total_duration: con.total_duration,
+      })
+      .catch((error) => {
+        console.error('AI 응답 저장 실패:', error);
+      });
+
     return { ...con, id: data.id, USER_ID: data.USER_ID };
   },
 
@@ -100,6 +114,21 @@ export const message_management = {
 
     if (!response.ok) throw new Error('서버 정보 수정 실패');
     return response.json();
+  },
+
+  // MCP 응답 저장
+  saveMcpResponse: async (data: {
+    messageId: number;
+    response: string;
+    clientId: string;
+  }): Promise<{ success: boolean; id: number }> => {
+    const res = await fetch(`${API_BASE_URL}/message/save-mcp-response`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('MCP 응답 저장 실패');
+    return res.json();
   },
 };
 

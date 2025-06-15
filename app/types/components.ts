@@ -1,7 +1,7 @@
 import React from 'react';
 import { Message, ChatReq, DurationData } from './message';
 import { ClientInfo } from './socket';
-import { McpRes, ServerRes } from './api';
+import { McpRes, ServerRes, McpParamsRes } from './api';
 
 export interface ChatMessageProps {
   message: Message;
@@ -13,6 +13,10 @@ export interface ChatInputProps {
   onSendMessage: (content: ChatReq) => void;
   isDisabled: boolean;
   USER_ID: string;
+  selectServer: string;
+  setSelectServer: React.Dispatch<React.SetStateAction<string>>;
+  mcpParams?: McpParamsRes[];
+  isMcpParamsPending: boolean;
 }
 
 export interface DateDividerProps {

@@ -14,9 +14,10 @@ export interface ApiError {
 export interface SaveChatRes {
   id: number;
   success: boolean;
-  content: string;
+  CONTENT: string;
   USER_ID: string;
-  total_duration: number;
+  MCP_SERVER?: string;
+  // total_duration: number;
 }
 
 export interface AIChatRes extends ChatResponse {

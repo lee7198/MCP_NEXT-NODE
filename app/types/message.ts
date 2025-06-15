@@ -18,6 +18,8 @@ export interface ChatReq {
   CONTENT: string;
   USER_ID: string;
   ID?: string;
+  isMCP?: boolean;
+  MCP_SERVER?: string;
 }
 
 export interface ChatRes extends Message {

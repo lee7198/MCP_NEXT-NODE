@@ -17,16 +17,19 @@ export default function ChatInputSection({
   onSendMessage,
   isDisabled = false,
   USER_ID,
+  selectServer,
+  setSelectServer,
+  mcpParams,
+  isMcpParamsPending,
 }: ChatInputProps) {
   const [message, setMessage] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [boxHeight, setBoxHeight] = useState(1);
-  const [selectServer, setSelectServer] = useState('');
   const [isMcpSettingsOpen, setIsMcpSettingsOpen] = useState(false);
   const [serverStatuses, setServerStatuses] = useState<
     Record<string, serverStatusType>
   >({});
-  const { clients, sendMessageWithMCP, mcpResponse } = useSocket();
+  const { clients, mcpResponse } = useSocket();
 
   const { data: servers } = useQuery({
     queryKey: ['server_config'],
@@ -36,12 +39,6 @@ export default function ChatInputSection({
   const { data: mcps } = useQuery({
     queryKey: ['mcp_config', selectServer],
     queryFn: () => mcp_management.getMcpToolUsage(selectServer),
-    enabled: !!selectServer,
-  });
-
-  const { data: mcpParams, isPending: isMcpPramsPending } = useQuery({
-    queryKey: ['mcp_config_parmas', selectServer],
-    queryFn: () => mcp_management.getMcpToolParams(selectServer),
     enabled: !!selectServer,
   });
 
@@ -68,8 +65,14 @@ export default function ChatInputSection({
   const handleSendMessage = () => {
     if (message.trim() && !isDisabled) {
       if (selectServer !== '' && mcpParams) {
-        sendMessageWithMCP('TEST', message, mcpParams);
+        // message DB 저장
+        onSendMessage({
+          CONTENT: message.trim(),
+          USER_ID,
+          MCP_SERVER: selectServer,
+        });
       } else {
+        // 일반 ai 요청 message 저장
         onSendMessage({ CONTENT: message.trim(), USER_ID });
       }
       setMessage('');
@@ -126,7 +129,7 @@ export default function ChatInputSection({
           servers={servers}
           serverStatuses={serverStatuses}
           mcps={mcps}
-          isMcpParamsPending={isMcpPramsPending}
+          isMcpParamsPending={isMcpParamsPending}
         />
 
         <ServerStatusPing isPending={isPending} isSuccess={isSuccess} />
