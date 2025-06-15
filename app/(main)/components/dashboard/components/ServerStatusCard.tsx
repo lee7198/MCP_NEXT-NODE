@@ -1,0 +1,20 @@
+import React from 'react';
+import StatusPing from '../../../settings/components/StatusPing';
+import { ServerStatusCardProps } from '@/app/types/dashboard';
+
+export default function ServerStatusCard({
+  isPending,
+  isSuccess,
+}: ServerStatusCardProps) {
+  return (
+    <div className="flex items-center rounded-lg bg-white p-4 shadow">
+      <div className="flex items-center gap-2 text-lg font-bold">
+        Model Server 상태 :
+        <StatusPing
+          status={isPending ? 'loading' : isSuccess ? 'success' : 'offline'}
+          size={3}
+        />
+      </div>
+    </div>
+  );
+}

@@ -334,4 +334,10 @@ export const common_management = {
     }
     return res.json();
   },
+
+  getDBSserverPing: async (): Promise<{ success: boolean }> => {
+    const res = await fetch(`${API_BASE_URL}/common/db-server-ping`);
+    if (!res.ok) throw new Error('DB 서버 ping 실패');
+    return res.json();
+  },
 };
