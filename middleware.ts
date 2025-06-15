@@ -1,20 +1,31 @@
-import { auth as middleware } from '@/auth';
 import { getToken } from 'next-auth/jwt';
 import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-export default middleware(async (req) => {
+export default async function middleware(req: NextRequest) {
   const isRoleMng = req.nextUrl.pathname.startsWith('/no_role');
   const isApiReq = req.nextUrl.pathname.startsWith('/api');
+  const isAuthReq = req.nextUrl.pathname.startsWith('/api/auth');
+
+  // auth 관련 요청은 미들웨어 처리하지 않음
+  if (isAuthReq) {
+    return NextResponse.next();
+  }
+
   if (!isRoleMng && !isApiReq) {
     //  미등록 유저는 /no_role로 redirect
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    const token = await getToken({
+      req,
+      secret: process.env.NEXTAUTH_SECRET,
+      secureCookie: process.env.NODE_ENV === 'production',
+    });
 
     if (token?.email) {
       const checkUserRes = await fetch(
         `${req.nextUrl.origin}/api/common/check_user?email=${token.email}`,
         {
           headers: {
-            Authorization: `Bearer ${token.jwt}`,
+            Authorization: `Bearer ${token.accessToken}`,
           },
         }
       );
@@ -30,13 +41,22 @@ export default middleware(async (req) => {
       }
     }
   }
+
   // 로그인 안 된 사용자는 모두 root로 redirect
-  if (!req.auth && req.nextUrl.pathname !== '/') {
+  const token = await getToken({
+    req,
+    secret: process.env.NEXTAUTH_SECRET,
+    secureCookie: process.env.NODE_ENV === 'production',
+  });
+
+  if (!token && req.nextUrl.pathname !== '/') {
     const newUrl = new URL('/', req.nextUrl.origin);
-    return Response.redirect(newUrl);
+    return NextResponse.redirect(newUrl);
   }
-});
+
+  return NextResponse.next();
+}
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|api).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };
