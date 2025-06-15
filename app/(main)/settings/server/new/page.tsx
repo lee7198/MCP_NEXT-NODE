@@ -18,7 +18,7 @@ export default function New() {
     mutationFn: (data: SaveServerForm) => server_management.saveServer(data),
     onSuccess: () => {
       toast.success('저장이 완료되었습니다');
-      router.push('/settings');
+      router.push('/settings/servers');
       router.refresh();
     },
     onError: (error) => {

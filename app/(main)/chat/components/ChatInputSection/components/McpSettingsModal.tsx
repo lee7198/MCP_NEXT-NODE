@@ -2,7 +2,7 @@
 
 import { XIcon } from '@phosphor-icons/react/dist/ssr';
 import { McpSettingsModalProps } from '@/app/types';
-import StatusPing from '../../settings/components/StatusPing';
+import StatusPing from '@/app/(main)/settings/components/StatusPing';
 
 export default function McpSettingsModal({
   isOpen,

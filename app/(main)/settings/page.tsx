@@ -1,5 +1,9 @@
 import React from 'react';
-import { HardDrivesIcon, UsersIcon, Robot } from '@phosphor-icons/react/ssr';
+import {
+  HardDrivesIcon,
+  UsersIcon,
+  RobotIcon,
+} from '@phosphor-icons/react/ssr';
 import Link from 'next/link';
 
 export default function Setting() {
@@ -17,7 +21,7 @@ export default function Setting() {
     {
       name: 'MCP 마스터 관리',
       path: '/settings/mcp_mng',
-      icon: <Robot size={48} />,
+      icon: <RobotIcon size={48} />,
     },
   ];
   return (

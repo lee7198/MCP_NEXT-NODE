@@ -1,7 +1,7 @@
 'use client';
 
+import StatusPing from '@/app/(main)/settings/components/StatusPing';
 import { ServerStatusProps } from '@/app/types';
-import StatusPing from '../../settings/components/StatusPing';
 
 export default function ServerStatusPing({
   isPending,

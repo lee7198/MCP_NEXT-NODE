@@ -19,11 +19,11 @@ import MessageList from '@/app/(main)/chat/components/MessageList';
 import Spinner from '@/app/(main)/components/common/Spinner';
 import { useUserStore } from '@/app/store/userStore';
 import { aiModel_management, message_management } from '@/app/services/api';
-import LoadingResponse from './components/LoadingResponse';
-import ErrorResponse from './components/ErrorResponse';
+import LoadingResponse from './components/MessageList/components/LoadingResponse';
+import ErrorResponse from './components/MessageList/components/ErrorResponse';
 import { initReqState } from '@/app/lib/common';
 import { useSession } from 'next-auth/react';
-import ChatInputSection from '@/app/(main)/chat/components/ChatInput';
+import ChatInputSection from '@/app/(main)/chat/components/ChatInputSection';
 
 export default function Chat() {
   const [isMounted, setIsMounted] = useState(false);

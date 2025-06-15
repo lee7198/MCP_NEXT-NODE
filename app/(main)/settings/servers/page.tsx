@@ -87,7 +87,7 @@ export default function Servers() {
             <span>서버(클라이언트) 관리</span>
           </h1>
           <Link
-            href="/settings/new"
+            href="/settings/server/new"
             className="cursor-pointer rounded-md bg-gray-600 px-4 py-2 text-xs font-medium text-white hover:bg-gray-700"
           >
             NEW

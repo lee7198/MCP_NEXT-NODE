@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { AIResponse, ChatMessageProps, Message } from '@/app/types';
-import MessageItem from '@/app/(main)/chat/components/MessageItem';
+import MessageItem from '@/app/(main)/chat/components/MessageList/components/MessageItem';
 import { useQuery } from '@tanstack/react-query';
 import { message_management } from '@/app/services/api';
 import AIResponseItem from './AIResponseItem';

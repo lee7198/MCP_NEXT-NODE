@@ -89,7 +89,7 @@ export default function Dashboard() {
   }, [clients, servers]);
 
   return (
-    <div className="grid w-full grid-cols-3 gap-4 p-4">
+    <div className="container mx-auto grid w-full grid-cols-3 gap-4 p-4">
       <ModelInfoCard />
       <ServerStatusCard isPending={isPendingServ} isSuccess={isSuccessServ} />
       <UsageCard todayUsage={todayUsage} />

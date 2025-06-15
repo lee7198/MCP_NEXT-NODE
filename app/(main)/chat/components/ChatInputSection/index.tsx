@@ -9,9 +9,9 @@ import {
   server_management,
 } from '@/app/services/api';
 import { useSocket } from '@/app/hooks/useSocket';
-import McpSettingsModal from './McpSettingsModal';
-import ServerStatusPing from './ServerStatusPing';
-import MessageInput from './MessageInput';
+import McpSettingsModal from './components/McpSettingsModal';
+import ServerStatusPing from './components/ServerStatusPing';
+import MessageInput from './components/MessageInput';
 
 export default function ChatInputSection({
   onSendMessage,
