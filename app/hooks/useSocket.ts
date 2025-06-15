@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import { ClientInfo } from '@/app/types/socket';
-import { McpParamsRes, pingStatus } from '../types';
+import { McpParamsRes, pingStatusType } from '../types';
 
 export const useSocket = (serverName?: string) => {
   const [socketInstance, setSocketInstance] = useState<ReturnType<
     typeof io
   > | null>(null);
-  const [pingStatus, setPingStatus] = useState<pingStatus>('idle');
+  const [pingStatus, setPingStatus] = useState<pingStatusType>('idle');
   const [clients, setClients] = useState<ClientInfo[]>([]);
   const [messageStatus, setMessageStatus] = useState<
     'idle' | 'sending' | 'success' | 'error'

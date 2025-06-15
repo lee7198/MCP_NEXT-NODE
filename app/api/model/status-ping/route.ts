@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
+  const MODEL_PORT = process.env.MODEL_PORT;
   try {
-    await fetch('http://127.0.0.1:11434');
+    await fetch(`http://127.0.0.1:${MODEL_PORT}`);
 
     return NextResponse.json({ message: 'ping 성공' });
   } catch (err) {

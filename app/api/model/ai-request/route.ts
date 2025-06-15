@@ -5,8 +5,11 @@ import { Ollama } from 'ollama';
 export async function POST(req: Request) {
   const { CONTENT, USER_ID, id } = await req.json();
   const prompt = CONTENT;
+
+  const MODEL_PORT = process.env.MODEL_PORT;
+
   try {
-    const ollama = new Ollama({ host: 'http://127.0.0.1:11434' });
+    const ollama = new Ollama({ host: `http://127.0.0.1:${MODEL_PORT}` });
 
     const res = await ollama.chat({
       model: 'qwen3:8b',
