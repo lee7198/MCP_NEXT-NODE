@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { Handle, Position } from '@xyflow/react';
 
 import '@/tailwind.config';
-import { FlowNodeDataType } from '@/app/types/dashboard';
+import { FlowNodeDataType } from '@/app/types';
 import StatusPing from '@/app/(main)/settings/components/StatusPing';
 
 function CustomFlowNode({ data }: { data: FlowNodeDataType }) {

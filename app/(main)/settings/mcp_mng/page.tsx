@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { mcp_management } from '@/app/services/api';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { McpToolRes } from '@/app/types/management';
+import { McpToolRes } from '@/app/types';
 import { AddMcpForm } from './components/AddMcpForm';
 import { McpTable } from './components/McpTable';
 import Link from 'next/link';

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import StatusPing from '../../../settings/components/StatusPing';
-import { AgentStatusSectionProps } from '@/app/types/dashboard';
+import { AgentStatusSectionProps } from '@/app/types';
 import { XIcon } from '@phosphor-icons/react/dist/ssr';
 
 export default function AgentStatusSection({

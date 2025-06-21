@@ -5,8 +5,8 @@ import { McpRes, ServerRes, McpParamsRes } from './api';
 
 export interface ChatMessageProps {
   message: Message;
-  reqState: AIReqState;
-  setReqState: React.Dispatch<React.SetStateAction<AIReqState>>;
+  reqState: AIRequestState;
+  setReqState: React.Dispatch<React.SetStateAction<AIRequestState>>;
 }
 
 export interface ChatInputProps {
@@ -27,8 +27,8 @@ export interface MessageListProps {
   messages: Message[];
   userId?: string;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
-  reqState: AIReqState;
-  setReqState: React.Dispatch<React.SetStateAction<AIReqState>>;
+  reqState: AIRequestState;
+  setReqState: React.Dispatch<React.SetStateAction<AIRequestState>>;
   lastMessageRef: (node: HTMLDivElement) => void;
 }
 
@@ -37,24 +37,24 @@ export interface AIResponseChatProps {
   CREATED_AT: Date;
 }
 
-export interface AIReqState {
+export interface AIRequestState {
   messageId: number;
   isAIRes: boolean;
   isAIResSave: boolean;
 }
 
-export type serverStatusType = 'offline' | 'loading' | 'success';
-export type pingStatusType = 'idle' | 'loading' | 'success';
+export type ServerStatus = 'offline' | 'loading' | 'success';
+export type PingStatus = 'idle' | 'loading' | 'success';
 export interface StatusPingProps {
-  status: serverStatusType;
+  status: ServerStatus;
   size?: number;
 }
 
 export interface ServerCardProps {
   serverName: string;
-  serverStatus: serverStatusType;
+  serverStatus: ServerStatus;
   client?: ClientInfo;
-  pingStatus: pingStatusType;
+  pingStatus: PingStatus;
   onTestPing: (serverName: string) => void;
 }
 
@@ -65,15 +65,15 @@ export interface ServerCardSkeletonProps {
 export interface ServerCardWrapperProps {
   serverName: string;
   onTestPing: (serverName: string) => void;
-  pingStatus: pingStatusType;
+  pingStatus: PingStatus;
 }
 
 export interface ServerListProps {
   clients: ClientInfo[];
   servers: ServerRes[];
   isGetServers: boolean;
-  serverStatuses: Record<string, serverStatusType>;
-  pingStatuses: Record<string, pingStatusType>;
+  serverStatuses: Record<string, ServerStatus>;
+  pingStatuses: Record<string, PingStatus>;
   handleTestPing: (serverName: string) => void;
 }
 
@@ -96,7 +96,7 @@ export interface McpSettingsModalProps {
   onServerSelect: (serverId: string) => void;
   onClearSelection: () => void;
   servers: ServerRes[] | undefined;
-  serverStatuses: Record<string, serverStatusType>;
+  serverStatuses: Record<string, ServerStatus>;
   mcps: McpRes[] | undefined;
   isMcpParamsPending: boolean;
 }

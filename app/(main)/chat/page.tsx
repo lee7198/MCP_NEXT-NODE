@@ -10,7 +10,7 @@ import {
 } from '@tanstack/react-query';
 import {
   AIChatRes,
-  AIReqState,
+  AIRequestState,
   ChatReq,
   MessagesResponse,
   SaveChatRes,
@@ -32,7 +32,7 @@ import { useSocket } from '@/app/hooks/useSocket';
 
 export default function Chat() {
   const [isMounted, setIsMounted] = useState(false);
-  const [reqState, setReqState] = useState<AIReqState>(initReqState);
+  const [reqState, setReqState] = useState<AIRequestState>(initReqState);
   const isUserLoading = useUserStore((state) => state.isLoading);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();

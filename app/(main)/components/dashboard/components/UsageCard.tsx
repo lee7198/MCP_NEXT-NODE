@@ -1,4 +1,4 @@
-import { UsageCardProps } from '@/app/types/dashboard';
+import { UsageCardProps } from '@/app/types';
 import React from 'react';
 
 export default function UsageCard({ todayUsage }: UsageCardProps) {

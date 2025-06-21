@@ -1,5 +1,5 @@
 import React from 'react';
-import { McpTableProps } from '@/app/types/management';
+import { McpTableProps } from '@/app/types';
 
 export const McpTable: React.FC<McpTableProps> = ({
   mcpTools,

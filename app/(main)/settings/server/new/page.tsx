@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { SaveServerForm } from '@/app/types/server';
+import { SaveServerForm } from '@/app/types';
 import { useMutation } from '@tanstack/react-query';
 import { server_management } from '@/app/services/api';
 import { toast } from 'react-toastify';

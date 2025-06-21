@@ -1,4 +1,4 @@
-import { ServerInfoProps } from '@/app/types/server';
+import { ServerInfoProps } from '@/app/types';
 
 export const ServerInfo = ({
   isLoading,

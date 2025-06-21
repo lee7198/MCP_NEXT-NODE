@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AddUserFormProps } from '@/app/types/management';
+import { AddUserFormProps } from '@/app/types';
 import { UserListRes } from '@/app/types';
 
 export const AddUserForm: React.FC<AddUserFormProps> = ({

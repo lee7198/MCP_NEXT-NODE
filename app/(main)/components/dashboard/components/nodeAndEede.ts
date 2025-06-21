@@ -1,4 +1,4 @@
-import { CustomEdge, CustomNode } from '@/app/types/dashboard';
+import { CustomEdge, CustomNode } from '@/app/types';
 import {
   DatabaseIcon,
   HardDrivesIcon,

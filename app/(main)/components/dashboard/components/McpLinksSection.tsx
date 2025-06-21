@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { LinkIcon } from '@phosphor-icons/react/dist/ssr';
-import { McpLinkArticle } from '@/app/types/dashboard';
+import { McpLinkArticle } from '@/app/types';
 
 const mcp_link: McpLinkArticle[] = [
   {

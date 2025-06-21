@@ -1,5 +1,5 @@
 import { ProgressCircle } from './ProgressCircle';
-import { ServerDescriptionProps } from '@/app/types/server';
+import { ServerDescriptionProps } from '@/app/types';
 
 export const ServerDescription = ({
   isLoading,

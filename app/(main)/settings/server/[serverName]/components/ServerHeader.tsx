@@ -6,7 +6,7 @@ import {
 
 import { ProgressCircle } from './ProgressCircle';
 import StatusPing from '../../../components/StatusPing';
-import { ServerHeaderProps } from '@/app/types/server';
+import { ServerHeaderProps } from '@/app/types';
 
 export const ServerHeader = ({
   serverName,

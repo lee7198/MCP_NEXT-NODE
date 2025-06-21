@@ -1,4 +1,4 @@
-import { serverStatus } from './components';
+import { ServerStatus } from './components';
 
 export interface SaveServerForm {
   SERVERNAME: string;
@@ -16,7 +16,7 @@ export interface ServerHeaderProps {
   isDeleting: boolean;
   onEdit: () => void;
   onDelete: () => void;
-  status: serverStatus;
+  status: ServerStatus;
 }
 
 export interface ServerDescriptionProps {
