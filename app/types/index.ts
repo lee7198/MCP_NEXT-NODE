@@ -6,3 +6,4 @@ export * from './dashboard';
 export * from './management';
 export * from './server';
 export * from './socket';
+export * from './chat';

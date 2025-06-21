@@ -7,17 +7,23 @@ import { McpParamsRes } from '@/app/types/api';
 // 메시지 관리 관련 쿼리
 export const message_query_management = {
   // 채팅 메시지 저장
-  async saveChatMessage(userId: string, content: string, MCP_SERVER?: string) {
+  async saveChatMessage(
+    userId: string,
+    roomHash: string,
+    content: string,
+    MCP_SERVER?: string
+  ) {
     const connection = await getOracleConnection();
     try {
-      const sql = `INSERT INTO chat_messages (user_id, content, created_at, mcp_server) 
-                   VALUES (:userId, :content, CURRENT_DATE, :mcp_server) 
+      const sql = `INSERT INTO chat_messages (user_id, room_hash, content, created_at, mcp_server)
+                   VALUES (:userId, :roomHash, :content, CURRENT_DATE, :mcp_server)
                    RETURNING id INTO :id`;
 
       const result = await connection.execute(
         sql,
         {
           userId,
+          roomHash: roomHash || 'default',
           content,
           id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
           mcp_server: MCP_SERVER || null,
@@ -42,8 +48,41 @@ export const message_query_management = {
     }
   },
 
+  async createChatRoom(userId: string, roomHash: string) {
+    const connection = await getOracleConnection();
+    try {
+      await connection.execute(
+        `INSERT INTO chat_rooms (room_hash, user_id, created_at) VALUES (:roomHash, :userId, CURRENT_DATE)`,
+        { roomHash, userId },
+        { autoCommit: true }
+      );
+      return { roomHash };
+    } finally {
+      await connection.close();
+    }
+  },
+
+  async getChatRooms(userId: string) {
+    const connection = await getOracleConnection();
+    try {
+      const result = await connection.execute(
+        `SELECT ROOM_HASH, USER_ID, CREATED_AT FROM chat_rooms WHERE USER_ID = :userId ORDER BY CREATED_AT DESC`,
+        { userId },
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+      return result.rows || [];
+    } finally {
+      await connection.close();
+    }
+  },
+
   // 채팅 메시지 불러오기 (최신순)
-  async getChatMessages(userId: string, limit = 20, cursor?: string) {
+  async getChatMessages(
+    userId: string,
+    roomHash: string,
+    limit = 20,
+    cursor?: string
+  ) {
     if (!userId) {
       throw new Error('사용자 ID가 필요합니다.');
     }
@@ -53,16 +92,23 @@ export const message_query_management = {
       const sql = `
         SELECT ID, USER_ID, DBMS_LOB.SUBSTR(CONTENT, 4000, 1) as CONTENT, CREATED_AT 
         FROM (
-          SELECT * FROM chat_messages 
-          WHERE user_id = :userId 
+          SELECT * FROM chat_messages
+          WHERE user_id = :userId
+          AND room_hash = :roomHash
           ${cursor ? 'AND CREATED_AT < :cursor' : ''}
           ORDER BY created_at DESC
-        ) 
+        )
         WHERE ROWNUM <= :limit
       `;
 
-      const params: { userId: string; limit: number; cursor?: Date } = {
+      const params: {
+        userId: string;
+        roomHash: string;
+        limit: number;
+        cursor?: Date;
+      } = {
         userId,
+        roomHash: roomHash || 'default',
         limit,
       };
       if (cursor) {
@@ -196,7 +242,8 @@ export const message_query_management = {
 
   // 메시지 날짜 목록 조회
   async getMessageDates(
-    userId: string
+    userId: string,
+    roomHash: string
   ): Promise<{ date: string; count: number }[]> {
     const connection = await getOracleConnection();
     try {
@@ -204,15 +251,16 @@ export const message_query_management = {
         SELECT 
           TO_CHAR(CREATED_AT, 'YYYY-MM-DD') as MESSAGE_DATE,
           COUNT(*) as MESSAGE_COUNT
-        FROM chat_messages 
-        WHERE user_id = :userId 
+        FROM chat_messages
+        WHERE user_id = :userId
+        AND room_hash = :roomHash
         GROUP BY TO_CHAR(CREATED_AT, 'YYYY-MM-DD')
         ORDER BY MESSAGE_DATE DESC
       `;
 
       const result = await connection.execute(
         sql,
-        { userId },
+        { userId, roomHash: roomHash || 'default' },
         { outFormat: oracledb.OUT_FORMAT_OBJECT }
       );
 

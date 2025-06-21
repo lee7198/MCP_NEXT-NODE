@@ -2,6 +2,7 @@
 export interface Message {
   ID?: string | number;
   USER_ID: string;
+  ROOM_HASH?: string;
   CONTENT: string;
   CREATED_AT: Date;
   isUser?: boolean;
@@ -17,6 +18,7 @@ export interface MessagesResponse {
 export interface ChatReq {
   CONTENT: string;
   USER_ID: string;
+  ROOM_HASH?: string;
   ID?: string;
   isMCP?: boolean;
   MCP_SERVER?: string;

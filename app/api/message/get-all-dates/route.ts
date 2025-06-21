@@ -5,6 +5,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
+    const roomHash = searchParams.get('roomHash') || 'default';
 
     if (!userId) {
       return NextResponse.json(
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const dates = await message_query_management.getMessageDates(userId);
+    const dates = await message_query_management.getMessageDates(userId, roomHash);
 
     return NextResponse.json({ dates });
   } catch (error) {

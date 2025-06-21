@@ -27,6 +27,7 @@ import LoadingResponse from './components/MessageList/components/LoadingResponse
 import ErrorResponse from './components/MessageList/components/ErrorResponse';
 import { initReqState } from '@/app/lib/common';
 import { useSession } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
 import ChatInputSection from '@/app/(main)/chat/components/ChatInputSection';
 import { useSocket } from '@/app/hooks/useSocket';
 
@@ -37,6 +38,8 @@ export default function Chat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   const { data: session } = useSession();
+  const searchParams = useSearchParams();
+  const roomHash = searchParams.get('roomHash') || 'default';
   const observerRef = useRef<IntersectionObserver | null>(null);
   const { sendMessageWithMCP } = useSocket();
   const [selectServer, setSelectServer] = useState('');
@@ -52,9 +55,9 @@ export default function Chat() {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery<MessagesResponse, Error>({
-    queryKey: ['messages', userId],
+    queryKey: ['messages', userId, roomHash],
     queryFn: ({ pageParam }) =>
-      message_management.getMessages(userId!, pageParam as string),
+      message_management.getMessages(userId!, roomHash, pageParam as string),
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     enabled: !!userId && isMounted,
     initialPageParam: undefined,
@@ -128,7 +131,7 @@ export default function Chat() {
   // not mcp ai 메세지용
   const handleSendMessage = async (req: ChatReq) => {
     try {
-      await saveMessageMutation.mutateAsync(req);
+      await saveMessageMutation.mutateAsync({ ...req, ROOM_HASH: roomHash });
     } catch (error) {
       console.error('메시지 전송 중 오류 발생:', error);
     }

@@ -5,6 +5,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
+    const roomHash = searchParams.get('roomHash') || 'default';
     const cursor = searchParams.get('cursor') || undefined;
     const limit = Number(searchParams.get('limit')) || 20;
 
@@ -16,7 +17,12 @@ export async function GET(req: NextRequest) {
     }
 
     const { messages, nextCursor } =
-      await message_query_management.getChatMessages(userId, limit, cursor);
+      await message_query_management.getChatMessages(
+        userId,
+        roomHash,
+        limit,
+        cursor
+      );
 
     console.log(messages);
 

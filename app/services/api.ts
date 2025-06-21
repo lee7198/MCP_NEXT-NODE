@@ -11,6 +11,7 @@ import {
   ServerDetail,
   ServerRes,
   UserListRes,
+  ChatRoomsResponse,
 } from '@/app/types';
 import { ChatResponse } from 'ollama';
 import { SaveServerForm } from '../types/server';
@@ -59,11 +60,13 @@ export const message_management = {
   // 메시지 목록 조회
   getMessages: async (
     userId: string,
+    roomHash: string,
     cursor?: string,
     limit: number = 5
   ): Promise<MessagesResponse> => {
     const queryParams = new URLSearchParams({
       userId,
+      roomHash,
       limit: limit.toString(),
     });
     if (cursor) queryParams.append('cursor', cursor);
@@ -78,10 +81,11 @@ export const message_management = {
 
   // 전체 메시지 날짜 목록 조회
   getAllMessageDates: async (
-    userId: string
+    userId: string,
+    roomHash: string
   ): Promise<{ dates: { date: string; count: number }[] }> => {
     const res = await fetch(
-      `${API_BASE_URL}/message/get-all-dates?userId=${userId}`
+      `${API_BASE_URL}/message/get-all-dates?userId=${userId}&roomHash=${roomHash}`
     );
     if (!res.ok) throw new Error('메시지 날짜 목록 조회 실패');
     return res.json();
@@ -95,6 +99,26 @@ export const message_management = {
       body: JSON.stringify(data),
     });
     if (!res.ok) throw new Error('메시지 저장 실패');
+    return res.json();
+  },
+
+  createRoom: async (
+    userId: string
+  ): Promise<{ roomHash: string }> => {
+    const res = await fetch(`${API_BASE_URL}/message/create-room`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ USER_ID: userId }),
+    });
+    if (!res.ok) throw new Error('채팅방 생성 실패');
+    return res.json();
+  },
+
+  getRooms: async (userId: string): Promise<ChatRoomsResponse> => {
+    const res = await fetch(
+      `${API_BASE_URL}/message/get-rooms?userId=${userId}`
+    );
+    if (!res.ok) throw new Error('채팅방 목록 조회 실패');
     return res.json();
   },
 
