@@ -26,7 +26,6 @@ export default function Mcp_mng() {
     queryFn: async () => mcp_management.getMcpTools(),
   });
 
-  //TODO 수정하셈
   const updateMcpToolMutation = useMutation({
     mutationFn: async (tools: McpToolRes[]) => {
       return mcp_management.updateMcpTools(tools);

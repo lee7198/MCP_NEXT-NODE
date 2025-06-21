@@ -25,7 +25,11 @@ export default function ServerCard({
           </Link>
           <div className="text-xs">
             {client
-              ? timeAgo.format(new Date(client.lastActivity && new Date()))
+              ? timeAgo.format(
+                  client.lastActivity
+                    ? new Date(client.lastActivity)
+                    : new Date()
+                )
               : '-'}
           </div>
         </div>
