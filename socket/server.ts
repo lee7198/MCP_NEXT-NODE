@@ -3,7 +3,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import type { Socket } from 'socket.io';
 import type { Request, Response } from 'express';
-import { ClientInfo, ResponseClient } from '@/app/types/socket';
+import { ClientInfo, ResponseClient } from '@/app/types';
 import { McpParamsRes } from '@/app/types';
 import { message_management } from '@/app/services/api';
 

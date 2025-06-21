@@ -1,6 +1,6 @@
 import React from 'react';
 import ResponseTimeChart from '../../ResponseTimeChart';
-import { ResponseTimeSectionProps } from '@/app/types/dashboard';
+import { ResponseTimeSectionProps } from '@/app/types';
 
 export default function ResponseTimeSection({
   data,

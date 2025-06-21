@@ -7,10 +7,10 @@ import {
   type Edge,
 } from '@xyflow/react';
 import { Icon } from '@phosphor-icons/react';
-import { serverStatusType } from '@/app/types';
+import { ServerStatus } from '@/app/types';
 
 const CustomFlowEdge: FC<
-  EdgeProps<Edge<{ icon?: Icon; label?: serverStatusType }>>
+  EdgeProps<Edge<{ icon?: Icon; label?: ServerStatus }>>
 > = ({
   id,
   sourceX,

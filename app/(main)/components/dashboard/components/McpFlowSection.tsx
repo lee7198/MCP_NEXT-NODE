@@ -1,8 +1,8 @@
 import React from 'react';
 import { EdgeTypes, NodeTypes, ReactFlow } from '@xyflow/react';
 import CustomFlowNode from './CustomFlowNode';
-import { FlowSectionProps } from '@/app/types/dashboard';
-import { serverStatusType } from '@/app/types';
+import { FlowSectionProps } from '@/app/types';
+import { ServerStatus } from '@/app/types';
 import { initialEdges, initialNodes } from './nodeAndEede';
 import CustomFlowEdge from './CustomFlowEdge';
 import {
@@ -13,7 +13,7 @@ import {
 
 import '@xyflow/react/dist/style.css';
 
-const stateToDisplay = (serverState: serverStatusType) => {
+const stateToDisplay = (serverState: ServerStatus) => {
   switch (serverState) {
     case 'success':
       return { icon: LinkIcon, label: 'success' };
@@ -44,7 +44,7 @@ export default function McpFlowSection({
   );
 
   const nodes = initialNodes.map((node) => {
-    let state: serverStatusType = 'offline';
+    let state: ServerStatus = 'offline';
     if (node.id === 'Web Server') {
       state = 'success';
     } else if (node.id === 'DB Server') {

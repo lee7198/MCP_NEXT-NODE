@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import type { ChatInputProps, serverStatusType } from '@/app/types';
+import type { ChatInputProps, ServerStatus } from '@/app/types';
 import { useQuery } from '@tanstack/react-query';
 import {
   aiModel_management,
@@ -27,7 +27,7 @@ export default function ChatInputSection({
   const [boxHeight, setBoxHeight] = useState(1);
   const [isMcpSettingsOpen, setIsMcpSettingsOpen] = useState(false);
   const [serverStatuses, setServerStatuses] = useState<
-    Record<string, serverStatusType>
+    Record<string, ServerStatus>
   >({});
   const { clients, mcpResponse } = useSocket();
 

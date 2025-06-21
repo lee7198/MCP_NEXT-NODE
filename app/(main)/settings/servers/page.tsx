@@ -6,15 +6,15 @@ import Link from 'next/link';
 import ServerList from '../components/ServerList';
 import { useSocket } from '@/app/hooks/useSocket';
 import { useEffect, useState } from 'react';
-import { pingStatusType, serverStatusType } from '@/app/types';
+import { PingStatus, ServerStatus } from '@/app/types';
 import { CaretLeftIcon } from '@phosphor-icons/react/dist/ssr';
 
 export default function Servers() {
   const [pingStatuses, setPingStatuses] = useState<
-    Record<string, pingStatusType>
+    Record<string, PingStatus>
   >({});
   const [serverStatuses, setServerStatuses] = useState<
-    Record<string, serverStatusType>
+    Record<string, ServerStatus>
   >({});
 
   const { data: servers, isSuccess: isGetServers } = useQuery({

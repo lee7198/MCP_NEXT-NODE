@@ -6,7 +6,7 @@ import {
   server_management,
 } from '@/app/services/api';
 import { useQuery } from '@tanstack/react-query';
-import { DurationData, serverStatusType } from '@/app/types';
+import { DurationData, ServerStatus } from '@/app/types';
 import { useSocket } from '@/app/hooks/useSocket';
 import ModelInfoCard from './components/ModelInfoCard';
 import ServerStatusCard from './components/ServerStatusCard';
@@ -21,7 +21,7 @@ export default function Dashboard() {
   const { clients } = useSocket();
 
   const [serverStatuses, setServerStatuses] = useState<
-    Record<string, serverStatusType>
+    Record<string, ServerStatus>
   >({});
 
   const { isPending: isPendingServ, isSuccess: isSuccessServ } = useQuery({

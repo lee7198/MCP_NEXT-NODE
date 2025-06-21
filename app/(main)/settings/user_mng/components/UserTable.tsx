@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserTableProps } from '@/app/types/management';
+import { UserTableProps } from '@/app/types';
 
 export const UserTable: React.FC<UserTableProps> = ({
   users,

@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { ServerHeader } from './components/ServerHeader';
 import { ServerDescription } from './components/ServerDescription';
 import { ServerInfo } from './components/ServerInfo';
-import { ServerDetailPageProps } from '@/app/types/server';
+import { ServerDetailPageProps } from '@/app/types';
 import McpTool from './components/McpTool';
 import McpToolSetting from './components/McpToolSetting';
 import { useSocket } from '@/app/hooks/useSocket';

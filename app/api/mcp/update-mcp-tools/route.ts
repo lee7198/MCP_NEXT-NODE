@@ -1,5 +1,5 @@
 import { mcp_query_management } from '@/app/lib/db/queries';
-import { McpToolRes } from '@/app/types/management';
+import { McpToolRes } from '@/app/types';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function PUT(request: NextRequest) {

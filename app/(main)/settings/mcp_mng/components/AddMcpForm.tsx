@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AddMcpFormProps, McpToolRes } from '@/app/types/management';
+import { AddMcpFormProps, McpToolRes } from '@/app/types';
 
 export const AddMcpForm: React.FC<AddMcpFormProps> = ({ onAdd, onCancel }) => {
   const [newTool, setNewTool] = useState<Partial<McpToolRes>>({

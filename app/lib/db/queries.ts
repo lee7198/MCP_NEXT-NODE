@@ -1,7 +1,7 @@
 import { getOracleConnection } from '@/app/lib/db/connection';
 import oracledb from 'oracledb';
 import { DurationData, UserListRes } from '@/app/types';
-import { McpToolRes } from '@/app/types/management';
+import { McpToolRes } from '@/app/types';
 import { McpParamsRes } from '@/app/types/api';
 
 // 메시지 관리 관련 쿼리

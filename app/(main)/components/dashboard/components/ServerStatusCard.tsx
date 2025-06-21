@@ -1,6 +1,6 @@
 import React from 'react';
 import StatusPing from '../../../settings/components/StatusPing';
-import { ServerStatusCardProps } from '@/app/types/dashboard';
+import { ServerStatusCardProps } from '@/app/types';
 
 export default function ServerStatusCard({
   isPending,
