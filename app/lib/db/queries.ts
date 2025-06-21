@@ -100,6 +100,26 @@ export const message_query_management = {
   ) {
     const connection = await getOracleConnection();
     try {
+      // 먼저 해당 messageId에 대한 AI 응답이 이미 존재하는지 확인
+      const checkSql = `SELECT COUNT(*) as count FROM AI_RESPONSES WHERE message_id = :messageId`;
+      const checkResult = await connection.execute(
+        checkSql,
+        { messageId },
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+
+      if (checkResult.rows && checkResult.rows[0].COUNT > 0) {
+        // 이미 존재하면 저장하지 않고 기존 ID 반환
+        const existingSql = `SELECT id FROM AI_RESPONSES WHERE message_id = :messageId`;
+        const existingResult = await connection.execute(
+          existingSql,
+          { messageId },
+          { outFormat: oracledb.OUT_FORMAT_OBJECT }
+        );
+        return existingResult.rows?.[0]?.ID;
+      }
+
+      // 존재하지 않으면 새로 저장
       const sql = `INSERT INTO AI_RESPONSES (message_id, content, created_at, total_duration) 
                    VALUES (:messageId, :content, CURRENT_DATE, :total_duration) 
                    RETURNING id INTO :id`;
@@ -199,7 +219,6 @@ export const message_query_management = {
       if (!result.rows) {
         return [];
       }
-      console.log(result.rows);
       return result.rows.map(
         (row: { MESSAGE_DATE: string; MESSAGE_COUNT: number }) => ({
           date: row.MESSAGE_DATE,

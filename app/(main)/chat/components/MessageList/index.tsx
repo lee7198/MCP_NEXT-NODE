@@ -43,25 +43,6 @@ export default function MessageList({
 }: MessageListProps) {
   const dateRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  if (!messages || messages.length === 0) {
-    return null;
-  }
-
-  // 날짜별로 메시지 그룹화 (DateNavigation과 동일한 정규화 방식 사용)
-  const messagesByDate = messages.reduce(
-    (acc, message) => {
-      const date = normalizeDate(
-        new Date(message.CREATED_AT).toISOString().split('T')[0]
-      );
-      if (!acc[date]) {
-        acc[date] = [];
-      }
-      acc[date].push(message);
-      return acc;
-    },
-    {} as Record<string, Message[]>
-  );
-
   // 날짜 클릭 시 해당 위치로 스크롤
   const handleDateClick = useCallback((date: string) => {
     const targetRef = dateRefs.current[date];
@@ -80,6 +61,25 @@ export default function MessageList({
       });
     }
   }, []);
+
+  if (!messages || messages.length === 0) {
+    return null;
+  }
+
+  // 날짜별로 메시지 그룹화 (DateNavigation과 동일한 정규화 방식 사용)
+  const messagesByDate = messages.reduce(
+    (acc, message) => {
+      const date = normalizeDate(
+        new Date(message.CREATED_AT).toISOString().split('T')[0]
+      );
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(message);
+      return acc;
+    },
+    {} as Record<string, Message[]>
+  );
 
   return (
     <>

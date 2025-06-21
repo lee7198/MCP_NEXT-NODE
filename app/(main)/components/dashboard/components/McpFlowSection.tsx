@@ -81,7 +81,7 @@ export default function McpFlowSection({
       animated = webState !== 'offline';
       conf = stateToDisplay(webState);
     } else if (edge.id === 'ec-a') {
-      const agentState = modelStatus || 'offline';
+      const agentState = agentStatus.length > 0 ? 'success' : 'offline';
       animated = agentState !== 'offline';
       conf = stateToDisplay(agentState);
     }

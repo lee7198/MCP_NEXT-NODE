@@ -72,6 +72,7 @@ export const message_management = {
 
     const res = await fetch(url);
     if (!res.ok) throw new Error('메시지 조회 실패');
+
     return res.json();
   },
 

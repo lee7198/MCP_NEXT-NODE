@@ -27,7 +27,7 @@ export default function MessageInput({
         e.preventDefault();
         onSendMessage();
       }}
-      className={`flex w-full items-end justify-center overflow-y-hidden lg:w-3/4 lg:max-w-5xl ${message ? 'gap-2' : 'gap-0'}`}
+      className={`flex w-full items-end justify-center overflow-y-hidden px-4 pb-4 ${message ? 'gap-2' : 'gap-0'}`}
     >
       <textarea
         ref={textareaRef}
@@ -37,7 +37,7 @@ export default function MessageInput({
         onCompositionStart={() => setIsComposing(true)}
         onCompositionEnd={() => setIsComposing(false)}
         placeholder="메시지를 입력하세요..."
-        className={`focus:border-main/50 max-h-48 min-h-20 flex-1 resize-none overflow-y-auto rounded-lg border border-gray-300 p-2 leading-normal transition-all duration-300 focus:outline-none ${message ? 'mr-0 w-auto' : 'mr-0 w-full'} ${isDisabled ? 'bg-gray-300' : ''}`}
+        className={`focus:border-main/50 max-h-48 min-h-20 flex-1 resize-none overflow-y-auto rounded-lg border border-gray-300 p-2 leading-normal transition-all duration-300 focus:outline-none ${message ? 'mr-0 w-auto' : 'mr-0 w-full'} ${isDisabled ? 'animate-pulse bg-gray-200' : 'bg-white'}`}
         rows={boxHeight}
         disabled={isDisabled}
       />
@@ -50,7 +50,7 @@ export default function MessageInput({
       >
         <button
           type="submit"
-          className="bg-main hover:bg-main/80 h-full grow-0 cursor-pointer rounded-lg px-4 py-4 text-white focus:outline-none"
+          className={`bg-main hover:bg-main/80 h-full w-full grow-0 cursor-pointer rounded-lg px-4 py-4 text-white focus:outline-none ${isDisabled ? 'w-0 opacity-0' : 'opacity-100'}`}
           tabIndex={message ? 0 : -1}
           disabled={!message.trim() || isDisabled}
         >

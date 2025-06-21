@@ -33,3 +33,7 @@
   /* active 등에서 푸른 배경화면 제거 */
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+
+.react-flow__attribution {
+  display: none;
+}

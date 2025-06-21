@@ -18,6 +18,8 @@ export async function GET(req: NextRequest) {
     const { messages, nextCursor } =
       await message_query_management.getChatMessages(userId, limit, cursor);
 
+    console.log(messages);
+
     return NextResponse.json({
       messages,
       nextCursor,

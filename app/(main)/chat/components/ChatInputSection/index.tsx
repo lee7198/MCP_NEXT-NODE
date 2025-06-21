@@ -9,9 +9,11 @@ import {
   server_management,
 } from '@/app/services/api';
 import { useSocket } from '@/app/hooks/useSocket';
+
 import McpSettingsModal from './components/McpSettingsModal';
 import ServerStatusPing from './components/ServerStatusPing';
 import MessageInput from './components/MessageInput';
+import { CaretDownIcon } from '@phosphor-icons/react/dist/ssr';
 
 export default function ChatInputSection({
   onSendMessage,
@@ -26,6 +28,7 @@ export default function ChatInputSection({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [boxHeight, setBoxHeight] = useState(1);
   const [isMcpSettingsOpen, setIsMcpSettingsOpen] = useState(false);
+  const [isInputVisible, setIsInputVisible] = useState(true);
   const [serverStatuses, setServerStatuses] = useState<
     Record<string, ServerStatus>
   >({});
@@ -42,7 +45,7 @@ export default function ChatInputSection({
     enabled: !!selectServer,
   });
 
-  const { isPending, isSuccess } = useQuery({
+  const { isPending: isModelPing, isSuccess } = useQuery({
     queryKey: ['model_server'],
     queryFn: () => aiModel_management.getModelPing(),
     refetchInterval: 5000,
@@ -108,11 +111,11 @@ export default function ChatInputSection({
   }, [message]);
 
   return (
-    <div className="flex w-full flex-col items-center border-t">
-      <div className="relative flex w-full gap-4 py-2 lg:w-3/4 lg:max-w-5xl">
+    <div className="relative z-50 mx-auto flex w-full flex-col items-center rounded-t-xl border border-gray-300 bg-white lg:max-w-6xl">
+      <div className="relative flex w-full gap-4 px-2 py-2">
         <button
           onClick={() => setIsMcpSettingsOpen(!isMcpSettingsOpen)}
-          className={`cursor-pointer rounded-md px-2 text-sm ${selectServer ? 'border bg-green-500 text-black' : 'border bg-white'} `}
+          className={`cursor-pointer rounded-md px-2 text-sm hover:opacity-70 ${selectServer ? 'border bg-green-500 text-black' : 'border border-gray-300 bg-white'} `}
         >
           MCP 설정 : {selectServer ? <b>{selectServer}</b> : '선택안함'}
         </button>
@@ -132,17 +135,36 @@ export default function ChatInputSection({
           isMcpParamsPending={isMcpParamsPending}
         />
 
-        <ServerStatusPing isPending={isPending} isSuccess={isSuccess} />
+        <ServerStatusPing isPending={isModelPing} isSuccess={isSuccess} />
+
+        <button
+          onClick={() => setIsInputVisible(!isInputVisible)}
+          className="ml-auto flex cursor-pointer items-center gap-1 px-3 py-1 text-sm transition-all duration-200 hover:bg-gray-200"
+        >
+          <div
+            className={`transition-transform duration-200 ${isInputVisible ? 'rotate-0' : 'rotate-180'}`}
+          >
+            <CaretDownIcon size={16} />
+          </div>
+        </button>
       </div>
 
-      <MessageInput
-        message={message}
-        setMessage={setMessage}
-        onSendMessage={handleSendMessage}
-        isDisabled={isDisabled}
-        textareaRef={textareaRef}
-        boxHeight={boxHeight}
-      />
+      <div
+        className={`w-full overflow-hidden transition-all duration-300 ease-in-out ${
+          isInputVisible ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        <div className="flex w-full justify-center">
+          <MessageInput
+            message={message}
+            setMessage={setMessage}
+            onSendMessage={handleSendMessage}
+            isDisabled={isDisabled}
+            textareaRef={textareaRef}
+            boxHeight={boxHeight}
+          />
+        </div>
+      </div>
     </div>
   );
 }

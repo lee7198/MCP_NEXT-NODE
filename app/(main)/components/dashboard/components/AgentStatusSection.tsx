@@ -18,7 +18,7 @@ export default function AgentStatusSection({
   });
 
   return (
-    <div className="col-span-12 row-start-3 rounded-lg bg-white p-4 shadow lg:col-span-4">
+    <div className="col-span-12 row-start-3 rounded-lg bg-white p-4 shadow lg:col-span-4 lg:row-start-2">
       <div className="flex items-center gap-2">
         <h2 className="text-lg font-bold">서버 AGENT 상태</h2>
         {isLoggedIn && clients.filter((item) => item.clientId).length > 0 && (

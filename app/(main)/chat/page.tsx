@@ -159,7 +159,7 @@ export default function Chat() {
   const messages = data?.pages.flatMap((page) => page.messages) || [];
 
   return (
-    <div className="bg= container mx-auto flex h-[calc(100svh-3rem)] flex-col px-2 pb-8">
+    <div className="mx-auto flex h-[calc(100svh-3rem)] flex-col px-2">
       <div className="flex h-full flex-col gap-6 overflow-y-auto p-4">
         {isMessagesLoading ? (
           <LoadingResponse />
