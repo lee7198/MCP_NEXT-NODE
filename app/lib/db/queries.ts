@@ -82,7 +82,7 @@ export const message_query_management = {
         messages.length === limit
           ? messages[messages.length - 1].CREATED_AT
           : null;
-
+      console.log(messages);
       return { messages, nextCursor };
     } catch (err) {
       console.error('메시지 조회 중 오류 발생:', err);

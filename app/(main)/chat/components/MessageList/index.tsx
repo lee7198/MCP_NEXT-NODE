@@ -5,33 +5,7 @@ import { Message, MessageListProps } from '@/app/types';
 import ChatMessage from '@/app/(main)/chat/components/MessageList/components/ChatMessage';
 import DateDivider from '@/app/(main)/components/common/DateDivider';
 import DateNavigation from './components/DateNavigation';
-
-// 날짜 정규화 함수 (DateNavigation과 동일한 방식)
-const normalizeDate = (dateString: string): string => {
-  // "2025. 6. 21." 형식 처리
-  const dotFormat = dateString.match(/(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})\.?/);
-  if (dotFormat) {
-    const [, year, month, day] = dotFormat;
-    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-  }
-
-  // "2025-06-21" 형식은 그대로 반환
-  if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
-    return dateString;
-  }
-
-  // 기타 형식은 Date 객체로 파싱 시도
-  try {
-    const date = new Date(dateString);
-    if (!isNaN(date.getTime())) {
-      return date.toISOString().split('T')[0];
-    }
-  } catch {
-    console.warn('날짜 파싱 실패:', dateString);
-  }
-
-  return dateString; // 파싱 실패 시 원본 반환
-};
+import { normalizeDate } from './components/lib';
 
 export default function MessageList({
   messages,
@@ -42,6 +16,21 @@ export default function MessageList({
   lastMessageRef,
 }: MessageListProps) {
   const dateRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  // 날짜별로 메시지 그룹화 (DateNavigation과 동일한 정규화 방식 사용)
+  const messagesByDate = messages.reduce(
+    (acc, message) => {
+      const date = normalizeDate(
+        new Date(message.CREATED_AT).toISOString().split('T')[0]
+      );
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(message);
+      return acc;
+    },
+    {} as Record<string, Message[]>
+  );
 
   // 날짜 클릭 시 해당 위치로 스크롤
   const handleDateClick = useCallback((date: string) => {
@@ -66,21 +55,6 @@ export default function MessageList({
     return null;
   }
 
-  // 날짜별로 메시지 그룹화 (DateNavigation과 동일한 정규화 방식 사용)
-  const messagesByDate = messages.reduce(
-    (acc, message) => {
-      const date = normalizeDate(
-        new Date(message.CREATED_AT).toISOString().split('T')[0]
-      );
-      if (!acc[date]) {
-        acc[date] = [];
-      }
-      acc[date].push(message);
-      return acc;
-    },
-    {} as Record<string, Message[]>
-  );
-
   return (
     <>
       <div className="flex flex-col items-center gap-4">
@@ -101,6 +75,7 @@ export default function MessageList({
                   index === dateMessages.length - 1 ? lastMessageRef : undefined
                 }
               >
+                {date}
                 <ChatMessage
                   message={{ ...message, isUser: message.USER_ID === userId }}
                   reqState={reqState}
