@@ -11,7 +11,7 @@ export const message_query_management = {
     const connection = await getOracleConnection();
     try {
       const sql = `INSERT INTO chat_messages (user_id, content, created_at, mcp_server) 
-                   VALUES (:userId, :content, SYSDATE, :mcp_server) 
+                   VALUES (:userId, :content, CURRENT_DATE, :mcp_server) 
                    RETURNING id INTO :id`;
 
       const result = await connection.execute(
@@ -101,7 +101,7 @@ export const message_query_management = {
     const connection = await getOracleConnection();
     try {
       const sql = `INSERT INTO AI_RESPONSES (message_id, content, created_at, total_duration) 
-                   VALUES (:messageId, :content, SYSDATE, :total_duration) 
+                   VALUES (:messageId, :content, CURRENT_DATE, :total_duration) 
                    RETURNING id INTO :id`;
       const result = await connection.execute(
         sql,
@@ -156,7 +156,7 @@ export const message_query_management = {
     const connection = await getOracleConnection();
     try {
       const sql = `INSERT INTO AI_RESPONSES (message_id, content, created_at, client_id) 
-                   VALUES (:messageId, :content, SYSDATE, :clientId) 
+                   VALUES (:messageId, :content, CURRENT_DATE, :clientId) 
                    RETURNING id INTO :id`;
       const result = await connection.execute(
         sql,
@@ -169,6 +169,46 @@ export const message_query_management = {
         { autoCommit: true }
       );
       return result.outBinds?.id[0];
+    } finally {
+      await connection.close();
+    }
+  },
+
+  // 메시지 날짜 목록 조회
+  async getMessageDates(
+    userId: string
+  ): Promise<{ date: string; count: number }[]> {
+    const connection = await getOracleConnection();
+    try {
+      const sql = `
+        SELECT 
+          TO_CHAR(CREATED_AT, 'YYYY-MM-DD') as MESSAGE_DATE,
+          COUNT(*) as MESSAGE_COUNT
+        FROM chat_messages 
+        WHERE user_id = :userId 
+        GROUP BY TO_CHAR(CREATED_AT, 'YYYY-MM-DD')
+        ORDER BY MESSAGE_DATE DESC
+      `;
+
+      const result = await connection.execute(
+        sql,
+        { userId },
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+
+      if (!result.rows) {
+        return [];
+      }
+      console.log(result.rows);
+      return result.rows.map(
+        (row: { MESSAGE_DATE: string; MESSAGE_COUNT: number }) => ({
+          date: row.MESSAGE_DATE,
+          count: row.MESSAGE_COUNT,
+        })
+      );
+    } catch (err) {
+      console.error('메시지 날짜 목록 조회 중 오류 발생:', err);
+      throw new Error('메시지 날짜 목록 조회에 실패했습니다.');
     } finally {
       await connection.close();
     }
@@ -189,7 +229,7 @@ FROM
 WHERE
 	cm.USER_ID = um.EMAIL 
 	AND cm.ID = ar.MESSAGE_ID
-    AND ar.CREATED_AT >= ADD_MONTHS(SYSDATE, -1)
+    AND ar.CREATED_AT >= ADD_MONTHS(CURRENT_DATE, -1)
 ORDER BY ar.CREATED_AT DESC`;
 
       const result = await connection.execute(
@@ -253,7 +293,7 @@ export const server_query_management = {
       }
 
       await connection.execute(
-        'INSERT INTO SERVERS (SERVERNAME, "COMMENT", RESPONSED_AT) VALUES (:1, :2, SYSDATE)',
+        'INSERT INTO SERVERS (SERVERNAME, "COMMENT", RESPONSED_AT) VALUES (:1, :2, CURRENT_DATE)',
         [SERVERNAME, COMMENT],
         { autoCommit: true }
       );
@@ -794,7 +834,7 @@ export const common_query_management = {
       }
 
       await connection.execute(
-        'UPDATE USER_MST SET LAST_LOGIN_AT = SYSDATE WHERE EMAIL = :1',
+        'UPDATE USER_MST SET LAST_LOGIN_AT = CURRENT_DATE WHERE EMAIL = :1',
         [email],
         { autoCommit: true }
       );

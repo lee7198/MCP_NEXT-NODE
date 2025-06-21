@@ -120,3 +120,8 @@ export interface ResponseTimeChartProps {
   selectedUsername: string;
   isDataPending: boolean;
 }
+
+export interface DateNavigationProps {
+  messages: Message[];
+  onDateClick: (date: string) => void;
+}

@@ -75,6 +75,17 @@ export const message_management = {
     return res.json();
   },
 
+  // 전체 메시지 날짜 목록 조회
+  getAllMessageDates: async (
+    userId: string
+  ): Promise<{ dates: { date: string; count: number }[] }> => {
+    const res = await fetch(
+      `${API_BASE_URL}/message/get-all-dates?userId=${userId}`
+    );
+    if (!res.ok) throw new Error('메시지 날짜 목록 조회 실패');
+    return res.json();
+  },
+
   // 메시지 저장
   saveMessage: async (data: ChatReq): Promise<SaveChatRes> => {
     const res = await fetch(`${API_BASE_URL}/message/save-message`, {
@@ -100,7 +111,7 @@ export const message_management = {
   },
 
   // AI 응답 조회
-  getAIResponse: async (messageId: number): Promise<AIResponse> => {
+  getAIResponse: async (messageId: number): Promise<AIResponse | null> => {
     const res = await fetch(
       `${API_BASE_URL}/message/get-ai-response?messageId=${messageId}`
     );
