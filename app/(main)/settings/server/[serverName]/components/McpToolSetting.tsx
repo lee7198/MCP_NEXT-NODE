@@ -161,14 +161,15 @@ export default function McpToolSetting({
 
   useEffect(() => {
     if (mcpTools) {
-      const filtedTool = mcpTools.filter((item) => item.USE_YON === 'Y');
-      if (filtedTool.length > 1) {
-        const filtedTool2 = filtedTool.filter(
+      const filteredTool = mcpTools.filter((item) => item.USE_YON === 'Y');
+      if (filteredTool.length > 1) {
+        const filteredTool2 = filteredTool.filter(
           (item) => item.TOOLNAME === settingTool
         );
-        if (filtedTool2.length === 0) setSettingTool(filtedTool[0].TOOLNAME);
+        if (filteredTool2.length === 0)
+          setSettingTool(filteredTool[0].TOOLNAME);
       } else {
-        if (filtedTool[0]) setSettingTool(filtedTool[0].TOOLNAME);
+        if (filteredTool[0]) setSettingTool(filteredTool[0].TOOLNAME);
       }
     }
   }, [mcpTools]);
