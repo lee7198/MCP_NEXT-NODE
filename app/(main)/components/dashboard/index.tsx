@@ -12,6 +12,7 @@ import { useSession } from 'next-auth/react';
 import ModelInfoCard from './components/ModelInfoCard';
 import ServerStatusCard from './components/ServerStatusCard';
 import UsageCard from './components/UsageCard';
+import UsageTable from './components/UsageTable';
 import AgentStatusSection from './components/AgentStatusSection';
 import ResponseTimeSection from './components/ResponseTimeSection';
 import McpLinksSection from './components/McpLinksSection';
@@ -108,6 +109,8 @@ export default function Dashboard() {
         onUsernameChange={setSelectedUsername}
         isLoggedIn={!!session}
       />
+
+      <UsageTable data={data || []} />
 
       <McpLinksSection />
     </div>

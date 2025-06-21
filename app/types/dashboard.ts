@@ -10,6 +10,10 @@ export interface UsageCardProps {
   selectedUsername: string;
 }
 
+export interface UsageTableProps {
+  data: DurationData[];
+}
+
 export interface ServerStatusCardProps {
   isPending: boolean;
   isSuccess: boolean;
