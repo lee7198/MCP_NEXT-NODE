@@ -7,7 +7,7 @@ export default function ServerStatusCard({
   isSuccess,
 }: ServerStatusCardProps) {
   return (
-    <div className="flex items-center rounded-lg bg-white p-4 shadow">
+    <div className="col-span-5 flex items-center rounded-lg bg-white p-4 shadow lg:col-span-3">
       <div className="flex items-center gap-2 text-lg font-bold">
         Model Server 상태 :
         <StatusPing

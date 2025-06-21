@@ -8,9 +8,10 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { DurationData, ServerStatus } from '@/app/types';
 import { useSocket } from '@/app/hooks/useSocket';
+import { useSession } from 'next-auth/react';
 import ModelInfoCard from './components/ModelInfoCard';
 import ServerStatusCard from './components/ServerStatusCard';
-import UsageCard from './components/UsageCard';
+// import UsageCard from './components/UsageCard';
 import AgentStatusSection from './components/AgentStatusSection';
 import ResponseTimeSection from './components/ResponseTimeSection';
 import McpLinksSection from './components/McpLinksSection';
@@ -19,6 +20,7 @@ import McpFlowSection from './components/McpFlowSection';
 export default function Dashboard() {
   const [selectedUsername, setSelectedUsername] = useState<string>('all');
   const { clients } = useSocket();
+  const { data: session } = useSession();
 
   const [serverStatuses, setServerStatuses] = useState<
     Record<string, ServerStatus>
@@ -39,25 +41,13 @@ export default function Dashboard() {
   const { data, isPending: isDataPending } = useQuery<DurationData[]>({
     queryKey: ['model_duration'],
     queryFn: () => message_management.getMessageDuration(),
+    enabled: !!session,
   });
 
   const { data: servers } = useQuery({
     queryKey: ['server_agent'],
     queryFn: () => server_management.getServers(),
   });
-
-  const todayUsage = useMemo(() => {
-    if (!data) return 0;
-    const today = new Date();
-    return data.filter((item) => {
-      const itemDate = new Date(item.CREATED_AT);
-      return (
-        itemDate.getDate() === today.getDate() &&
-        itemDate.getMonth() === today.getMonth() &&
-        itemDate.getFullYear() === today.getFullYear()
-      );
-    }).length;
-  }, [data]);
 
   const uniqueUsernames = useMemo(() => {
     if (!data) return [];
@@ -89,10 +79,10 @@ export default function Dashboard() {
   }, [clients, servers]);
 
   return (
-    <div className="container mx-auto grid w-full grid-cols-3 gap-4 p-4">
+    <div className="container mx-auto grid w-full grid-cols-12 gap-4 p-4">
       <ModelInfoCard />
       <ServerStatusCard isPending={isPendingServ} isSuccess={isSuccessServ} />
-      <UsageCard todayUsage={todayUsage} />
+      {/* <UsageCard todayUsage={todayUsage} /> */}
 
       <McpFlowSection
         servers={servers || []}
@@ -107,6 +97,7 @@ export default function Dashboard() {
         clients={clients}
         servers={servers || []}
         serverStatuses={serverStatuses}
+        isLoggedIn={!!session}
       />
 
       <ResponseTimeSection
@@ -115,6 +106,7 @@ export default function Dashboard() {
         isDataPending={isDataPending}
         uniqueUsernames={uniqueUsernames}
         onUsernameChange={setSelectedUsername}
+        isLoggedIn={!!session}
       />
 
       <McpLinksSection />

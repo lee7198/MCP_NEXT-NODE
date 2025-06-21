@@ -31,11 +31,11 @@ export default function MessageList({
   );
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col items-center gap-4">
       {Object.entries(messagesByDate).map(([date, dateMessages]) => (
         <div
           key={date}
-          className="flex flex-col gap-4 rounded-2xl border border-gray-300 bg-white p-4 shadow"
+          className="flex w-full max-w-5xl flex-col gap-4 rounded-2xl border border-gray-300 bg-white p-4 shadow"
         >
           <DateDivider date={date} />
 

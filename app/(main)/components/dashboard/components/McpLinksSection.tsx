@@ -26,7 +26,7 @@ const mcp_link: McpLinkArticle[] = [
 
 export default function McpLinksSection() {
   return (
-    <div className="col-span-3 rounded-lg bg-white p-4 shadow">
+    <div className="col-span-12 row-start-5 rounded-lg bg-white p-4 shadow">
       <h2 className="text-lg font-bold">MCP 관련 DOC & POST</h2>
       <ul className="mt-4 mb-2 list-inside list-decimal">
         {mcp_link.map((item) => (

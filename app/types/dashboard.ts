@@ -6,7 +6,7 @@ import { ClientInfo } from './socket';
 import { MarkerType, Position, Node } from '@xyflow/react';
 
 export interface UsageCardProps {
-  todayUsage: number;
+  data: DurationData[];
 }
 
 export interface ServerStatusCardProps {
@@ -20,6 +20,7 @@ export interface ResponseTimeSectionProps {
   isDataPending: boolean;
   uniqueUsernames: string[];
   onUsernameChange: (username: string) => void;
+  isLoggedIn: boolean;
 }
 
 export type McpLinkArticle = { title: string; link: string };
@@ -28,6 +29,7 @@ export interface AgentStatusSectionProps {
   clients: ClientInfo[];
   servers: ServerRes[];
   serverStatuses: Record<string, ServerStatus>;
+  isLoggedIn: boolean;
 }
 
 export interface FlowSectionProps {

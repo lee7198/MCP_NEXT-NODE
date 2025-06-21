@@ -94,7 +94,7 @@ export default function McpFlowSection({
   });
 
   return (
-    <div className="relative col-span-3 h-[350px] w-full rounded-lg bg-white p-4 shadow lg:col-span-2">
+    <div className="relative col-span-12 row-start-2 h-[350px] w-full rounded-lg bg-white p-4 shadow lg:col-span-8">
       <h2 className="absolute z-50 bg-white/40 px-2 text-lg font-bold backdrop-blur">
         System Flow
       </h2>
