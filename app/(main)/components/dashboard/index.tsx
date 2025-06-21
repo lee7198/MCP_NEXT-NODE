@@ -11,7 +11,7 @@ import { useSocket } from '@/app/hooks/useSocket';
 import { useSession } from 'next-auth/react';
 import ModelInfoCard from './components/ModelInfoCard';
 import ServerStatusCard from './components/ServerStatusCard';
-// import UsageCard from './components/UsageCard';
+import UsageCard from './components/UsageCard';
 import AgentStatusSection from './components/AgentStatusSection';
 import ResponseTimeSection from './components/ResponseTimeSection';
 import McpLinksSection from './components/McpLinksSection';
@@ -82,7 +82,7 @@ export default function Dashboard() {
     <div className="container mx-auto grid w-full grid-cols-12 gap-4 p-4">
       <ModelInfoCard />
       <ServerStatusCard isPending={isPendingServ} isSuccess={isSuccessServ} />
-      {/* <UsageCard todayUsage={todayUsage} /> */}
+      <UsageCard data={data || []} selectedUsername={selectedUsername} />
 
       <McpFlowSection
         servers={servers || []}

@@ -7,6 +7,7 @@ import { MarkerType, Position, Node } from '@xyflow/react';
 
 export interface UsageCardProps {
   data: DurationData[];
+  selectedUsername: string;
 }
 
 export interface ServerStatusCardProps {
