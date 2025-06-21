@@ -7,8 +7,8 @@ export default function ServerStatusCard({
   isSuccess,
 }: ServerStatusCardProps) {
   return (
-    <div className="col-span-6 flex items-center rounded-lg bg-white p-4 shadow lg:col-span-3">
-      <div className="flex items-center gap-2 text-lg font-bold">
+    <div className="col-span-4 flex items-center rounded-lg bg-white p-4 shadow">
+      <div className="flex items-center gap-2 font-bold">
         Model Server 상태 :
         <StatusPing
           status={isPending ? 'loading' : isSuccess ? 'success' : 'offline'}

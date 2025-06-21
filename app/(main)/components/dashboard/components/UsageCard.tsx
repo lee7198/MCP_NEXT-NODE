@@ -19,7 +19,7 @@ export default function UsageCard({ data, selectedUsername }: UsageCardProps) {
   }, [data, selectedUsername]);
 
   return (
-    <div className="flex items-center rounded-lg bg-white p-4 shadow">
+    <div className="col-span-4 flex items-center rounded-lg bg-white p-4 shadow">
       <b>{new Date().getMonth() + 1}월 사용 횟수 : </b>&nbsp;{thisMonthUsage}회
     </div>
   );
