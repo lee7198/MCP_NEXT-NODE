@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <div className="flex h-[calc(100svh-3rem)] w-full justify-center">
       <div className="flex h-full w-full flex-col overflow-y-scroll py-8">
-        <h1 className="my-16 text-center text-7xl font-black">
+        <h1 className="my-16 text-center text-[8vw] font-black lg:text-6xl">
           MCP 통합 관리 SYSTEM
         </h1>
         <Dashboard />

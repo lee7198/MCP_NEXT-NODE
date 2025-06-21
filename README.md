@@ -2,6 +2,8 @@
 
 이 프로젝트는 Next.js 기반의 웹 클라이언트와 Socket.IO 서버, Oracle 데이터베이스 그리고 Qwen3 모델 서버를 이용해 MCP(Machine Context Protocol) 에이전트를 관리하는 시스템입니다.
 
+![main_page](./readme/image.png)
+
 ## 구성 요소
 
 - **WebServer (Next.js)** – React 19와 TypeScript로 작성된 프론트엔드입니다. Google OAuth를 이용한 로그인(`next-auth`)과 여러 API 라우트가 포함되어 있습니다.
@@ -23,6 +25,7 @@ socket/server.ts    Express + Socket.IO 서버 (포트 3001)
 ```
 
 ## 환경 변수
+
 `app/lib/db/connection.ts`에서 확인할 수 있듯 다음 변수가 필요합니다.
 
 ```
@@ -30,6 +33,7 @@ ORACLE_USER
 ORACLE_PASSWORD
 ORACLE_CONNECT_STRING
 ```
+
 또한 모델 서버 연결을 위해 `MODEL_PORT`가 사용됩니다(`app/api/model/ai-request/route.ts` 참고). Google OAuth와 `next-auth`를 위해 다음 값도 필요합니다.
 
 ```
@@ -37,6 +41,7 @@ GOOGLE_CLIENT_ID
 GOOGLE_CLIENT_SECRET
 NEXTAUTH_SECRET
 ```
+
 `.env.local` 파일에 위 변수를 설정하면 됩니다.
 
 ## 사용 방법
@@ -55,8 +60,10 @@ NEXTAUTH_SECRET
 테스트는 Jest로 작성되어 있으며 `npm test` 로 실행할 수 있습니다.
 
 ## 소켓 통신
+
 `socket/server.ts`에서 Socket.IO 서버가 포트 3001에서 동작하며 웹 클라이언트와 Python MCP 에이전트 사이의 메시지를 중계합니다. 클라이언트 목록은 `/api/clients` 엔드포인트로 제공됩니다.
 
 ## 참고
+
 - Qwen3 모델 서버는 Ollama를 통해 구동되어야 하며, `MODEL_PORT`에 해당 포트를 지정합니다.
 - Python MCP 에이전트 실행 방법은 [MCP_AGENT](https://github.com/lee7198/MCP_AGENT) 저장소를 참고하세요.
