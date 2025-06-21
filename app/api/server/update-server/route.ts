@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { updateServer } from '@/app/lib/db/queries';
+import { server_query_management } from '@/app/lib/db/queries';
 
 export async function PUT(req: NextRequest) {
   try {
@@ -12,7 +12,7 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    await updateServer(serverId, comment);
+    await server_query_management.updateServer(serverId, comment);
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err) {
     console.error('서버 정보 수정 실패:', err);
