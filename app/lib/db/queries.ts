@@ -1,5 +1,6 @@
 import { getOracleConnection } from '@/app/lib/db/connection';
 import oracledb from 'oracledb';
+import { createUniqueRoomId } from '@/app/lib/db/room';
 import { DurationData, RoomInfo, UserListRes } from '@/app/types';
 import { McpToolRes } from '@/app/types';
 import { McpParamsRes } from '@/app/types/api';
@@ -20,43 +21,11 @@ export const message_query_management = {
   }) {
     const connection = await getOracleConnection();
 
-    // 랜덤 7자리 룸 코드 생성
-    const getShortIdBase62 = (length = 7) => {
-      const chars =
-        '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-      let id = '';
-      for (let i = 0; i < length; i++) {
-        const array = new Uint8Array(1);
-        crypto.getRandomValues(array);
-        id += chars[array[0] % chars.length];
-      }
-      return id;
-    };
-
-    // 중복되지 않는 roomId를 반환
-    const checkRoomId = async () => {
-      let newRoomId = '';
-      let isDuplicate = true;
-      while (isDuplicate) {
-        newRoomId = getShortIdBase62();
-        const checkSql = `SELECT COUNT(*) as count FROM chat_messages WHERE user_id = :userId AND room_id = :roomId`;
-        const checkResult = await connection.execute(
-          checkSql,
-          { userId, roomId: newRoomId },
-          { outFormat: oracledb.OUT_FORMAT_OBJECT }
-        );
-        if (checkResult.rows && checkResult.rows[0].COUNT === 0) {
-          isDuplicate = false;
-        }
-      }
-      return newRoomId;
-    };
-
     try {
       let finalRoomId = roomId;
       // roomId가 없다면 신규 방으로 간주하고 중복 없는 roomId 생성
       if (!roomId) {
-        finalRoomId = await checkRoomId();
+        finalRoomId = await createUniqueRoomId(connection, userId);
       }
 
       const sql = `INSERT INTO chat_messages (user_id, content, created_at, mcp_server, room_id) 
