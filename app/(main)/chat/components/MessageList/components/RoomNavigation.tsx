@@ -4,6 +4,7 @@ import {
   CaretRightIcon,
   ChatCircleDotsIcon,
   ClockCounterClockwiseIcon,
+  SidebarSimpleIcon,
 } from '@phosphor-icons/react/dist/ssr';
 import React from 'react';
 import { normalizeDate } from './lib';
@@ -35,14 +36,18 @@ export default function RoomNavigation({
           </button>
         )}
         <div
-          className={`flex flex-col gap-2 p-4 ${openNav ? '' : 'lg:items-center lg:justify-start lg:p-4'}`}
+          className={`flex flex-col gap-2 p-2 lg:p-4 ${openNav ? '' : 'lg:items-center lg:justify-start lg:p-4'}`}
         >
           <div>
             <button
-              className={`aspect-square cursor-pointer rounded-lg p-1 hover:bg-gray-200 ${openNav ? '' : 'lg:w-full'}`}
+              className={`aspect-square rounded-lg p-1 hover:bg-gray-200 ${isLgAndUp ? (openNav ? 'cursor-w-resize' : 'cursor-e-resize lg:w-full') : 'cursor-pointer'}`}
               onClick={() => setOpenNav(!openNav)}
             >
-              <CaretLeftIcon size={24} />
+              {isLgAndUp ? (
+                <SidebarSimpleIcon size={24} />
+              ) : (
+                <CaretLeftIcon size={24} />
+              )}
             </button>
           </div>
           <button
@@ -61,11 +66,9 @@ export default function RoomNavigation({
             onClick={() => isLgAndUp && setOpenNav(true)}
           >
             <ClockCounterClockwiseIcon size={24} />
-            <h2
-              className={`font-bold ${!openNav && isLgAndUp ? 'hidden' : ''}`}
-            >
+            <div className={` ${!openNav && isLgAndUp ? 'hidden' : ''}`}>
               HISTORY
-            </h2>
+            </div>
           </div>
           {/* history list */}
           {!openNav && isLgAndUp ? undefined : (
@@ -86,7 +89,7 @@ export default function RoomNavigation({
                               {item.content}
                             </div>
 
-                            <div className="col-span-11 flex gap-2 text-xs leading-3.5">
+                            <div className="col-span-11 flex gap-1 text-xs leading-3.5">
                               <span className="font-bold">{date}</span>
                               <span>[{item.roomId}]</span>
                             </div>

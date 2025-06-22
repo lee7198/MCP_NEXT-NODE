@@ -58,3 +58,11 @@ export interface RoomInfo {
   createdAt: Date;
   count: string;
 }
+
+export interface SaveChatRes {
+  id: number;
+  USER_ID: string;
+  CONTENT: string;
+  MCP_SERVER?: string;
+  roomId: string;
+}

@@ -113,7 +113,7 @@ export default function ChatInputSection({
 
   return (
     <div
-      className={`z-50 col-span-16 mx-auto h-auto w-full px-4 xl:max-w-6xl xl:px-4 ${openNav ? 'lg:col-span-12 lg:col-start-5 lg:w-full lg:pl-0 xl:col-span-13 xl:col-start-4' : 'lg:col-span-14 lg:col-start-4 lg:w-full lg:pl-0'}`}
+      className={`z-50 col-span-16 mx-auto h-auto w-full px-4 xl:max-w-6xl xl:px-4 ${openNav ? 'lg:col-span-12 lg:col-start-5 lg:w-full lg:pl-0 xl:col-span-13 xl:col-start-4' : 'lg:col-span-15 lg:col-start-2 lg:w-full lg:pl-4'}`}
     >
       <div className="= relative flex h-auto w-full flex-col items-center rounded-t-xl border border-gray-300 bg-white">
         <div className="relative flex h-auto w-full gap-4 px-2 py-2">

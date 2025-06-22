@@ -108,8 +108,11 @@ export default function Chat() {
         roomId: selectRoom,
       }),
     onSuccess: async (res) => {
-      const { MCP_SERVER } = res;
+      const { MCP_SERVER, roomId } = res;
       setReqState(initReqState);
+
+      // 새로 생성된 채팅방이 있으면 바로 이동
+      if (roomId) setSelectRoom(roomId);
 
       // mcp 요청이라면
       if (MCP_SERVER === selectServer) {
