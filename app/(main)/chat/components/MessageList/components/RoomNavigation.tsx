@@ -14,6 +14,9 @@ export default function RoomNavigation({
   isRoomSuccess,
   openNav,
   setOpenNav,
+  selectRoom,
+  setSelectRoom,
+  onNewChat,
 }: RoomNavigationProps) {
   const { isLgAndUp } = useBreakpoint();
 
@@ -44,6 +47,7 @@ export default function RoomNavigation({
           </div>
           <button
             className={`flex cursor-pointer items-center gap-2 rounded-lg p-1 hover:bg-gray-200 ${openNav ? '' : 'lg:aspect-square lg:justify-center'}`}
+            onClick={onNewChat}
           >
             <ChatCircleDotsIcon size={24} />
             <div className={`${!openNav && isLgAndUp ? 'hidden' : ''}`}>
@@ -58,7 +62,7 @@ export default function RoomNavigation({
           >
             <ClockCounterClockwiseIcon size={24} />
             <h2
-              className={`text-lg font-bold ${!openNav && isLgAndUp ? 'hidden' : ''}`}
+              className={`font-bold ${!openNav && isLgAndUp ? 'hidden' : ''}`}
             >
               HISTORY
             </h2>
@@ -74,20 +78,25 @@ export default function RoomNavigation({
                       );
                       return (
                         <div className="py-1" key={item.roomId}>
-                          <div className="grid cursor-pointer grid-cols-13 grid-rows-2 rounded-lg px-2 py-1 hover:bg-gray-200">
-                            <div className="col-span-5 text-xs">
-                              <span className="bg-gray-200">{item.roomId}</span>
+                          <div
+                            className={`grid cursor-pointer grid-cols-13 grid-rows-2 rounded-lg px-2 py-1 ${selectRoom === item.roomId ? 'bg-gray-800 text-white hover:bg-gray-600' : 'hover:bg-gray-200'}`}
+                            onClick={() => setSelectRoom(item.roomId)}
+                          >
+                            <div className="col-span-11 truncate text-sm leading-3.5 whitespace-nowrap">
+                              {item.content}
                             </div>
-                            <div className="col-span-6 text-xs leading-3.5">
-                              {date}
+
+                            <div className="col-span-11 flex gap-2 text-xs leading-3.5">
+                              <span className="font-bold">{date}</span>
+                              <span>[{item.roomId}]</span>
                             </div>
-                            <div className="col-span-2 row-span-2 flex items-center justify-end">
-                              <div className="flex size-6 items-center justify-center rounded-full bg-gray-500 text-center text-xs font-bold text-white">
+
+                            <div className="col-span-2 col-start-12 row-span-2 row-start-1 flex items-center justify-end">
+                              <div
+                                className={`flex size-6 items-center justify-center rounded-full text-center text-xs font-bold ${selectRoom === item.roomId ? 'bg-gray-300 text-black' : 'bg-gray-500 text-white'}`}
+                              >
                                 {item.count}
                               </div>
-                            </div>
-                            <div className="col-span-11 row-start-2 truncate text-sm leading-3.5 whitespace-nowrap">
-                              {item.content}
                             </div>
                           </div>
                         </div>

@@ -94,7 +94,17 @@ export const message_query_management = {
   },
 
   // 채팅 메시지 불러오기 (최신순)
-  async getChatMessages(userId: string, limit = 20, cursor?: string) {
+  async getChatMessages({
+    userId,
+    limit = 20,
+    roomId,
+    cursor,
+  }: {
+    userId: string;
+    limit: number;
+    roomId: string;
+    cursor?: string;
+  }) {
     if (!userId) {
       throw new Error('사용자 ID가 필요합니다.');
     }
@@ -105,16 +115,24 @@ export const message_query_management = {
         SELECT ID, USER_ID, DBMS_LOB.SUBSTR(CONTENT, 4000, 1) as CONTENT, CREATED_AT 
         FROM (
           SELECT * FROM chat_messages 
-          WHERE user_id = :userId 
-          ${cursor ? 'AND CREATED_AT < :cursor' : ''}
+          WHERE 
+            user_id = :userId 
+            AND ROOM_ID = :roomId
+            ${cursor ? 'AND CREATED_AT < :cursor' : ''}
           ORDER BY created_at DESC
         ) 
         WHERE ROWNUM <= :limit
       `;
 
-      const params: { userId: string; limit: number; cursor?: Date } = {
+      const params: {
+        userId: string;
+        limit: number;
+        roomId: string;
+        cursor?: Date;
+      } = {
         userId,
         limit,
+        roomId,
       };
       if (cursor) {
         params.cursor = new Date(cursor);
@@ -133,7 +151,7 @@ export const message_query_management = {
         messages.length === limit
           ? messages[messages.length - 1].CREATED_AT
           : null;
-      return { messages, nextCursor };
+      return { messages, nextCursor, roomId };
     } catch (err) {
       console.error('메시지 조회 중 오류 발생:', err);
       throw new Error('메시지 조회에 실패했습니다.');

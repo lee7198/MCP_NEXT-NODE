@@ -9,3 +9,13 @@ export default function NoDataMessage() {
     </div>
   );
 }
+
+export function GuideMessage() {
+  return (
+    <div className="flex h-full w-full items-center justify-center pr-4">
+      <div className="rounded-lg bg-white px-6 py-3 text-center font-semibold text-gray-700 shadow">
+        🤖 어떤 것을 도와드릴까요?
+      </div>
+    </div>
+  );
+}

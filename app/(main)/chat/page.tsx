@@ -42,6 +42,7 @@ export default function Chat() {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const { sendMessageWithMCP } = useSocket();
   const [selectServer, setSelectServer] = useState('');
+  const [selectRoom, setSelectRoom] = useState('');
 
   const userId = session?.user?.email;
 
@@ -53,12 +54,17 @@ export default function Chat() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    refetch: reFetchMessages,
   } = useInfiniteQuery<MessagesResponse, Error>({
     queryKey: ['messages', userId],
     queryFn: ({ pageParam }) =>
-      message_management.getMessages(userId!, pageParam as string),
+      message_management.getMessages({
+        userId: userId!,
+        cursor: pageParam as string,
+        roomId: selectRoom,
+      }),
     getNextPageParam: (lastPage) => lastPage.nextCursor,
-    enabled: !!userId && isMounted,
+    enabled: !!userId && isMounted && !!selectRoom,
     initialPageParam: undefined,
   });
 
@@ -92,7 +98,15 @@ export default function Chat() {
 
   // 메시지 저장 mutation
   const saveMessageMutation = useMutation<SaveChatRes, Error, ChatReq>({
-    mutationFn: (content) => message_management.saveMessage(content),
+    mutationFn: (content) =>
+      message_management.saveMessage({
+        CONTENT: content.CONTENT,
+        USER_ID: content.USER_ID,
+        ID: content.ID,
+        isMCP: content.isMCP,
+        MCP_SERVER: content.MCP_SERVER,
+        roomId: selectRoom,
+      }),
     onSuccess: async (res) => {
       const { MCP_SERVER } = res;
       setReqState(initReqState);
@@ -107,7 +121,9 @@ export default function Chat() {
         // 일반 AI 요청 (요청 후 바로 저장됨)
         aiRequestMutation.mutateAsync(res);
       }
+      reFetchRooms();
       queryClient.invalidateQueries({ queryKey: ['messages'] });
+
       setReqState((prev) => ({
         ...prev,
         messageId: res.id,
@@ -132,6 +148,7 @@ export default function Chat() {
     data: roomsData,
     isSuccess: isRoomSuccess,
     isLoading: isRoomLoading,
+    refetch: reFetchRooms,
   } = useQuery({
     queryKey: ['room'],
     queryFn: () => message_management.getRooms(userId!),
@@ -148,6 +165,10 @@ export default function Chat() {
     }
   };
 
+  const handleNewChat = () => {
+    setSelectRoom('');
+  };
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -161,7 +182,12 @@ export default function Chat() {
     if (selectServer) reFetchParam();
   }, [selectServer]);
 
-  const messages = data?.pages.flatMap((page) => page.messages) || [];
+  useEffect(() => {
+    if (selectRoom) reFetchMessages();
+  }, [selectRoom]);
+
+  const messages =
+    selectRoom === '' ? [] : data?.pages.flatMap((page) => page.messages) || [];
 
   if (!isMounted) return null;
 
@@ -173,17 +199,20 @@ export default function Chat() {
     );
 
   return (
-    <div className="relative mx-auto grid h-[calc(100svh-3rem)] max-h-full min-h-full grid-cols-16">
+    <div className="relative mx-auto grid h-[calc(100svh-3rem)] max-h-full min-h-full grid-cols-16 grid-rows-[1fr_auto]">
       <RoomNavigation
         rooms={roomsData || []}
         isRoomLoading={isRoomLoading}
         isRoomSuccess={isRoomSuccess}
         openNav={openNav}
         setOpenNav={setOpenNav}
+        selectRoom={selectRoom}
+        setSelectRoom={setSelectRoom}
+        onNewChat={handleNewChat}
       />
 
       <div
-        className={`col-span-16 flex flex-col gap-6 overflow-y-scroll px-4 transition-all duration-300 ${
+        className={`relative col-span-16 flex min-h-full flex-col gap-6 overflow-y-scroll px-4 transition-all duration-300 ${
           openNav
             ? 'lg:col-span-12 lg:pr-4 lg:pl-0 xl:col-span-13 xl:px-0 2xl:col-start-4'
             : 'lg:col-span-15 lg:col-start-2'

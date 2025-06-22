@@ -5,6 +5,7 @@ import { Message, MessageListProps } from '@/app/types';
 import ChatMessage from '@/app/(main)/chat/components/MessageList/components/ChatMessage';
 import DateDivider from '@/app/(main)/components/common/DateDivider';
 import { normalizeDate } from './components/lib';
+import { GuideMessage } from './components/NoDataMessage';
 
 export default function MessageList({
   messages,
@@ -51,7 +52,7 @@ export default function MessageList({
   // }, []);
 
   if (!messages || messages.length === 0) {
-    return null;
+    return <GuideMessage />;
   }
 
   return (

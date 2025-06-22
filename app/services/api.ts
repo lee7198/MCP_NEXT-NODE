@@ -58,14 +58,21 @@ export const aiModel_management = {
 
 export const message_management = {
   // 메시지 목록 조회
-  getMessages: async (
-    userId: string,
-    cursor?: string,
-    limit: number = 5
-  ): Promise<MessagesResponse> => {
+  getMessages: async ({
+    userId,
+    cursor,
+    limit = 5,
+    roomId,
+  }: {
+    userId: string;
+    cursor?: string;
+    limit?: number;
+    roomId: string;
+  }): Promise<MessagesResponse> => {
     const queryParams = new URLSearchParams({
       userId,
       limit: limit.toString(),
+      roomId,
     });
     if (cursor) queryParams.append('cursor', cursor);
 

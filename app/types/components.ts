@@ -133,4 +133,7 @@ export interface RoomNavigationProps {
   isRoomLoading: boolean;
   openNav: boolean;
   setOpenNav: React.Dispatch<React.SetStateAction<boolean>>;
+  selectRoom: string;
+  setSelectRoom: React.Dispatch<React.SetStateAction<string>>;
+  onNewChat: () => void;
 }

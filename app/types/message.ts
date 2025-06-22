@@ -20,6 +20,7 @@ export interface ChatReq {
   ID?: string;
   isMCP?: boolean;
   MCP_SERVER?: string;
+  roomId?: string;
 }
 
 export interface ChatRes extends Message {
