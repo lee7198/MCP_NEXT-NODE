@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint --fix",
     "prepare": "husky install",
-    "clean": "rm -rf package-lock.json ./next ./node_modules && npm install",
+    "clean": "rm -rf package-lock.json ./.next ./node_modules && npm install",
     "test": "jest"
   },
   "dependencies": {

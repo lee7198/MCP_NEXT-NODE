@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useRef, useCallback } from 'react';
+import React, { useRef } from 'react';
 import { Message, MessageListProps } from '@/app/types';
 import ChatMessage from '@/app/(main)/chat/components/MessageList/components/ChatMessage';
 import DateDivider from '@/app/(main)/components/common/DateDivider';
-import DateNavigation from './components/DateNavigation';
 import { normalizeDate } from './components/lib';
 
 export default function MessageList({
@@ -33,23 +32,23 @@ export default function MessageList({
   );
 
   // 날짜 클릭 시 해당 위치로 스크롤
-  const handleDateClick = useCallback((date: string) => {
-    const targetRef = dateRefs.current[date];
-    if (targetRef) {
-      // 해당 날짜의 메시지가 이미 로드된 경우
-      targetRef.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    } else {
-      // 해당 날짜의 메시지가 로드되지 않은 경우
-      // 스크롤을 맨 위로 이동하여 무한 스크롤이 해당 날짜까지 로드하도록 함
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
-    }
-  }, []);
+  // const handleDateClick = useCallback((date: string) => {
+  //   const targetRef = dateRefs.current[date];
+  //   if (targetRef) {
+  //     // 해당 날짜의 메시지가 이미 로드된 경우
+  //     targetRef.scrollIntoView({
+  //       behavior: 'smooth',
+  //       block: 'start',
+  //     });
+  //   } else {
+  //     // 해당 날짜의 메시지가 로드되지 않은 경우
+  //     // 스크롤을 맨 위로 이동하여 무한 스크롤이 해당 날짜까지 로드하도록 함
+  //     window.scrollTo({
+  //       top: 0,
+  //       behavior: 'smooth',
+  //     });
+  //   }
+  // }, []);
 
   if (!messages || messages.length === 0) {
     return null;
@@ -57,7 +56,7 @@ export default function MessageList({
 
   return (
     <>
-      <div className="flex flex-col items-center gap-4">
+      <div className="mt-4 flex flex-col items-center gap-4">
         {Object.entries(messagesByDate).map(([date, dateMessages]) => (
           <div
             key={date}
@@ -66,8 +65,8 @@ export default function MessageList({
             }}
             className="flex w-full max-w-5xl flex-col gap-4 rounded-2xl border border-gray-300 bg-white p-4 shadow"
           >
+            {/* <div className="h-[500px]" /> */}
             <DateDivider date={date} />
-
             {dateMessages.map((message, index) => (
               <div
                 key={message.ID}
@@ -75,7 +74,6 @@ export default function MessageList({
                   index === dateMessages.length - 1 ? lastMessageRef : undefined
                 }
               >
-                {date}
                 <ChatMessage
                   message={{ ...message, isUser: message.USER_ID === userId }}
                   reqState={reqState}
@@ -89,7 +87,7 @@ export default function MessageList({
       </div>
 
       {/* 날짜 네비게이션 플로팅 버튼 */}
-      <DateNavigation messages={messages} onDateClick={handleDateClick} />
+      {/* <DateNavigation messages={messages} onDateClick={handleDateClick} /> */}
     </>
   );
 }

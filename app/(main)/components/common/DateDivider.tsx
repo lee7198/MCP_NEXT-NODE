@@ -31,7 +31,7 @@ export default function DateDivider({ date }: DateDividerProps) {
     .padStart(2, '0')}`;
 
   return (
-    <div className="sticky top-0 z-0 flex justify-center">
+    <div className="sticky top-4 z-0 flex justify-center">
       <span className="rounded-full border border-gray-300 bg-gray-50 px-4 py-1 text-sm">
         {formattedDate}
       </span>

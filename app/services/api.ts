@@ -6,6 +6,7 @@ import {
   McpParamsRes,
   McpRes,
   MessagesResponse,
+  RoomInfo,
   SaveAIResponseRes,
   SaveChatRes,
   ServerDetail,
@@ -140,6 +141,16 @@ export const message_management = {
       body: JSON.stringify(data),
     });
     if (!res.ok) throw new Error('MCP 응답 저장 실패');
+    return res.json();
+  },
+
+  // 채팅방 조회
+  getRooms: async (userId: string): Promise<Array<RoomInfo>> => {
+    const res = await fetch(
+      `${API_BASE_URL}/message/get-rooms?userId=${userId}`
+    );
+    if (!res.ok) throw new Error('채팅방 목록 조회 실패');
+
     return res.json();
   },
 };

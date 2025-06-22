@@ -1,5 +1,5 @@
 import React from 'react';
-import { Message, ChatReq, DurationData } from './message';
+import { Message, ChatReq, DurationData, RoomInfo } from './message';
 import { ClientInfo } from './socket';
 import { McpRes, ServerRes, McpParamsRes } from './api';
 
@@ -17,6 +17,7 @@ export interface ChatInputProps {
   setSelectServer: React.Dispatch<React.SetStateAction<string>>;
   mcpParams?: McpParamsRes[];
   isMcpParamsPending: boolean;
+  openNav: boolean;
 }
 
 export interface DateDividerProps {
@@ -124,4 +125,12 @@ export interface ResponseTimeChartProps {
 export interface DateNavigationProps {
   messages: Message[];
   onDateClick: (date: string) => void;
+}
+
+export interface RoomNavigationProps {
+  rooms: RoomInfo[];
+  isRoomSuccess: boolean;
+  isRoomLoading: boolean;
+  openNav: boolean;
+  setOpenNav: React.Dispatch<React.SetStateAction<boolean>>;
 }

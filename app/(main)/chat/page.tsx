@@ -29,10 +29,12 @@ import { initReqState } from '@/app/lib/common';
 import { useSession } from 'next-auth/react';
 import ChatInputSection from '@/app/(main)/chat/components/ChatInputSection';
 import { useSocket } from '@/app/hooks/useSocket';
+import RoomNavigation from './components/MessageList/components/RoomNavigation';
 
 export default function Chat() {
   const [isMounted, setIsMounted] = useState(false);
   const [reqState, setReqState] = useState<AIRequestState>(initReqState);
+  const [openNav, setOpenNav] = useState(true);
   const isUserLoading = useUserStore((state) => state.isLoading);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
@@ -125,6 +127,18 @@ export default function Chat() {
     },
   });
 
+  //채팅방 조회
+  const {
+    data: roomsData,
+    isSuccess: isRoomSuccess,
+    isLoading: isRoomLoading,
+  } = useQuery({
+    queryKey: ['room'],
+    queryFn: () => message_management.getRooms(userId!),
+    enabled: !!userId,
+    staleTime: 0,
+  });
+
   // not mcp ai 메세지용
   const handleSendMessage = async (req: ChatReq) => {
     try {
@@ -147,6 +161,8 @@ export default function Chat() {
     if (selectServer) reFetchParam();
   }, [selectServer]);
 
+  const messages = data?.pages.flatMap((page) => page.messages) || [];
+
   if (!isMounted) return null;
 
   if (isUserLoading)
@@ -156,11 +172,23 @@ export default function Chat() {
       </div>
     );
 
-  const messages = data?.pages.flatMap((page) => page.messages) || [];
-
   return (
-    <div className="mx-auto flex h-[calc(100svh-3rem)] flex-col px-2">
-      <div className="flex h-full flex-col gap-6 overflow-y-auto p-4">
+    <div className="relative mx-auto grid h-[calc(100svh-3rem)] max-h-full min-h-full grid-cols-16">
+      <RoomNavigation
+        rooms={roomsData || []}
+        isRoomLoading={isRoomLoading}
+        isRoomSuccess={isRoomSuccess}
+        openNav={openNav}
+        setOpenNav={setOpenNav}
+      />
+
+      <div
+        className={`col-span-16 flex flex-col gap-6 overflow-y-scroll px-4 transition-all duration-300 ${
+          openNav
+            ? 'lg:col-span-12 lg:pr-4 lg:pl-0 xl:col-span-13 xl:px-0 2xl:col-start-4'
+            : 'lg:col-span-15 lg:col-start-2'
+        }`}
+      >
         {isMessagesLoading ? (
           <LoadingResponse />
         ) : isError ? (
@@ -191,6 +219,7 @@ export default function Chat() {
         setSelectServer={setSelectServer}
         mcpParams={mcpParams}
         isMcpParamsPending={isMcpParamsPending}
+        openNav={openNav}
       />
     </div>
   );

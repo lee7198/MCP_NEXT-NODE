@@ -50,3 +50,10 @@ export interface DurationData {
   CREATED_AT: Date;
   TOTAL_DURATION: number;
 }
+
+export interface RoomInfo {
+  roomId: string;
+  content: string;
+  createdAt: Date;
+  count: string;
+}

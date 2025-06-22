@@ -1,17 +1,66 @@
 import { getOracleConnection } from '@/app/lib/db/connection';
 import oracledb from 'oracledb';
-import { DurationData, UserListRes } from '@/app/types';
+import { DurationData, RoomInfo, UserListRes } from '@/app/types';
 import { McpToolRes } from '@/app/types';
 import { McpParamsRes } from '@/app/types/api';
 
 // 메시지 관리 관련 쿼리
 export const message_query_management = {
   // 채팅 메시지 저장
-  async saveChatMessage(userId: string, content: string, MCP_SERVER?: string) {
+  async saveChatMessage({
+    userId,
+    content,
+    MCP_SERVER,
+    roomId,
+  }: {
+    userId: string;
+    content: string;
+    MCP_SERVER?: string;
+    roomId?: string;
+  }) {
     const connection = await getOracleConnection();
+
+    // 랜덤 7자리 룸 코드 생성
+    const getShortIdBase62 = (length = 7) => {
+      const chars =
+        '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let id = '';
+      for (let i = 0; i < length; i++) {
+        const array = new Uint8Array(1);
+        crypto.getRandomValues(array);
+        id += chars[array[0] % chars.length];
+      }
+      return id;
+    };
+
+    // 중복되지 않는 roomId를 반환
+    const checkRoomId = async () => {
+      let newRoomId = '';
+      let isDuplicate = true;
+      while (isDuplicate) {
+        newRoomId = getShortIdBase62();
+        const checkSql = `SELECT COUNT(*) as count FROM chat_messages WHERE user_id = :userId AND room_id = :roomId`;
+        const checkResult = await connection.execute(
+          checkSql,
+          { userId, roomId: newRoomId },
+          { outFormat: oracledb.OUT_FORMAT_OBJECT }
+        );
+        if (checkResult.rows && checkResult.rows[0].COUNT === 0) {
+          isDuplicate = false;
+        }
+      }
+      return newRoomId;
+    };
+
     try {
-      const sql = `INSERT INTO chat_messages (user_id, content, created_at, mcp_server) 
-                   VALUES (:userId, :content, CURRENT_DATE, :mcp_server) 
+      let finalRoomId = roomId;
+      // roomId가 없다면 신규 방으로 간주하고 중복 없는 roomId 생성
+      if (!roomId) {
+        finalRoomId = await checkRoomId();
+      }
+
+      const sql = `INSERT INTO chat_messages (user_id, content, created_at, mcp_server, room_id) 
+                   VALUES (:userId, :content, CURRENT_DATE, :mcp_server, :roomId) 
                    RETURNING id INTO :id`;
 
       const result = await connection.execute(
@@ -21,6 +70,7 @@ export const message_query_management = {
           content,
           id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
           mcp_server: MCP_SERVER || null,
+          roomId: finalRoomId,
         },
         { autoCommit: true }
       );
@@ -36,6 +86,7 @@ export const message_query_management = {
       return {
         id: result.outBinds?.id[0],
         mcp_server: selectResult.rows?.[0]?.MCP_SERVER,
+        roomId: finalRoomId,
       };
     } finally {
       await connection.close();
@@ -82,7 +133,6 @@ export const message_query_management = {
         messages.length === limit
           ? messages[messages.length - 1].CREATED_AT
           : null;
-      console.log(messages);
       return { messages, nextCursor };
     } catch (err) {
       console.error('메시지 조회 중 오류 발생:', err);
@@ -264,6 +314,69 @@ ORDER BY ar.CREATED_AT DESC`;
     } catch (err) {
       console.error('메세지 응답시간 조회 중 오류 발생:', err);
       throw new Error('메세지 응답시간 조회에 실패했습니다.');
+    } finally {
+      await connection.close();
+    }
+  },
+
+  async getRooms(userId: string): Promise<Array<RoomInfo>> {
+    const connection = await getOracleConnection();
+    try {
+      const sql = `
+        SELECT 
+          M.ROOM_ID, 
+          DBMS_LOB.SUBSTR(M.CONTENT, 4000, 1) AS CONTENT, 
+          M.CREATED_AT, 
+          C.COUNT_ROOMS
+        FROM (
+          SELECT 
+            ROOM_ID,
+            USER_ID,
+            CONTENT,
+            CREATED_AT,
+            ROW_NUMBER() OVER (PARTITION BY ROOM_ID ORDER BY CREATED_AT DESC) AS RN
+          FROM CHAT_MESSAGES
+          WHERE USER_ID = :userId
+        ) M
+        JOIN (
+          SELECT ROOM_ID, COUNT(*) AS COUNT_ROOMS
+          FROM CHAT_MESSAGES
+          WHERE USER_ID = :userId
+          GROUP BY ROOM_ID
+        ) C ON M.ROOM_ID = C.ROOM_ID
+        WHERE M.RN = 1
+        ORDER BY M.CREATED_AT DESC
+      `;
+
+      const result = await connection.execute(
+        sql,
+        { userId },
+        {
+          outFormat: oracledb.OUT_FORMAT_OBJECT,
+        }
+      );
+
+      if (!result.rows || result.rows.length === 0) {
+        return [];
+      }
+
+      // 순환 참조 문제 해결을 위해 순수 객체로 변환
+      return result.rows.map(
+        (row: {
+          ROOM_ID: string;
+          CONTENT: string;
+          CREATED_AT: Date;
+          COUNT_ROOMS: number;
+        }) => ({
+          roomId: row.ROOM_ID,
+          content: row.CONTENT,
+          createdAt: row.CREATED_AT,
+          count: row.COUNT_ROOMS,
+        })
+      );
+    } catch (err) {
+      console.error('채팅방 조회 중 오류 발생:', err);
+      throw new Error('채팅방 조회에 실패했습니다.');
     } finally {
       await connection.close();
     }

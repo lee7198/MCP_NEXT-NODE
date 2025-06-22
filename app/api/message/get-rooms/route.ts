@@ -5,8 +5,6 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
-    const cursor = searchParams.get('cursor') || undefined;
-    const limit = Number(searchParams.get('limit')) || 20;
 
     if (!userId) {
       return NextResponse.json(
@@ -15,18 +13,13 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const { messages, nextCursor } =
-      await message_query_management.getChatMessages(userId, limit, cursor);
-
-    return NextResponse.json({
-      messages,
-      nextCursor,
-      hasMore: !!nextCursor,
-    });
+    const rooms = await message_query_management.getRooms(userId);
+    console.log(rooms);
+    return NextResponse.json(rooms);
   } catch (err) {
-    console.error('메시지 조회 실패:', err);
+    console.error('채팅방 조회 실패:', err);
     const errorMessage =
-      err instanceof Error ? err.message : '메시지 조회 실패';
+      err instanceof Error ? err.message : '채팅방 조회 실패';
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
