@@ -28,11 +28,13 @@ export default function UserInfo({
         className="fixed top-0 left-0 z-10 h-screen w-screen cursor-pointer bg-black/20 backdrop-blur-[4px]"
         onClick={() => setOpenHover(false)}
       />
-      <div className="absolute top-12 right-0 z-20 min-w-56 rounded-lg bg-white p-4 shadow-2xl">
+      <div className="absolute top-12 right-0 z-20 min-w-56 rounded-lg border bg-white p-4 shadow-2xl dark:border-gray-700 dark:bg-gray-800 dark:shadow-gray-900/50">
         <div className="mb-3 flex items-start justify-between">
-          <h3 className="text-lg font-semibold">사용자 정보</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            사용자 정보
+          </h3>
           <button
-            className="cursor-pointer rounded-full bg-gray-200 p-1"
+            className="cursor-pointer rounded-full bg-gray-200 p-1 text-gray-900 dark:bg-gray-700 dark:text-gray-100"
             onClick={() => setOpenHover(false)}
           >
             <XIcon size={14} weight="bold" />
@@ -41,15 +43,19 @@ export default function UserInfo({
 
         <div className="mb-4 flex flex-col items-center gap-2">
           <div className="flex flex-col items-center gap-1">
-            <div className="text-base font-black">{userId}</div>
-            <div className="text-sm wrap-anywhere text-gray-600">{email}</div>
+            <div className="text-base font-black text-gray-900 dark:text-gray-100">
+              {userId}
+            </div>
+            <div className="text-sm wrap-anywhere text-gray-600 dark:text-gray-400">
+              {email}
+            </div>
           </div>
         </div>
 
         <div className="flex justify-center">
           <button
             onClick={handleSignOut}
-            className="cursor-pointer rounded-md bg-gray-800 px-4 py-2 text-sm text-white transition-colors hover:bg-gray-600"
+            className="cursor-pointer rounded-md bg-gray-800 px-4 py-2 text-sm text-white transition-colors hover:bg-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600"
           >
             로그아웃
           </button>

@@ -196,13 +196,13 @@ export default function Chat() {
 
   if (isUserLoading)
     return (
-      <div className="flex h-[calc(100svh-3rem)] items-center justify-center">
+      <div className="flex h-[calc(100svh-3rem)] items-center justify-center bg-gray-50 dark:bg-gray-900">
         <Spinner size={8} />
       </div>
     );
 
   return (
-    <div className="relative mx-auto grid h-[calc(100svh-3rem)] max-h-full min-h-full grid-cols-16 grid-rows-[1fr_auto]">
+    <div className="relative mx-auto grid h-[calc(100svh-3rem)] max-h-full min-h-full grid-cols-16 grid-rows-[1fr_auto] bg-gray-50 dark:bg-gray-900">
       <RoomNavigation
         rooms={roomsData || []}
         isRoomLoading={isRoomLoading}
@@ -215,7 +215,7 @@ export default function Chat() {
       />
 
       <div
-        className={`relative col-span-16 flex min-h-full flex-col gap-6 overflow-y-scroll px-4 transition-all duration-300 ${
+        className={`relative col-span-16 flex min-h-full flex-col gap-6 overflow-y-scroll bg-gray-50 px-4 transition-all duration-300 dark:bg-gray-900 ${
           openNav
             ? 'lg:col-span-12 lg:pr-4 lg:pl-0 xl:col-span-13 xl:px-0 2xl:col-start-4'
             : 'lg:col-span-15 lg:col-start-2'
