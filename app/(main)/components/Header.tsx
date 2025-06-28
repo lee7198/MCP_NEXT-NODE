@@ -21,13 +21,13 @@ const Header = React.memo(function Header() {
   if (!mounted) {
     return (
       <div
-        className="absolute top-0 z-[9999] w-screen border-b bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
+        className="absolute top-0 z-[9999] w-screen border-b border-gray-200 bg-white dark:border-zinc-700 dark:bg-zinc-800"
         suppressHydrationWarning
       >
         <div className="container mx-auto flex h-12 w-full items-center justify-between gap-2 px-4">
           <div className="flex w-full items-center justify-between">
             <div />
-            <div className="size-8 animate-pulse rounded-full bg-gray-300" />
+            <div className="size-8 animate-pulse rounded-full bg-gray-300 dark:bg-zinc-600" />
           </div>
         </div>
       </div>
@@ -36,7 +36,7 @@ const Header = React.memo(function Header() {
 
   return (
     <div
-      className="absolute top-0 z-[9999] w-screen border-b bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
+      className="absolute top-0 z-[9999] w-screen border-b border-gray-200 bg-white dark:border-zinc-700 dark:bg-zinc-800"
       suppressHydrationWarning
     >
       <div className="container mx-auto flex h-12 w-full items-center justify-between gap-2 px-4">
@@ -45,7 +45,7 @@ const Header = React.memo(function Header() {
         {status === 'loading' ? (
           <div className="flex w-full items-center justify-between">
             <div />
-            <div className="size-8 animate-pulse rounded-full bg-gray-300" />
+            <div className="size-8 animate-pulse rounded-full bg-gray-300 dark:bg-zinc-600" />
           </div>
         ) : session?.user ? (
           <>
@@ -54,7 +54,7 @@ const Header = React.memo(function Header() {
                 <Link
                   key={item.path}
                   href={item.path}
-                  className="cursor-pointer"
+                  className="cursor-pointer text-gray-900 hover:text-gray-600 dark:text-zinc-100 dark:hover:text-gray-300"
                 >
                   {item.name}
                 </Link>
@@ -71,9 +71,10 @@ const Header = React.memo(function Header() {
                     height={32}
                     src={session.user.image}
                     alt="profile_image"
+                    className="rounded-full"
                   />
                 ) : (
-                  <div className="size-8 animate-pulse rounded-full bg-gray-300" />
+                  <div className="size-8 animate-pulse rounded-full bg-gray-300 dark:bg-zinc-600" />
                 )}
               </button>
               <UserInfo
@@ -90,7 +91,7 @@ const Header = React.memo(function Header() {
             <div />
             <button
               onClick={() => signIn('google')}
-              className="flex cursor-pointer items-center gap-2 rounded-md border px-4 py-1 text-sm hover:bg-gray-200"
+              className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-1 text-sm text-gray-700 hover:bg-gray-50 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600"
             >
               <GoogleLogoIcon size={16} weight="bold" /> 구글 계정으로 로그인
             </button>

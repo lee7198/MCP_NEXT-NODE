@@ -72,7 +72,7 @@ export default function AIResponseItem({
         </>
       )}
 
-      <div className="text-gray-800">
+      <div className="text-gray-800 dark:text-white">
         <div className="rounded-lg p-2 break-keep">
           <MarkdownStyle input={responseMessage} />
         </div>

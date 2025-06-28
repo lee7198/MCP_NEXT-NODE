@@ -97,7 +97,7 @@ export default function New() {
           <button
             type="submit"
             disabled={saveServerMutation.isPending}
-            className="rounded-md bg-gray-600 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
+            className="rounded-md bg-gray-600 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
           >
             {saveServerMutation.isPending ? '등록 중...' : '등록'}
           </button>

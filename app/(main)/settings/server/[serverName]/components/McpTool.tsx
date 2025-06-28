@@ -34,15 +34,19 @@ export default function McpTool({
   };
 
   return (
-    <div className="rounded-lg bg-gray-50 p-4 md:col-span-2 lg:col-span-1">
-      <h2 className="mb-4 text-lg font-semibold">
+    <div className="rounded-lg bg-gray-50 p-4 md:col-span-2 lg:col-span-1 dark:bg-zinc-700">
+      <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-zinc-100">
         MCP(Model Context Protocol) 정보
       </h2>
       <div className="mt-2 flex flex-col gap-2">
         {/* header */}
-        <div className="grid grid-cols-5 gap-4 border-b px-2 pb-2">
-          <div className="col-span-4 font-bold">MCP:설명</div>
-          <div className="text-center font-bold">사용유무</div>
+        <div className="grid grid-cols-5 gap-4 border-b border-gray-200 px-2 pb-2 dark:border-zinc-600">
+          <div className="col-span-4 font-bold text-gray-900 dark:text-zinc-100">
+            MCP:설명
+          </div>
+          <div className="text-center font-bold text-gray-900 dark:text-zinc-100">
+            사용유무
+          </div>
         </div>
         {/* content */}
         <div className="max-h-44 overflow-y-scroll">
@@ -50,11 +54,15 @@ export default function McpTool({
             ? mcpTools?.map((mcp) => (
                 <div
                   key={mcp.TOOLNAME}
-                  className="mb-2 grid grid-cols-5 gap-4 rounded-sm px-2 py-1 hover:bg-gray-100"
+                  className="mb-2 grid grid-cols-5 gap-4 rounded-sm px-2 py-1 hover:bg-gray-100 dark:hover:bg-zinc-600"
                 >
                   <div className="col-span-4 flex flex-col gap-1">
-                    <div className="font-bold">{mcp.TOOLNAME}</div>
-                    <div className="text-sm">{mcp.TOOL_COMMENT}</div>
+                    <div className="font-bold text-gray-900 dark:text-zinc-100">
+                      {mcp.TOOLNAME}
+                    </div>
+                    <div className="text-sm text-gray-600 dark:text-zinc-400">
+                      {mcp.TOOL_COMMENT}
+                    </div>
                   </div>
 
                   <label
@@ -69,7 +77,7 @@ export default function McpTool({
                       className="peer sr-only"
                     />
                     <div
-                      className={`peer relative h-6 w-11 rounded-full bg-gray-200 peer-checked:bg-green-600 peer-focus:ring-0 peer-focus:outline-none after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white rtl:peer-checked:after:-translate-x-full ${updateMcpToolMutation.isPending ? 'cursor-not-allowed opacity-50' : ''}`}
+                      className={`peer relative h-6 w-11 rounded-full bg-gray-200 peer-checked:bg-green-600 peer-focus:ring-0 peer-focus:outline-none after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white rtl:peer-checked:after:-translate-x-full dark:bg-zinc-600 dark:peer-checked:bg-green-500 ${updateMcpToolMutation.isPending ? 'cursor-not-allowed opacity-50' : ''}`}
                     />
                   </label>
                 </div>
@@ -79,8 +87,8 @@ export default function McpTool({
                   key={i}
                   className="mb-2 flex animate-pulse flex-col gap-1 py-1"
                 >
-                  <div className="h-6 w-50 rounded-lg bg-gray-300 font-bold" />
-                  <div className="h-5 w-20 rounded-lg bg-gray-300 font-bold" />
+                  <div className="h-6 w-50 rounded-lg bg-gray-300 font-bold dark:bg-zinc-600" />
+                  <div className="h-5 w-20 rounded-lg bg-gray-300 font-bold dark:bg-zinc-600" />
                 </div>
               ))}
         </div>

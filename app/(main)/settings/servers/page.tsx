@@ -10,9 +10,9 @@ import { PingStatus, ServerStatus } from '@/app/types';
 import { CaretLeftIcon } from '@phosphor-icons/react/dist/ssr';
 
 export default function Servers() {
-  const [pingStatuses, setPingStatuses] = useState<
-    Record<string, PingStatus>
-  >({});
+  const [pingStatuses, setPingStatuses] = useState<Record<string, PingStatus>>(
+    {}
+  );
   const [serverStatuses, setServerStatuses] = useState<
     Record<string, ServerStatus>
   >({});
@@ -77,18 +77,21 @@ export default function Servers() {
   }, [clients]);
 
   return (
-    <div className="container mx-auto flex flex-col gap-12 p-6">
+    <div className="container mx-auto flex flex-col gap-12 bg-gray-50 p-6 dark:bg-zinc-900">
       <div>
         <div className="mb-4 flex items-center justify-between">
-          <h1 className="flex items-center gap-2 text-2xl font-bold">
-            <Link href="/settings">
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-zinc-100">
+            <Link
+              href="/settings"
+              className="text-gray-900 hover:text-gray-600 dark:text-zinc-100 dark:hover:text-gray-300"
+            >
               <CaretLeftIcon size={24} weight="bold" />
             </Link>
             <span>서버(클라이언트) 관리</span>
           </h1>
           <Link
             href="/settings/server/new"
-            className="cursor-pointer rounded-md bg-gray-600 px-4 py-2 text-xs font-medium text-white hover:bg-gray-700"
+            className="cursor-pointer rounded-md bg-gray-600 px-4 py-2 text-xs font-medium text-white hover:bg-gray-800 dark:bg-zinc-700 dark:hover:bg-zinc-600"
           >
             NEW
           </Link>

@@ -39,13 +39,13 @@ const CustomFlowEdge: FC<
           style={{
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
           }}
-          className={`absolute rounded-full bg-white/40 backdrop-blur`}
+          className={`absolute rounded-full bg-white/40 backdrop-blur dark:bg-zinc-800/40`}
         >
           {Icon && (
             <Icon
               size={10}
               className={`${label === 'loading' ? 'animate-spin' : ''}`}
-              color={label === 'offline' ? '#FB2C36' : '#222'}
+              color={label === 'offline' ? '#FB2C36' : undefined}
             />
           )}
         </div>

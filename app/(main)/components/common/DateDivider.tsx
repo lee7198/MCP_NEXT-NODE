@@ -32,7 +32,7 @@ export default function DateDivider({ date }: DateDividerProps) {
 
   return (
     <div className="sticky top-4 z-0 flex justify-center">
-      <span className="rounded-full border border-gray-300 bg-gray-50 px-4 py-1 text-sm">
+      <span className="rounded-full border border-gray-300 bg-gray-50 px-4 py-1 text-sm dark:border-zinc-500 dark:bg-zinc-700">
         {formattedDate}
       </span>
     </div>

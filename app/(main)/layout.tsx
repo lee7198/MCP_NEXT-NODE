@@ -11,41 +11,36 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const theme = useThemeStore((state) => state.theme);
-  const [mounted, setMounted] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    const systemDark = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches;
 
-  // 서버 사이드 렌더링 중에는 기본값 사용
-  if (!mounted) {
-    return (
-      <div
-        className="bg-background text-foreground min-h-screen overflow-y-hidden"
-        suppressHydrationWarning
-      >
-        <Header />
-        <div className="pt-12" />
-        {children}
-        <ToastContainer
-          position="bottom-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick={false}
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-      </div>
-    );
-  }
+    if (theme === 'dark') {
+      setIsDark(true);
+    } else if (theme === 'light') {
+      setIsDark(false);
+    } else if (theme === 'system') {
+      setIsDark(systemDark);
+    }
+
+    if (theme === 'system') {
+      const mql = window.matchMedia('(prefers-color-scheme: dark)');
+      const handle = (e: MediaQueryListEvent) => {
+        if (theme === 'system') {
+          setIsDark(e.matches);
+        }
+      };
+      mql.addEventListener('change', handle);
+      return () => mql.removeEventListener('change', handle);
+    }
+  }, [theme]);
 
   return (
     <div
-      className="bg-background text-foreground min-h-screen overflow-y-hidden"
+      className="min-h-screen overflow-y-hidden bg-gray-50 text-gray-900 dark:bg-zinc-900 dark:text-zinc-100"
       suppressHydrationWarning
     >
       <Header />
@@ -63,7 +58,7 @@ export default function RootLayout({
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme={theme === 'dark' ? 'dark' : 'light'}
+        theme={isDark ? 'dark' : 'light'}
         // transition={Bounce}
       />
     </div>

@@ -111,10 +111,13 @@ export default function User_mng() {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto bg-gray-50 p-6 dark:bg-zinc-900">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="flex items-center gap-2 text-2xl font-bold">
-          <Link href="/settings">
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-zinc-100">
+          <Link
+            href="/settings"
+            className="text-gray-900 hover:text-gray-600 dark:text-zinc-100 dark:hover:text-gray-300"
+          >
             <CaretLeftIcon size={24} weight="bold" />
           </Link>
           <span>사용자 관리</span>
@@ -125,7 +128,7 @@ export default function User_mng() {
               onClick={() => {
                 if (isSuccess) setIsAddingUser(true);
               }}
-              className="cursor-pointer rounded-md bg-gray-600 px-4 py-2 text-xs font-medium text-white hover:bg-gray-700"
+              className="cursor-pointer rounded-md bg-gray-600 px-4 py-2 text-xs font-medium text-white hover:bg-gray-800 dark:bg-zinc-700 dark:hover:bg-zinc-600"
             >
               사용자 추가
             </button>
@@ -133,16 +136,16 @@ export default function User_mng() {
           {Object.keys(editedUsers).length > 0 && (
             <button
               onClick={handleSave}
-              className="cursor-pointer rounded-md bg-gray-600 px-4 py-2 text-xs font-medium text-white hover:bg-gray-700"
+              className="cursor-pointer rounded-md bg-gray-600 px-4 py-2 text-xs font-medium text-white hover:bg-gray-800 dark:bg-zinc-700 dark:hover:bg-zinc-600"
             >
               변경사항 저장
             </button>
           )}
         </div>
       </div>
-      <div className="overflow-auto rounded-lg bg-white shadow">
+      <div className="overflow-auto rounded-lg bg-white shadow dark:bg-zinc-800 dark:shadow-gray-900/20">
         {/* Grid Header */}
-        <div className="grid grid-cols-8 gap-4 bg-gray-50 p-4 text-xs font-medium tracking-wider text-gray-500 uppercase">
+        <div className="grid grid-cols-8 gap-4 bg-gray-50 p-4 text-xs font-medium tracking-wider text-gray-500 uppercase dark:bg-zinc-700 dark:text-zinc-400">
           <div className="col-span-2">이름</div>
           <div className="col-span-2">이메일</div>
           <div>사용유무</div>

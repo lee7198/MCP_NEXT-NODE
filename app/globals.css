@@ -1,9 +1,4 @@
 @import 'tailwindcss';
-@import './theme.css';
-
-@theme {
-  --color-main: var(--color-gray-800);
-}
 
 @font-face {
   font-family: 'SUIT';
@@ -36,11 +31,16 @@
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: #fbf9fa;
+  color: #171717;
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
+}
+
+.dark body {
+  background-color: #0a0a0a;
+  color: #fbf9fa;
 }
 
 .react-flow__attribution {

@@ -19,12 +19,12 @@ export default function UsageCard({ data, selectedUsername }: UsageCardProps) {
   }, [data, selectedUsername]);
 
   return (
-    <div className="col-span-4 flex items-center rounded-lg border bg-white p-4 shadow dark:border-gray-700 dark:bg-gray-800 dark:shadow-gray-900/20">
-      <b className="text-gray-900 dark:text-gray-100">
+    <div className="col-span-4 flex items-center rounded-lg border bg-white p-4 shadow dark:border-zinc-700 dark:bg-zinc-800 dark:shadow-gray-900/20">
+      <b className="text-gray-900 dark:text-zinc-100">
         {new Date().getMonth() + 1}월 사용 횟수 :{' '}
       </b>
       &nbsp;
-      <span className="text-gray-700 dark:text-gray-300">
+      <span className="text-gray-700 dark:text-zinc-300">
         {thisMonthUsage}회
       </span>
     </div>

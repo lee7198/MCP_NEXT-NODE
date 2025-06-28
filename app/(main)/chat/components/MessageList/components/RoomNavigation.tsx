@@ -25,11 +25,11 @@ export default function RoomNavigation({
     <div
       className={`absolute z-50 w-52 transition-none lg:top-auto lg:left-auto lg:row-span-2 lg:w-full lg:pb-4 ${openNav ? 'top-4 left-4 lg:relative lg:col-span-4 lg:p-4 xl:col-span-3' : 'top-4 -left-64 w-64 lg:relative lg:col-span-1 lg:pt-4 lg:pl-4'}`}
     >
-      <div className="rounded-2xl border border-gray-300 bg-white shadow-2xl duration-75 lg:h-full lg:max-h-[calc(100svh-5rem)] lg:shadow">
+      <div className="rounded-2xl border border-gray-300 bg-white shadow-2xl duration-75 lg:h-full lg:max-h-[calc(100svh-5rem)] lg:shadow dark:border-zinc-600 dark:bg-zinc-800">
         {/* 모바일용 버튼 */}
         {!openNav && (
           <button
-            className={`absolute -right-16 aspect-square cursor-pointer rounded-full border border-gray-300 bg-white p-2 shadow-2xl duration-150 hover:scale-95 hover:bg-gray-200 active:scale-105 lg:hidden ${openNav ? 'opacity-0' : 'opacity-100'}`}
+            className={`absolute -right-16 aspect-square cursor-pointer rounded-full border border-gray-300 bg-white p-2 shadow-2xl duration-150 hover:scale-95 hover:bg-gray-200 active:scale-105 lg:hidden dark:bg-zinc-800 dark:hover:bg-zinc-600 ${openNav ? 'opacity-0' : 'opacity-100'}`}
             onClick={() => setOpenNav(!openNav)}
           >
             <CaretRightIcon size={24} />
@@ -40,7 +40,7 @@ export default function RoomNavigation({
         >
           <div>
             <button
-              className={`aspect-square rounded-lg p-1 hover:bg-gray-200 ${isLgAndUp ? (openNav ? 'cursor-w-resize' : 'cursor-e-resize lg:w-full') : 'cursor-pointer'}`}
+              className={`aspect-square rounded-lg p-1 hover:bg-gray-200 ${isLgAndUp ? (openNav ? 'cursor-w-resize' : 'cursor-e-resize lg:w-full') : 'cursor-pointer'} dark:hover:bg-zinc-600`}
               onClick={() => setOpenNav(!openNav)}
             >
               {isLgAndUp ? (
@@ -51,7 +51,7 @@ export default function RoomNavigation({
             </button>
           </div>
           <button
-            className={`flex cursor-pointer items-center gap-2 rounded-lg p-1 hover:bg-gray-200 ${openNav ? '' : 'lg:aspect-square lg:justify-center'}`}
+            className={`flex cursor-pointer items-center gap-2 rounded-lg p-1 hover:bg-gray-200 ${openNav ? '' : 'lg:aspect-square lg:justify-center'} dark:hover:bg-zinc-600`}
             onClick={onNewChat}
           >
             <ChatCircleDotsIcon size={24} />
@@ -61,7 +61,7 @@ export default function RoomNavigation({
           </button>
 
           <div
-            className={`flex items-center gap-2 p-1 ${openNav ? '' : 'hover:bg-gray-200 lg:aspect-square lg:cursor-pointer lg:justify-center lg:rounded-lg'}`}
+            className={`flex items-center gap-2 p-1 ${openNav ? '' : 'hover:bg-gray-200 lg:aspect-square lg:cursor-pointer lg:justify-center lg:rounded-lg dark:hover:bg-zinc-600'}`}
             // lg 이상에서는 항상 open 하도록
             onClick={() => isLgAndUp && setOpenNav(true)}
           >
@@ -82,7 +82,7 @@ export default function RoomNavigation({
                       return (
                         <div className="py-1" key={item.roomId}>
                           <div
-                            className={`grid cursor-pointer grid-cols-13 grid-rows-2 rounded-lg px-2 py-1 ${selectRoom === item.roomId ? 'bg-gray-800 text-white hover:bg-gray-600' : 'hover:bg-gray-200'}`}
+                            className={`grid cursor-pointer grid-cols-13 grid-rows-2 rounded-lg px-2 py-1 ${selectRoom === item.roomId ? 'bg-gray-800 text-white hover:bg-gray-600 dark:bg-zinc-200 dark:text-black dark:hover:bg-zinc-400' : 'hover:bg-gray-200 dark:hover:bg-zinc-700'}`}
                             onClick={() => setSelectRoom(item.roomId)}
                           >
                             <div className="col-span-11 truncate text-sm leading-3.5 whitespace-nowrap">
@@ -96,7 +96,7 @@ export default function RoomNavigation({
 
                             <div className="col-span-2 col-start-12 row-span-2 row-start-1 flex items-center justify-end">
                               <div
-                                className={`flex size-6 items-center justify-center rounded-full text-center text-xs font-bold ${selectRoom === item.roomId ? 'bg-gray-300 text-black' : 'bg-gray-500 text-white'}`}
+                                className={`flex size-6 items-center justify-center rounded-full text-center text-xs font-bold ${selectRoom === item.roomId ? 'bg-gray-300 text-black dark:bg-zinc-800 dark:text-white' : 'bg-gray-500 text-white dark:bg-zinc-100 dark:text-black'}`}
                               >
                                 {item.count}
                               </div>

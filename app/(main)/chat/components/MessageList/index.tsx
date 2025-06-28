@@ -64,7 +64,7 @@ export default function MessageList({
             ref={(el) => {
               dateRefs.current[date] = el;
             }}
-            className="flex w-full max-w-5xl flex-col gap-4 rounded-2xl border border-gray-300 bg-white p-4 shadow"
+            className="flex w-full max-w-5xl flex-col gap-4 rounded-2xl border border-gray-300 bg-white p-4 shadow dark:border-zinc-600 dark:bg-zinc-800"
           >
             {/* <div className="h-[500px]" /> */}
             <DateDivider date={date} />

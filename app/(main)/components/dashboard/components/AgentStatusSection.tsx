@@ -18,13 +18,13 @@ export default function AgentStatusSection({
   });
 
   return (
-    <div className="col-span-12 row-start-3 rounded-lg border bg-white p-4 shadow lg:col-span-4 lg:row-start-2 dark:border-gray-700 dark:bg-gray-800 dark:shadow-gray-900/20">
+    <div className="col-span-12 row-start-3 rounded-lg border bg-white p-4 shadow lg:col-span-4 lg:row-start-2 dark:border-zinc-700 dark:bg-zinc-800 dark:shadow-gray-900/20">
       <div className="flex items-center gap-2">
-        <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+        <h2 className="text-lg font-bold text-gray-900 dark:text-zinc-100">
           서버 AGENT 상태
         </h2>
         {isLoggedIn && clients.filter((item) => item.clientId).length > 0 && (
-          <div className="flex aspect-square size-5 grow-0 items-center justify-center rounded-full bg-gray-700 text-sm font-bold text-white dark:bg-gray-600">
+          <div className="flex aspect-square size-5 grow-0 items-center justify-center rounded-full bg-gray-700 text-sm font-bold text-white dark:bg-zinc-600">
             {clients.filter((item) => item.clientId).length}
           </div>
         )}
@@ -42,7 +42,7 @@ export default function AgentStatusSection({
                 className={`cursor-pointer rounded px-3 hover:opacity-70 ${
                   selectedStatus === 'success'
                     ? 'bg-green-500 text-white'
-                    : 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
+                    : 'bg-gray-200 text-gray-900 dark:bg-zinc-700 dark:text-zinc-100'
                 }`}
               >
                 online (
@@ -60,7 +60,7 @@ export default function AgentStatusSection({
                 className={`cursor-pointer rounded px-3 hover:opacity-70 ${
                   selectedStatus === 'offline'
                     ? 'bg-red-500 text-white'
-                    : 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
+                    : 'bg-gray-200 text-gray-900 dark:bg-zinc-700 dark:text-zinc-100'
                 }`}
               >
                 offline (
@@ -72,7 +72,7 @@ export default function AgentStatusSection({
               {selectedStatus && (
                 <button
                   onClick={() => setSelectedStatus(null)}
-                  className="cursor-pointer rounded bg-gray-200 px-3 text-gray-900 hover:opacity-70 dark:bg-gray-700 dark:text-gray-100"
+                  className="cursor-pointer rounded bg-gray-200 px-3 text-gray-900 hover:opacity-70 dark:bg-zinc-700 dark:text-zinc-100"
                 >
                   <XIcon />
                 </button>
@@ -100,7 +100,7 @@ export default function AgentStatusSection({
                   .map((item) => (
                     <Link
                       key={item.SERVERNAME}
-                      className="flex items-center gap-2 rounded-full border border-gray-400 px-2 text-sm text-gray-900 hover:bg-gray-200 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700"
+                      className="flex items-center gap-2 rounded-full border border-gray-400 px-2 text-sm text-gray-900 hover:bg-gray-200 dark:border-zinc-600 dark:text-zinc-100 dark:hover:bg-zinc-800"
                       href={`/settings/server/${item.SERVERNAME}`}
                     >
                       <StatusPing status={serverStatuses[item.SERVERNAME]} />
@@ -108,7 +108,7 @@ export default function AgentStatusSection({
                     </Link>
                   ))
               ) : (
-                <div className="text-gray-500 dark:text-gray-400">
+                <div className="text-gray-500 dark:text-zinc-400">
                   등록된 서버가 없습니다.
                 </div>
               )}
@@ -116,7 +116,7 @@ export default function AgentStatusSection({
           </div>
         ) : (
           <div className="flex h-32 w-full items-center justify-center">
-            <div className="text-center text-gray-500 dark:text-gray-400">
+            <div className="text-center text-gray-500 dark:text-zinc-400">
               <p className="text-lg font-medium">로그인 후 사용 가능합니다</p>
               <p className="text-sm">
                 서버 AGENT 상태를 확인하려면 로그인이 필요합니다.

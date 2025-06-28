@@ -37,7 +37,7 @@ export default function MessageInput({
         onCompositionStart={() => setIsComposing(true)}
         onCompositionEnd={() => setIsComposing(false)}
         placeholder="메시지를 입력하세요..."
-        className={`focus:border-main/50 max-h-48 min-h-20 flex-1 resize-none overflow-y-auto rounded-lg border border-gray-300 p-2 leading-normal text-gray-900 placeholder-gray-500 transition-all duration-300 focus:outline-none dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-400 ${message ? 'mr-0 w-auto' : 'mr-0 w-full'} ${isDisabled ? 'animate-pulse bg-gray-200 dark:bg-gray-700' : 'bg-white dark:bg-gray-700'}`}
+        className={`focus:border-main/50 max-h-48 min-h-20 flex-1 resize-none overflow-y-auto rounded-lg border border-gray-300 p-2 leading-normal text-gray-900 placeholder-gray-500 transition-all duration-300 focus:outline-none dark:border-zinc-600 dark:text-zinc-100 dark:placeholder-gray-400 ${message ? 'mr-0 w-auto' : 'mr-0 w-full'} ${isDisabled ? 'animate-pulse bg-gray-200 dark:bg-zinc-700' : 'bg-white dark:bg-zinc-700'}`}
         rows={boxHeight}
         disabled={isDisabled}
       />

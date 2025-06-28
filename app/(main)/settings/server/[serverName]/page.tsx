@@ -106,16 +106,16 @@ export default function ServerDetailPage({ params }: ServerDetailPageProps) {
   }, []);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto bg-gray-50 px-4 py-8 dark:bg-zinc-900">
       <Link
         href="/settings/servers"
-        className="mb-6 inline-flex items-center gap-2 text-gray-600 hover:text-gray-900"
+        className="mb-6 inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-gray-100"
       >
         <ArrowLeftIcon size={20} />
         <span>돌아가기</span>
       </Link>
 
-      <div className="rounded-lg bg-white p-6 shadow-lg">
+      <div className="rounded-lg bg-white p-6 shadow-lg dark:bg-zinc-800 dark:shadow-gray-900/20">
         <ServerHeader
           serverName={resolvedParams.serverName}
           toggleEdit={toggleEdit}

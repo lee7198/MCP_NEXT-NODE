@@ -2,6 +2,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import { ApexOptions } from 'apexcharts';
 import { ResponseTimeChartProps } from '@/app/types';
+import { useThemeStore } from '@/app/store/themeStore';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -10,6 +11,34 @@ export default function ResponseTimeChart({
   selectedUsername,
   isDataPending,
 }: ResponseTimeChartProps) {
+  const theme = useThemeStore((state) => state.theme);
+  const [isDark, setIsDark] = React.useState(false);
+
+  React.useEffect(() => {
+    const systemDark = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches;
+
+    if (theme === 'dark') {
+      setIsDark(true);
+    } else if (theme === 'light') {
+      setIsDark(false);
+    } else if (theme === 'system') {
+      setIsDark(systemDark);
+    }
+
+    if (theme === 'system') {
+      const mql = window.matchMedia('(prefers-color-scheme: dark)');
+      const handle = (e: MediaQueryListEvent) => {
+        if (theme === 'system') {
+          setIsDark(e.matches);
+        }
+      };
+      mql.addEventListener('change', handle);
+      return () => mql.removeEventListener('change', handle);
+    }
+  }, [theme]);
+
   const filteredData = React.useMemo(() => {
     if (!data) return [];
     if (selectedUsername === 'all') return data;
@@ -22,6 +51,7 @@ export default function ResponseTimeChart({
       animations: {
         enabled: false,
       },
+      background: '#fff0',
     },
     stroke: {
       curve: 'smooth',
@@ -38,6 +68,7 @@ export default function ResponseTimeChart({
       labels: {
         style: {
           fontSize: '12px',
+          colors: isDark ? '#f3f4f6' : '#374151', // gray-100 for dark, gray-700 for light
         },
       },
       tickAmount: 15,
@@ -49,14 +80,26 @@ export default function ResponseTimeChart({
     yaxis: {
       title: {
         text: '응답 시간 (ms)',
+        style: {
+          color: isDark ? '#f3f4f6' : '#374151', // gray-100 for dark, gray-700 for light
+          fontSize: '14px',
+          fontWeight: 600,
+        },
       },
       labels: {
         formatter: (value) => {
           return value.toLocaleString();
         },
+        style: {
+          colors: isDark ? '#f3f4f6' : '#374151', // gray-100 for dark, gray-700 for light
+        },
       },
     },
     tooltip: {
+      theme: isDark ? 'dark' : 'light',
+      style: {
+        fontSize: '12px',
+      },
       y: {
         formatter: (value) => {
           return `${value.toLocaleString()} ms`;
@@ -65,6 +108,10 @@ export default function ResponseTimeChart({
     },
     dataLabels: {
       enabled: false,
+    },
+    theme: {
+      mode: isDark ? 'dark' : 'light',
+      palette: 'palette1',
     },
   };
 

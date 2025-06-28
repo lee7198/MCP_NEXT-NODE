@@ -11,14 +11,14 @@ export default function ResponseTimeSection({
   isLoggedIn,
 }: ResponseTimeSectionProps) {
   return (
-    <div className="col-span-12 row-start-4 min-h-[441px] rounded-lg bg-white p-4 shadow">
+    <div className="col-span-12 row-start-4 min-h-[441px] rounded-lg border bg-white p-4 shadow dark:border-zinc-700 dark:bg-zinc-800">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-bold">응답 시간 추이 (최근30일)</h2>
         {isLoggedIn && (
           <select
             value={selectedUsername}
             onChange={(e) => onUsernameChange(e.target.value)}
-            className="rounded border border-gray-300 px-3 py-1 text-sm"
+            className="rounded border border-gray-300 px-3 py-1 text-sm dark:border-zinc-700"
           >
             {uniqueUsernames.map((username) => (
               <option key={username} value={username}>

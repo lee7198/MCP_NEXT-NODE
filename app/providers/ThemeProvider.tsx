@@ -21,11 +21,25 @@ export default function ThemeProvider({
     if (!mounted) return;
 
     const root = document.documentElement;
+
     const applyTheme = () => {
+      // 시스템 다크모드 감지
       const systemDark = window.matchMedia(
         '(prefers-color-scheme: dark)'
       ).matches;
-      const isDark = theme === 'dark' || (theme === 'system' && systemDark);
+
+      // 테마 결정 로직
+      let isDark = false;
+
+      if (theme === 'dark') {
+        isDark = true;
+      } else if (theme === 'light') {
+        isDark = false;
+      } else if (theme === 'system') {
+        isDark = systemDark;
+      }
+
+      // Tailwind dark 클래스 적용
       if (isDark) {
         root.classList.add('dark');
       } else {
@@ -35,6 +49,7 @@ export default function ThemeProvider({
 
     applyTheme();
 
+    // 시스템 테마 변경 감지 (system 모드일 때만)
     if (theme === 'system') {
       const mql = window.matchMedia('(prefers-color-scheme: dark)');
       mql.addEventListener('change', applyTheme);

@@ -15,7 +15,7 @@ export const AddMcpForm: React.FC<AddMcpFormProps> = ({ onAdd, onCancel }) => {
   };
 
   return (
-    <div className="grid grid-cols-8 gap-4 border-b border-gray-200 p-4">
+    <div className="grid grid-cols-8 gap-4 border-b border-gray-200 p-4 dark:border-zinc-700">
       <div className="col-span-2">
         <input
           type="text"
@@ -27,7 +27,7 @@ export const AddMcpForm: React.FC<AddMcpFormProps> = ({ onAdd, onCancel }) => {
             }))
           }
           placeholder="Tool 이름"
-          className="w-full rounded-md border border-gray-300 px-2 text-sm"
+          className="w-full rounded-md border border-gray-300 bg-white px-2 text-sm text-gray-900 placeholder-gray-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100 dark:placeholder-gray-400"
         />
       </div>
       <div className="col-span-4">
@@ -41,19 +41,19 @@ export const AddMcpForm: React.FC<AddMcpFormProps> = ({ onAdd, onCancel }) => {
             }))
           }
           placeholder="설명"
-          className="w-full rounded-md border border-gray-300 px-2 text-sm"
+          className="w-full rounded-md border border-gray-300 bg-white px-2 text-sm text-gray-900 placeholder-gray-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100 dark:placeholder-gray-400"
         />
       </div>
       <div className="col-span-2 flex justify-between gap-2">
         <button
           onClick={onCancel}
-          className="w-full cursor-pointer rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600 hover:bg-gray-200"
+          className="w-full cursor-pointer rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600 hover:bg-gray-200 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-600"
         >
           취소
         </button>
         <button
           onClick={handleSubmit}
-          className="w-full cursor-pointer rounded-md bg-gray-600 px-2 py-1 text-xs text-white hover:bg-gray-700"
+          className="w-full cursor-pointer rounded-md bg-gray-600 px-2 py-1 text-xs text-white hover:bg-gray-800 dark:bg-zinc-700 dark:hover:bg-zinc-600"
         >
           추가
         </button>

@@ -94,8 +94,8 @@ export default function McpFlowSection({
   });
 
   return (
-    <div className="relative col-span-12 row-start-2 h-[350px] w-full rounded-lg bg-white p-4 shadow lg:col-span-8">
-      <h2 className="absolute z-50 bg-white/40 px-2 text-lg font-bold backdrop-blur">
+    <div className="relative col-span-12 row-start-2 h-[350px] w-full rounded-lg border bg-white shadow lg:col-span-8 dark:border-zinc-700 dark:bg-zinc-800">
+      <h2 className="absolute z-50 mt-4 ml-4 overflow-hidden rounded bg-white/40 px-2 text-lg font-bold backdrop-blur dark:bg-zinc-800/40">
         System Flow
       </h2>
       <ReactFlow
