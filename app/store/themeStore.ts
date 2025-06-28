@@ -11,7 +11,8 @@ interface ThemeState {
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
-      theme: 'system',
+      // 기본 테마를 라이트 모드로 설정
+      theme: 'light',
       setTheme: (theme: Theme) => set({ theme }),
     }),
     { name: 'theme-storage' }

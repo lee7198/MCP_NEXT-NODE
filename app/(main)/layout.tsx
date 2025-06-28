@@ -12,7 +12,7 @@ export default function RootLayout({
 }) {
   const theme = useThemeStore((state) => state.theme);
   return (
-    <div className="min-h-screen overflow-y-hidden bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen overflow-y-hidden bg-background text-foreground">
       <Header />
       <div className="pt-12" />
       {children}
