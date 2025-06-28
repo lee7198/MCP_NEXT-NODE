@@ -3,14 +3,14 @@
 import React from 'react';
 import Header from './components/Header';
 import { ToastContainer } from 'react-toastify';
-import { useThemeStore } from '@/app/store/themeStore';
+import useResolvedTheme from '@/app/hooks/useResolvedTheme';
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const theme = useThemeStore((state) => state.theme);
+  const resolvedTheme = useResolvedTheme();
   return (
     <div className="min-h-screen overflow-y-hidden bg-background text-foreground">
       <Header />
@@ -28,7 +28,7 @@ export default function RootLayout({
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme={theme === 'dark' ? 'dark' : 'light'}
+        theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
         // transition={Bounce}
       />
     </div>

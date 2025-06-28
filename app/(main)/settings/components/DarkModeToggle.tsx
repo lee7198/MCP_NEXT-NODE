@@ -1,22 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import useResolvedTheme from '@/app/hooks/useResolvedTheme';
 import { useThemeStore } from '@/app/store/themeStore';
 
 export default function DarkModeToggle() {
-  const theme = useThemeStore((state) => state.theme);
+  const resolvedTheme = useResolvedTheme();
   const setTheme = useThemeStore((state) => state.setTheme);
-  const [systemDark, setSystemDark] = useState(false);
 
-  useEffect(() => {
-    const mql = window.matchMedia('(prefers-color-scheme: dark)');
-    const handle = (e: MediaQueryListEvent) => setSystemDark(e.matches);
-    setSystemDark(mql.matches);
-    mql.addEventListener('change', handle);
-    return () => mql.removeEventListener('change', handle);
-  }, []);
-
-  const isDark = theme === 'dark' || (theme === 'system' && systemDark);
+  const isDark = resolvedTheme === 'dark';
 
   const toggle = () => {
     setTheme(isDark ? 'light' : 'dark');

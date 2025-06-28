@@ -1,35 +1,23 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useThemeStore } from '@/app/store/themeStore';
+import useResolvedTheme from '@/app/hooks/useResolvedTheme';
 
 export default function ThemeProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const theme = useThemeStore((state) => state.theme);
+  const resolvedTheme = useResolvedTheme();
 
   useEffect(() => {
     const root = document.documentElement;
-    const applyTheme = () => {
-      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const isDark = theme === 'dark' || (theme === 'system' && systemDark);
-      if (isDark) {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
-    };
-
-    applyTheme();
-
-    if (theme === 'system') {
-      const mql = window.matchMedia('(prefers-color-scheme: dark)');
-      mql.addEventListener('change', applyTheme);
-      return () => mql.removeEventListener('change', applyTheme);
+    if (resolvedTheme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
     }
-  }, [theme]);
+  }, [resolvedTheme]);
 
   return <>{children}</>;
 }
