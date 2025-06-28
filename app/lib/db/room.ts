@@ -1,4 +1,4 @@
-import oracledb from 'oracledb';
+import type { Connection } from 'oracledb';
 
 export const generateRoomId = (length = 7) => {
   const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -12,7 +12,7 @@ export const generateRoomId = (length = 7) => {
 };
 
 export async function createUniqueRoomId(
-  connection: oracledb.Connection,
+  connection: Connection,
   userId: string
 ) {
   let newRoomId = '';
