@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import ReactQueryProvider from '@/app/(main)/components/providers/ReactQueryProvider';
 import { NextAuthProvider } from '@/app/providers/NextAuthProvider';
+import ThemeProvider from '@/app/providers/ThemeProvider';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -20,9 +21,11 @@ export default function RootLayout({
         suppressHydrationWarning={process.env.NODE_ENV === 'development'}
         className="antialiased"
       >
-        <NextAuthProvider>
-          <ReactQueryProvider>{children}</ReactQueryProvider>
-        </NextAuthProvider>
+        <ThemeProvider>
+          <NextAuthProvider>
+            <ReactQueryProvider>{children}</ReactQueryProvider>
+          </NextAuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
