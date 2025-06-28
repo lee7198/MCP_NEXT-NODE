@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { pages } from '@/app/lib/common';
 import Link from 'next/link';
 import UserInfo from './common/UserInfo';
@@ -11,9 +11,34 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 const Header = React.memo(function Header() {
   const { data: session, status } = useSession();
   const [openHover, setOpenHover] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // 서버 사이드 렌더링 중에는 로딩 상태 표시
+  if (!mounted) {
+    return (
+      <div
+        className="absolute top-0 z-[9999] w-screen border-b bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
+        suppressHydrationWarning
+      >
+        <div className="container mx-auto flex h-12 w-full items-center justify-between gap-2 px-4">
+          <div className="flex w-full items-center justify-between">
+            <div />
+            <div className="size-8 animate-pulse rounded-full bg-gray-300" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="absolute top-0 z-[9999] w-screen border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+    <div
+      className="absolute top-0 z-[9999] w-screen border-b bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
+      suppressHydrationWarning
+    >
       <div className="container mx-auto flex h-12 w-full items-center justify-between gap-2 px-4">
         {/* links */}
 

@@ -14,7 +14,7 @@ export default function Home() {
   }, [session]);
 
   return (
-    <div className="flex h-[calc(100svh-3rem)] w-full justify-center bg-background">
+    <div className="bg-background flex h-[calc(100svh-3rem)] w-full justify-center">
       <div className="flex h-full w-full flex-col overflow-y-scroll py-8">
         <h1 className="my-16 text-center text-[8vw] font-black text-gray-900 lg:text-6xl dark:text-gray-100">
           MCP 통합 관리 SYSTEM

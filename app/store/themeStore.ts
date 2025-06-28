@@ -15,6 +15,10 @@ export const useThemeStore = create<ThemeState>()(
       theme: 'light',
       setTheme: (theme: Theme) => set({ theme }),
     }),
-    { name: 'theme-storage' }
+    {
+      name: 'theme-storage',
+      // 서버 사이드 렌더링 시 hydration mismatch 방지
+      skipHydration: true,
+    }
   )
 );
