@@ -5,6 +5,7 @@ import {
   RobotIcon,
 } from '@phosphor-icons/react/ssr';
 import Link from 'next/link';
+import DarkModeToggle from './components/DarkModeToggle';
 
 export default function Setting() {
   const menuList = [
@@ -39,6 +40,9 @@ export default function Setting() {
             <div className="col-span-3 text-xl font-bold">{item.name}</div>
           </Link>
         ))}
+      </div>
+      <div className="mt-8">
+        <DarkModeToggle />
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ const Header = React.memo(function Header() {
   const [openHover, setOpenHover] = useState(false);
 
   return (
-    <div className="absolute top-0 z-[9999] w-screen border-b bg-gray-50">
+    <div className="absolute top-0 z-[9999] w-screen border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
       <div className="container mx-auto flex h-12 w-full items-center justify-between gap-2 px-4">
         {/* links */}
 
