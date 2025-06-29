@@ -44,19 +44,21 @@ export default function McpSettingsModal({
   return (
     <div
       ref={modalRef}
-      className="absolute bottom-12 z-20 max-w-96 rounded-lg bg-white p-4 shadow-2xl"
+      className="absolute bottom-12 z-20 max-w-96 rounded-lg bg-white p-4 shadow-2xl dark:bg-zinc-800 dark:shadow-zinc-900/50"
     >
       <div className="mb-2 flex items-start justify-between">
-        <h3 className="text-lg">선택가능한 서버</h3>
+        <h3 className="text-lg text-gray-900 dark:text-zinc-100">
+          선택가능한 서버
+        </h3>
         <div className="flex gap-2">
           <button
-            className="cursor-pointer rounded-full bg-gray-200 px-1 text-sm"
+            className="cursor-pointer rounded-full bg-gray-200 px-1 text-sm text-gray-700 hover:bg-gray-300 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600"
             onClick={onClearSelection}
           >
             선택 취소
           </button>
           <button
-            className="cursor-pointer rounded-full bg-gray-200 p-1"
+            className="cursor-pointer rounded-full bg-gray-200 p-1 text-gray-700 hover:bg-gray-300 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600"
             onClick={onClose}
           >
             <XIcon size={14} weight="bold" />
@@ -68,20 +70,22 @@ export default function McpSettingsModal({
           {servers === undefined ? (
             <div className="flex h-full items-center justify-center py-8">
               <Spinner size={6} />
-              <span className="ml-2 text-sm text-gray-500">
+              <span className="ml-2 text-sm text-gray-500 dark:text-zinc-400">
                 서버 목록을 불러오는 중...
               </span>
             </div>
           ) : servers.length === 0 ? (
-            <div className="flex h-full items-center justify-center py-8 text-sm text-gray-400">
+            <div className="flex h-full items-center justify-center py-8 text-sm text-gray-400 dark:text-zinc-500">
               등록된 서버가 없습니다.
             </div>
           ) : (
             servers.map((server) => (
               <button
                 key={server.SERVERNAME}
-                className={`z-20 mr-2 cursor-pointer rounded-lg border border-gray-300 px-2 py-1 text-sm disabled:cursor-not-allowed disabled:opacity-65 ${
-                  selectedServer === server.SERVERNAME ? 'bg-gray-200' : ''
+                className={`z-20 mr-2 cursor-pointer rounded-lg border border-gray-300 px-2 py-1 text-sm disabled:cursor-not-allowed disabled:opacity-65 dark:border-zinc-600 dark:text-zinc-200 dark:disabled:opacity-50 ${
+                  selectedServer === server.SERVERNAME
+                    ? 'bg-gray-200 dark:bg-zinc-600'
+                    : 'hover:bg-gray-100 dark:hover:bg-zinc-700'
                 }`}
                 onClick={() => onServerSelect(server.SERVERNAME)}
                 disabled={serverStatuses[server.SERVERNAME] !== 'success'}
@@ -98,27 +102,29 @@ export default function McpSettingsModal({
           )}
         </div>
         <ul className="col-span-1 max-h-52 space-y-2 overflow-y-scroll">
-          <div className="font-bold text-gray-700">TOOL(MCP) 정보</div>
+          <div className="font-bold text-gray-700 dark:text-zinc-200">
+            TOOL(MCP) 정보
+          </div>
           {selectedServer !== '' && isMcpParamsPending ? (
             <div className="flex items-center justify-center p-4">
-              <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-gray-500"></div>
+              <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-gray-500 dark:border-zinc-600 dark:border-t-zinc-400"></div>
             </div>
           ) : (
             mcps?.map((mcp) => (
               <li
                 key={mcp.TOOLNAME}
-                className="group relative rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm transition-all hover:bg-gray-100"
+                className="group relative rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm transition-all hover:bg-gray-100 dark:border-zinc-600 dark:bg-zinc-700 dark:hover:bg-zinc-600"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-medium text-gray-800">
+                  <span className="font-medium text-gray-800 dark:text-zinc-200">
                     {mcp.TOOLNAME}
                   </span>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-gray-500 dark:text-zinc-400">
                     {mcp.USE_YON === 'Y' ? '사용' : '미사용'}
                   </span>
                 </div>
                 {mcp.USE_YON === 'Y' && (
-                  <div className="mt-1 pl-2 text-xs text-gray-600">
+                  <div className="mt-1 pl-2 text-xs text-gray-600 dark:text-zinc-400">
                     <div className="flex items-center gap-1">
                       <div className="h-1.5 w-1.5 rounded-full bg-green-500"></div>
                       <span>활성화됨</span>

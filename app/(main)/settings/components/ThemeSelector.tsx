@@ -53,7 +53,7 @@ export default function ThemeSelector() {
               key={option.value}
               className={`flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-all ${
                 isSelected
-                  ? 'border-gray-300 bg-gray-800 hover:bg-gray-700 dark:border-zinc-400 dark:bg-zinc-600 dark:hover:bg-zinc-500'
+                  ? 'border-gray-300 bg-gray-200 hover:bg-gray-100 dark:border-zinc-400 dark:bg-zinc-600 dark:hover:bg-zinc-500'
                   : 'border-gray-300 bg-white hover:bg-gray-100 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700'
               }`}
             >
@@ -82,7 +82,7 @@ export default function ThemeSelector() {
                 size={20}
                 className={`${
                   isSelected
-                    ? 'text-white dark:text-zinc-400'
+                    ? 'text-gray-900 dark:text-zinc-400'
                     : 'text-gray-600 dark:text-zinc-400'
                 }`}
               />
@@ -90,14 +90,14 @@ export default function ThemeSelector() {
                 <div
                   className={`font-medium ${
                     isSelected
-                      ? 'text-white dark:text-zinc-100'
+                      ? 'text-gray-900 dark:text-zinc-100'
                       : 'text-gray-900 dark:text-zinc-100'
                   }`}
                 >
                   {option.label}
                 </div>
                 <div
-                  className={`text-sm ${isSelected ? 'text-white dark:text-zinc-400' : 'text-gray-600 dark:text-zinc-400'}`}
+                  className={`text-sm ${isSelected ? 'text-gray-900 dark:text-zinc-400' : 'text-gray-600 dark:text-zinc-400'}`}
                 >
                   {option.description}
                 </div>
