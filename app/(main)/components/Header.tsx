@@ -21,7 +21,7 @@ const Header = React.memo(function Header() {
   if (!mounted) {
     return (
       <div
-        className="absolute top-0 z-[9999] w-screen border-b border-gray-200 bg-white dark:border-zinc-700 dark:bg-zinc-800"
+        className="absolute top-0 z-[9999] w-screen border-b border-gray-300 bg-white dark:border-zinc-700 dark:bg-zinc-800"
         suppressHydrationWarning
       >
         <div className="container mx-auto flex h-12 w-full items-center justify-between gap-2 px-4">
@@ -36,7 +36,7 @@ const Header = React.memo(function Header() {
 
   return (
     <div
-      className="absolute top-0 z-[9999] w-screen border-b border-gray-200 bg-white dark:border-zinc-700 dark:bg-zinc-800"
+      className="absolute top-0 z-[9999] w-screen border-b border-gray-300 bg-white dark:border-zinc-700 dark:bg-zinc-800"
       suppressHydrationWarning
     >
       <div className="container mx-auto flex h-12 w-full items-center justify-between gap-2 px-4">
@@ -91,7 +91,7 @@ const Header = React.memo(function Header() {
             <div />
             <button
               onClick={() => signIn('google')}
-              className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-1 text-sm text-gray-700 hover:bg-gray-50 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600"
+              className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-1 text-sm text-gray-700 hover:bg-gray-100 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600"
             >
               <GoogleLogoIcon size={16} weight="bold" /> 구글 계정으로 로그인
             </button>

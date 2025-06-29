@@ -107,7 +107,7 @@ export default function McpSettingsModal({
             mcps?.map((mcp) => (
               <li
                 key={mcp.TOOLNAME}
-                className="group relative rounded-lg border border-gray-100 bg-gray-50 p-2 text-sm transition-all hover:bg-gray-100"
+                className="group relative rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm transition-all hover:bg-gray-100"
               >
                 <div className="flex items-center justify-between">
                   <span className="font-medium text-gray-800">

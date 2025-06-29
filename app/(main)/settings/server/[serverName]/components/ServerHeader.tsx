@@ -31,7 +31,7 @@ export const ServerHeader = ({
           type="button"
           onClick={onEdit}
           disabled={isEditing}
-          className="cursor-pointer rounded-lg px-4 py-2 hover:bg-gray-300 active:ring-gray-500 dark:hover:bg-zinc-600 dark:active:ring-gray-400"
+          className="cursor-pointer rounded-lg px-4 py-2 hover:bg-gray-100 active:ring-gray-500 dark:hover:bg-zinc-600 dark:active:ring-gray-400"
         >
           {toggleEdit ? (
             <XIcon size={20} className="text-gray-600 dark:text-zinc-400" />
@@ -46,7 +46,7 @@ export const ServerHeader = ({
           type="button"
           onClick={onDelete}
           disabled={isDeleting}
-          className="cursor-pointer rounded-lg px-4 py-2 hover:bg-gray-300 active:ring-red-500 disabled:opacity-50 dark:hover:bg-zinc-600 dark:active:ring-red-400"
+          className="cursor-pointer rounded-lg px-4 py-2 hover:bg-gray-100 active:ring-red-500 disabled:opacity-50 dark:hover:bg-zinc-600 dark:active:ring-red-400"
         >
           {isDeleting ? (
             <ProgressCircle />

@@ -6,7 +6,7 @@ export interface SaveServerForm {
 }
 
 export interface ServerDetailPageProps {
-  params: { serverName: string };
+  params: Promise<{ serverName: string }>;
 }
 
 export interface ServerHeaderProps {

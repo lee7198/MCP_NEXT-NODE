@@ -143,7 +143,7 @@ export default function ChatInputSection({
 
           <button
             onClick={() => setIsInputVisible(!isInputVisible)}
-            className="ml-auto flex cursor-pointer items-center gap-1 rounded-md px-3 py-1 text-sm text-gray-900 transition-all duration-200 hover:bg-gray-200 dark:text-zinc-100 dark:hover:bg-zinc-800"
+            className="ml-auto flex cursor-pointer items-center gap-1 rounded-md px-3 py-1 text-sm text-gray-900 transition-all duration-200 hover:bg-gray-100 dark:text-zinc-100 dark:hover:bg-zinc-700"
           >
             <div
               className={`transition-transform duration-200 ${isInputVisible ? 'rotate-0' : 'rotate-180'}`}

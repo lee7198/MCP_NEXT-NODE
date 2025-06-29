@@ -22,7 +22,7 @@ export const ServerDescription = ({
           <textarea
             value={editedComment}
             onChange={(e) => onCommentChange(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-gray-900 focus:border-gray-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100 dark:focus:border-gray-400"
+            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-gray-900 focus:border-gray-300 focus:outline-none dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100 dark:focus:border-gray-400"
             rows={4}
           />
           <button

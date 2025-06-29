@@ -195,7 +195,7 @@ export default function McpToolSetting({
                   className={` ${
                     settingTool === tool.TOOLNAME
                       ? 'bg-gray-800 font-black text-white hover:bg-gray-800 dark:bg-zinc-600 dark:hover:bg-zinc-700'
-                      : 'bg-gray-200 hover:bg-gray-300 dark:bg-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-600'
+                      : 'bg-gray-200 hover:bg-gray-100 dark:bg-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-600'
                   } flex h-8 cursor-pointer items-center justify-center rounded-full px-4 uppercase`}
                 >
                   {tool.TOOLNAME}
@@ -323,7 +323,7 @@ export default function McpToolSetting({
                     <div className="flex gap-2 lg:mx-auto lg:w-1/2">
                       <button
                         onClick={() => handleEditClick(item)}
-                        className="w-full cursor-pointer rounded bg-gray-200 px-2 py-1 hover:bg-gray-300 dark:bg-zinc-600 dark:text-zinc-100 dark:hover:bg-zinc-500"
+                        className="w-full cursor-pointer rounded bg-gray-200 px-2 py-1 hover:bg-gray-100 dark:bg-zinc-600 dark:text-zinc-100 dark:hover:bg-zinc-500"
                       >
                         수정
                       </button>
@@ -383,7 +383,7 @@ export default function McpToolSetting({
               <div className="col-span-8 lg:col-span-12">
                 <button
                   onClick={handleAddNew}
-                  className="w-full cursor-pointer rounded bg-gray-200 px-2 py-1 hover:bg-gray-300 dark:bg-zinc-600 dark:text-zinc-100 dark:hover:bg-zinc-500"
+                  className="w-full cursor-pointer rounded bg-gray-200 px-2 py-1 hover:bg-gray-100 dark:bg-zinc-600 dark:text-zinc-100 dark:hover:bg-zinc-500"
                 >
                   파라미터 추가
                 </button>

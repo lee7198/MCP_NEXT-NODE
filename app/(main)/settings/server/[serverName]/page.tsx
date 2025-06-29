@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import Link from 'next/link';
 import { ArrowLeftIcon } from '@phosphor-icons/react/dist/ssr';
 import { mcp_management, server_management } from '@/app/services/api';
@@ -17,7 +17,7 @@ import { useSocket } from '@/app/hooks/useSocket';
 
 export default function ServerDetailPage({ params }: ServerDetailPageProps) {
   const router = useRouter();
-  const resolvedParams = params;
+  const resolvedParams = use(params);
   const [toggleEdit, setToggleEdit] = useState(false);
   const [editedComment, setEditedComment] = useState('');
   const { clients } = useSocket();

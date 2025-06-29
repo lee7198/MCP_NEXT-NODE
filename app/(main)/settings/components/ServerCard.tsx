@@ -16,7 +16,7 @@ export default function ServerCard({
   onTestPing,
 }: ServerCardProps) {
   return (
-    <div className="flex w-full items-center justify-between rounded-lg bg-gray-200 px-4 py-2 transition-colors hover:bg-gray-300 lg:w-[calc(50%-0.5rem)] dark:bg-zinc-700 dark:hover:bg-zinc-600">
+    <div className="flex w-full items-center justify-between rounded-lg bg-gray-200 px-4 py-2 transition-colors hover:bg-gray-100 lg:w-[calc(50%-0.5rem)] dark:bg-zinc-700 dark:hover:bg-zinc-600">
       <div className="flex items-center gap-2">
         <StatusPing status={serverStatus} />
         <div className="flex flex-col">

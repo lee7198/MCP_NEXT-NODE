@@ -40,7 +40,7 @@ export default function McpTool({
       </h2>
       <div className="mt-2 flex flex-col gap-2">
         {/* header */}
-        <div className="grid grid-cols-5 gap-4 border-b border-gray-200 px-2 pb-2 dark:border-zinc-600">
+        <div className="grid grid-cols-5 gap-4 border-b border-gray-300 px-2 pb-2 dark:border-zinc-600">
           <div className="col-span-4 font-bold text-gray-900 dark:text-zinc-100">
             MCP:설명
           </div>

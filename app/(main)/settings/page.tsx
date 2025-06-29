@@ -36,7 +36,7 @@ export default function Setting() {
           <Link
             href={item.path}
             key={item.name}
-            className="grid cursor-pointer grid-cols-4 items-center rounded-lg border border-gray-300 bg-white p-4 transition-colors hover:bg-gray-200 dark:border-zinc-600 dark:bg-zinc-800 dark:hover:bg-zinc-800"
+            className="grid cursor-pointer grid-cols-4 items-center rounded-lg border border-gray-300 bg-white p-4 transition-colors hover:bg-gray-100 dark:border-zinc-600 dark:bg-zinc-800 dark:hover:bg-zinc-700"
           >
             <div className="text-gray-900 dark:text-zinc-100">{item.icon}</div>
             <div className="col-span-3 text-xl font-bold text-gray-900 dark:text-zinc-100">

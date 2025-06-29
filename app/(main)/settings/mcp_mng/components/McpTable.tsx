@@ -26,7 +26,7 @@ export const McpTable: React.FC<McpTableProps> = ({
             return (
               <div
                 key={tool.TOOLNAME}
-                className="grid grid-cols-8 gap-4 p-4 hover:bg-gray-50 dark:hover:bg-zinc-700"
+                className="grid grid-cols-8 gap-4 p-4 hover:bg-gray-100 dark:hover:bg-zinc-700"
               >
                 <div className="col-span-2 text-sm font-medium text-gray-900 dark:text-zinc-100">
                   {tool.TOOLNAME}
@@ -54,7 +54,7 @@ export const McpTable: React.FC<McpTableProps> = ({
                 <div className="col-span-2 flex justify-between gap-2">
                   <button
                     onClick={() => onEdit(currentTool)}
-                    className="w-full cursor-pointer rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600 hover:bg-gray-200 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-600"
+                    className="w-full cursor-pointer rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-600"
                   >
                     {isEditing ? '취소' : '수정'}
                   </button>

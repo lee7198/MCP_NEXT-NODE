@@ -115,8 +115,8 @@ export default function DateNavigation({
 
       {/* 드롭다운 메뉴 */}
       {isOpen && (
-        <div className="absolute top-12 left-0 mt-2 w-64 rounded-lg border border-gray-200 bg-white shadow-xl">
-          <div className="flex items-center justify-between border-b border-gray-200 p-3">
+        <div className="absolute top-12 left-0 mt-2 w-64 rounded-lg border border-gray-300 bg-white shadow-xl">
+          <div className="flex items-center justify-between border-b border-gray-300 p-3">
             <h3 className="text-sm font-semibold text-gray-800">History</h3>
             <button
               onClick={() => setIsOpen(false)}
@@ -129,7 +129,7 @@ export default function DateNavigation({
           <div className="max-h-64 overflow-y-auto">
             {isDatesLoading ? (
               <div className="flex items-center justify-center py-4">
-                <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-gray-600"></div>
+                <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-gray-300"></div>
                 <span className="ml-2 text-sm text-gray-500">
                   날짜 목록 로딩 중...
                 </span>
@@ -151,7 +151,7 @@ export default function DateNavigation({
                   <button
                     key={date}
                     onClick={() => handleDateClick(date)}
-                    className={`w-full px-3 py-2 text-left text-sm transition-colors duration-150 hover:bg-gray-50 ${
+                    className={`w-full px-3 py-2 text-left text-sm transition-colors duration-150 hover:bg-gray-100 ${
                       selectedDate === date
                         ? 'bg-gray-50 text-gray-600'
                         : 'text-gray-700'

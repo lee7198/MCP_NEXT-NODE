@@ -53,6 +53,7 @@ export default function ResponseTimeChart({
       },
       background: '#fff0',
     },
+    colors: ['#6366f1'],
     stroke: {
       curve: 'smooth',
     },

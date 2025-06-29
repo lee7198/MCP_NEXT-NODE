@@ -15,7 +15,7 @@ export const AddMcpForm: React.FC<AddMcpFormProps> = ({ onAdd, onCancel }) => {
   };
 
   return (
-    <div className="grid grid-cols-8 gap-4 border-b border-gray-200 p-4 dark:border-zinc-700">
+    <div className="grid grid-cols-8 gap-4 border-b border-gray-300 p-4 dark:border-zinc-700">
       <div className="col-span-2">
         <input
           type="text"
@@ -47,7 +47,7 @@ export const AddMcpForm: React.FC<AddMcpFormProps> = ({ onAdd, onCancel }) => {
       <div className="col-span-2 flex justify-between gap-2">
         <button
           onClick={onCancel}
-          className="w-full cursor-pointer rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600 hover:bg-gray-200 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-600"
+          className="w-full cursor-pointer rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-600"
         >
           취소
         </button>

@@ -51,10 +51,10 @@ export default function ThemeSelector() {
           return (
             <label
               key={option.value}
-              className={`flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-all hover:bg-gray-50 dark:hover:bg-zinc-800 ${
+              className={`flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-all hover:bg-gray-100 dark:hover:bg-zinc-700 ${
                 isSelected
-                  ? 'border-gray-500 bg-gray-50 dark:border-zinc-400 dark:bg-zinc-900/20'
-                  : 'border-gray-200 bg-white dark:border-zinc-700 dark:bg-zinc-800'
+                  ? 'border-gray-300 bg-gray-800 dark:border-zinc-400 dark:bg-zinc-600'
+                  : 'border-gray-300 bg-white dark:border-zinc-700 dark:bg-zinc-800'
               }`}
             >
               <input
@@ -70,7 +70,7 @@ export default function ThemeSelector() {
               <div
                 className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
                   isSelected
-                    ? 'border-gray-500 bg-gray-500 dark:border-zinc-400 dark:bg-zinc-400'
+                    ? 'border-gray-300 bg-gray-500 dark:border-zinc-400 dark:bg-zinc-400'
                     : 'border-gray-300 dark:border-zinc-600'
                 }`}
               >
@@ -82,7 +82,7 @@ export default function ThemeSelector() {
                 size={20}
                 className={`${
                   isSelected
-                    ? 'text-gray-600 dark:text-zinc-400'
+                    ? 'text-white dark:text-zinc-400'
                     : 'text-gray-600 dark:text-zinc-400'
                 }`}
               />
@@ -90,13 +90,15 @@ export default function ThemeSelector() {
                 <div
                   className={`font-medium ${
                     isSelected
-                      ? 'text-gray-900 dark:text-zinc-100'
+                      ? 'text-white dark:text-zinc-100'
                       : 'text-gray-900 dark:text-zinc-100'
                   }`}
                 >
                   {option.label}
                 </div>
-                <div className="text-sm text-gray-500 dark:text-zinc-400">
+                <div
+                  className={`text-sm ${isSelected ? 'text-white dark:text-zinc-400' : 'text-gray-600 dark:text-zinc-400'}`}
+                >
                   {option.description}
                 </div>
               </div>

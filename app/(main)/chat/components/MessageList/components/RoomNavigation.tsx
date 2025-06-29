@@ -29,7 +29,7 @@ export default function RoomNavigation({
         {/* 모바일용 버튼 */}
         {!openNav && (
           <button
-            className={`absolute -right-16 aspect-square cursor-pointer rounded-full border border-gray-300 bg-white p-2 shadow-2xl duration-150 hover:scale-95 hover:bg-gray-200 active:scale-105 lg:hidden dark:bg-zinc-800 dark:hover:bg-zinc-600 ${openNav ? 'opacity-0' : 'opacity-100'}`}
+            className={`absolute -right-16 aspect-square cursor-pointer rounded-full border border-gray-300 bg-white p-2 shadow-2xl duration-150 hover:scale-95 hover:bg-gray-100 active:scale-105 lg:hidden dark:bg-zinc-800 dark:hover:bg-zinc-600 ${openNav ? 'opacity-0' : 'opacity-100'}`}
             onClick={() => setOpenNav(!openNav)}
           >
             <CaretRightIcon size={24} />
@@ -40,7 +40,7 @@ export default function RoomNavigation({
         >
           <div>
             <button
-              className={`aspect-square rounded-lg p-1 hover:bg-gray-200 ${isLgAndUp ? (openNav ? 'cursor-w-resize' : 'cursor-e-resize lg:w-full') : 'cursor-pointer'} dark:hover:bg-zinc-600`}
+              className={`aspect-square rounded-lg p-1 hover:bg-gray-100 ${isLgAndUp ? (openNav ? 'cursor-w-resize' : 'cursor-e-resize lg:w-full') : 'cursor-pointer'} dark:hover:bg-zinc-600`}
               onClick={() => setOpenNav(!openNav)}
             >
               {isLgAndUp ? (
@@ -51,7 +51,7 @@ export default function RoomNavigation({
             </button>
           </div>
           <button
-            className={`flex cursor-pointer items-center gap-2 rounded-lg p-1 hover:bg-gray-200 ${openNav ? '' : 'lg:aspect-square lg:justify-center'} dark:hover:bg-zinc-600`}
+            className={`flex cursor-pointer items-center gap-2 rounded-lg p-1 hover:bg-gray-100 ${openNav ? '' : 'lg:aspect-square lg:justify-center'} dark:hover:bg-zinc-600`}
             onClick={onNewChat}
           >
             <ChatCircleDotsIcon size={24} />
@@ -61,7 +61,7 @@ export default function RoomNavigation({
           </button>
 
           <div
-            className={`flex items-center gap-2 p-1 ${openNav ? '' : 'hover:bg-gray-200 lg:aspect-square lg:cursor-pointer lg:justify-center lg:rounded-lg dark:hover:bg-zinc-600'}`}
+            className={`flex items-center gap-2 p-1 ${openNav ? '' : 'hover:bg-gray-100 lg:aspect-square lg:cursor-pointer lg:justify-center lg:rounded-lg dark:hover:bg-zinc-600'}`}
             // lg 이상에서는 항상 open 하도록
             onClick={() => isLgAndUp && setOpenNav(true)}
           >
@@ -82,7 +82,7 @@ export default function RoomNavigation({
                       return (
                         <div className="py-1" key={item.roomId}>
                           <div
-                            className={`grid cursor-pointer grid-cols-13 grid-rows-2 rounded-lg px-2 py-1 ${selectRoom === item.roomId ? 'bg-gray-800 text-white hover:bg-gray-600 dark:bg-zinc-200 dark:text-black dark:hover:bg-zinc-400' : 'hover:bg-gray-200 dark:hover:bg-zinc-700'}`}
+                            className={`grid cursor-pointer grid-cols-13 grid-rows-2 rounded-lg px-2 py-1 ${selectRoom === item.roomId ? 'bg-gray-800 text-white hover:bg-gray-600 dark:bg-zinc-200 dark:text-black dark:hover:bg-zinc-400' : 'hover:bg-gray-100 dark:hover:bg-zinc-700'}`}
                             onClick={() => setSelectRoom(item.roomId)}
                           >
                             <div className="col-span-11 truncate text-sm leading-3.5 whitespace-nowrap">

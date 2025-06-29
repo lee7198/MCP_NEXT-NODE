@@ -100,7 +100,7 @@ export default function AgentStatusSection({
                   .map((item) => (
                     <Link
                       key={item.SERVERNAME}
-                      className="flex items-center gap-2 rounded-full border border-gray-400 px-2 text-sm text-gray-900 hover:bg-gray-200 dark:border-zinc-600 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                      className="flex items-center gap-2 rounded-full border border-gray-300 px-2 text-sm text-gray-900 hover:bg-gray-100 dark:border-zinc-600 dark:text-zinc-100 dark:hover:bg-zinc-700"
                       href={`/settings/server/${item.SERVERNAME}`}
                     >
                       <StatusPing status={serverStatuses[item.SERVERNAME]} />

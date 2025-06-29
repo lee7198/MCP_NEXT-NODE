@@ -34,7 +34,7 @@ export default function MarkdownStyle({ input }: { input: string }) {
         h3: ({ ...props }) => <h3 {...props} className="py-1 text-lg" />,
         p: ({ ...props }) => <p {...props} className="py-1 text-sm" />,
         hr: ({ ...props }) => (
-          <hr {...props} className="mx-auto my-4 w-3/4 border-gray-500" />
+          <hr {...props} className="mx-auto my-4 w-3/4 border-gray-300" />
         ),
         ol: ({ ...props }) => (
           <ol {...props} className="list-inside list-decimal text-sm" />
