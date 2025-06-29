@@ -16,11 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko">
-      <body
-        suppressHydrationWarning={process.env.NODE_ENV === 'development'}
-        className="antialiased"
-      >
+    <html lang="ko" suppressHydrationWarning>
+      <body suppressHydrationWarning className="antialiased">
         <ThemeProvider>
           <NextAuthProvider>
             <ReactQueryProvider>{children}</ReactQueryProvider>

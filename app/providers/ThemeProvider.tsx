@@ -9,6 +9,7 @@ export default function ThemeProvider({
   children: React.ReactNode;
 }) {
   const theme = useThemeStore((state) => state.theme);
+  const isHydrated = useThemeStore((state) => state.isHydrated);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -18,7 +19,7 @@ export default function ThemeProvider({
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted || !isHydrated) return;
 
     const root = document.documentElement;
 
@@ -42,8 +43,11 @@ export default function ThemeProvider({
       // Tailwind dark 클래스 적용
       if (isDark) {
         root.classList.add('dark');
+        // 추가로 data-theme 속성도 설정 (디버깅용)
+        root.setAttribute('data-theme', 'dark');
       } else {
         root.classList.remove('dark');
+        root.setAttribute('data-theme', 'light');
       }
     };
 
@@ -55,7 +59,16 @@ export default function ThemeProvider({
       mql.addEventListener('change', applyTheme);
       return () => mql.removeEventListener('change', applyTheme);
     }
-  }, [theme, mounted]);
+  }, [theme, mounted, isHydrated]);
+
+  // hydration 중에는 기본 스타일을 적용하지 않음
+  if (!mounted || !isHydrated) {
+    return (
+      <html lang="ko" suppressHydrationWarning>
+        <body suppressHydrationWarning>{children}</body>
+      </html>
+    );
+  }
 
   return <>{children}</>;
 }
