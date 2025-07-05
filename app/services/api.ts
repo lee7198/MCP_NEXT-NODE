@@ -399,4 +399,10 @@ export const common_management = {
     if (!res.ok) throw new Error('DB 서버 ping 실패');
     return res.json();
   },
+
+  checkUser: async (email: string): Promise<{ success: boolean }> => {
+    const res = await fetch(`/api/common/check_user?email=${email}`);
+    if (!res.ok) throw new Error('유저 정보 확인 실패');
+    return res.json();
+  },
 };

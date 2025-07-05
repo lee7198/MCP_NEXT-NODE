@@ -2,8 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import Header from './components/Header';
+
 import { ToastContainer } from 'react-toastify';
 import { useThemeStore } from '@/app/store/themeStore';
+import UserAuthCheckProvider from '../providers/UserAuthCheckProvider';
 
 export default function RootLayout({
   children,
@@ -45,8 +47,7 @@ export default function RootLayout({
     >
       <Header />
       <div className="pt-12" />
-      {children}
-
+      <UserAuthCheckProvider>{children}</UserAuthCheckProvider>
       {/* alert 발송 */}
       <ToastContainer
         position="bottom-right"

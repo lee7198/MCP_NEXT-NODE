@@ -12,12 +12,18 @@ export async function GET(req: NextRequest) {
         { status: 400 }
       );
     }
+
     const res = await common_query_management.getCheckUser(email);
     return NextResponse.json(res);
   } catch (err) {
-    console.error('유저 리스트 조회 실패:', err);
-    const errorMessage =
-      err instanceof Error ? err.message : '유저 리스트 조회 실패';
+    console.error('유저 확인 실패:', err);
+    const errorMessage = err instanceof Error ? err.message : '유저 확인 실패';
+
+    // 등록되지 않은 사용자인 경우 403 상태 코드로 응답
+    if (errorMessage === '등록된 유저가 아닙니다.') {
+      return NextResponse.json({ error: errorMessage }, { status: 403 });
+    }
+
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
