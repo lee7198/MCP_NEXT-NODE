@@ -63,7 +63,8 @@ export default function McpToolSetting({
       setNewParam({ ARGUMENT: '', COMMENT: '' });
     },
     onError: (error: Error) => {
-      toast.error(error.message || '파라미터 추가에 실패했습니다.');
+      if (!settingTool) toast.error('선택된 Tool이 없습니다..');
+      else toast.error(error.message || '파라미터 추가에 실패했습니다.');
     },
   });
 
@@ -119,12 +120,16 @@ export default function McpToolSetting({
   };
 
   const handleSaveNew = () => {
-    const newParamData = {
-      ...newParam,
-      SERVERNAME: serverId,
-      TOOLNAME: settingTool,
-    };
-    addParamMutation.mutate(newParamData);
+    if (!settingTool) {
+      toast.error('선택된 Tool이 없습니다..');
+    } else {
+      const newParamData = {
+        ...newParam,
+        SERVERNAME: serverId,
+        TOOLNAME: settingTool,
+      };
+      addParamMutation.mutate(newParamData);
+    }
   };
 
   const handleCancelNew = () => {
@@ -169,6 +174,8 @@ export default function McpToolSetting({
           setSettingTool(filteredTool[0].TOOLNAME);
       } else {
         if (filteredTool[0]) setSettingTool(filteredTool[0].TOOLNAME);
+        // tool을 선택하지 않은 경우
+        else setSettingTool('');
       }
     }
   }, [mcpTools]);

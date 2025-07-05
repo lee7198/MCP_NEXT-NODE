@@ -16,7 +16,7 @@ export const GRID_STYLES = {
   button: {
     common: 'w-full cursor-pointer rounded-md px-2 py-1 text-xs flex-',
     primary:
-      'bg-gray-100 text-gray-600 hover:bg-gray-100 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800',
+      'bg-gray-200 text-gray-600 hover:bg-gray-300 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800',
     danger:
       'bg-red-100 text-gray-600 hover:bg-red-200 dark:bg-red-900 dark:text-red-200 dark:hover:bg-red-800',
   },
@@ -46,7 +46,7 @@ export const GridHeader: React.FC<GridHeaderProps> = ({
 }) => {
   return (
     <div
-      className={`grid grid-cols-${totalColumns} gap-4 bg-gray-50 p-4 text-xs font-medium tracking-wider text-gray-500 uppercase dark:bg-zinc-700 dark:text-zinc-400`}
+      className={`grid grid-cols-${totalColumns} gap-4 bg-gray-200 p-4 text-xs font-medium tracking-wider text-gray-500 uppercase dark:bg-zinc-700 dark:text-zinc-400`}
     >
       {columns.map((column, index) => (
         <div key={index} className={`col-span-${column.span || 1}`}>
