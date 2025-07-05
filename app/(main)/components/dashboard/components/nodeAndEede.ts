@@ -12,7 +12,7 @@ export const initialNodes: CustomNode[] = [
     position: { x: 250, y: 100 },
     data: {
       title: 'IIS Web Server',
-      subtitle: 'this serveer',
+      subtitle: 'this server',
       icon: HardDrivesIcon,
       isTargetVisible: true,
       isSourceVisible: true,

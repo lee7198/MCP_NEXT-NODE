@@ -12,17 +12,17 @@ export default function Setting() {
     {
       name: '사용자 관리',
       path: '/settings/user_mng',
-      icon: <UsersIcon size={48} />,
+      icon: <UsersIcon size={36} />,
     },
     {
       name: '서버(클라이언트) 관리',
       path: '/settings/servers',
-      icon: <HardDrivesIcon size={48} />,
+      icon: <HardDrivesIcon size={36} />,
     },
     {
       name: 'MCP 마스터 관리',
       path: '/settings/mcp_mng',
-      icon: <RobotIcon size={48} />,
+      icon: <RobotIcon size={36} />,
     },
   ];
   return (
@@ -31,21 +31,19 @@ export default function Setting() {
         시스템 설정
       </h1>
 
-      <div className="grid grid-cols-1 gap-4 py-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 py-8 sm:grid-cols-2 lg:grid-cols-6">
         {menuList.map((item) => (
           <Link
             href={item.path}
             key={item.name}
-            className="grid cursor-pointer grid-cols-4 items-center rounded-lg border border-gray-300 bg-white p-4 transition-colors hover:bg-gray-100 dark:border-zinc-600 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+            className="grid cursor-pointer grid-cols-5 items-center rounded-lg border border-gray-300 bg-white p-4 transition-colors hover:bg-gray-100 lg:col-span-2 dark:border-zinc-600 dark:bg-zinc-800 dark:hover:bg-zinc-700"
           >
             <div className="text-gray-900 dark:text-zinc-100">{item.icon}</div>
-            <div className="col-span-3 text-xl font-bold text-gray-900 dark:text-zinc-100">
+            <div className="col-span-4 text-xl font-bold text-gray-900 dark:text-zinc-100">
               {item.name}
             </div>
           </Link>
         ))}
-      </div>
-      <div className="mt-8">
         <ThemeSelector />
       </div>
     </div>

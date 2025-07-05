@@ -1,6 +1,6 @@
 import { Icon } from '@phosphor-icons/react';
 import { ServerRes } from './api';
-import { ServerStatus } from './components';
+import { ServerStatus } from './common';
 import { DurationData } from './message';
 import { ClientInfo } from './socket';
 import { MarkerType, Position, Node } from '@xyflow/react';

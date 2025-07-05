@@ -23,7 +23,6 @@ import {
   message_management,
   mcp_management,
 } from '@/app/services/api';
-import LoadingResponse from './components/MessageList/components/LoadingResponse';
 import ErrorResponse from './components/MessageList/components/ErrorResponse';
 import { initReqState } from '@/app/lib/common';
 import { useSession } from 'next-auth/react';
@@ -222,7 +221,10 @@ export default function Chat() {
         }`}
       >
         {isMessagesLoading ? (
-          <LoadingResponse />
+          <div className="flex size-full items-center justify-center">
+            {/* <LoadingResponse /> */}
+            <Spinner size={12} />
+          </div>
         ) : isError ? (
           <ErrorResponse />
         ) : (

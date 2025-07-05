@@ -144,12 +144,6 @@ export default function Mcp_mng() {
         </div>
       </div>
       <div className="overflow-auto rounded-lg bg-white shadow dark:bg-zinc-800 dark:shadow-gray-900/20">
-        {/* Grid Header */}
-        <div className="grid grid-cols-8 gap-4 bg-gray-50 p-4 text-xs font-medium tracking-wider text-gray-500 uppercase dark:bg-zinc-700 dark:text-zinc-400">
-          <div className="col-span-2">Tool 이름</div>
-          <div className="col-span-4">설명</div>
-          <div className="col-span-2">작업</div>
-        </div>
         {isAddingTool && (
           <AddMcpForm
             onAdd={handleAddTool}
@@ -165,6 +159,23 @@ export default function Mcp_mng() {
           setEditedTools={setEditedTools}
           isPending={isPending}
         />
+
+        {/* <GridSystem
+          headerList={{
+            'TOOL 이름': 'TOOLNAME',
+            '설명': 'COMMENT',
+            '작업': 'TASK',
+          }}
+          data={
+            isSuccess
+              ? mcpTools.map((item) => [
+                  <td>{item.TOOLNAME}</td>,
+                  <td>{item.COMMENT}</td>,
+                  <div>hello</div>,
+                ])
+              : []
+          }
+        /> */}
       </div>
     </div>
   );

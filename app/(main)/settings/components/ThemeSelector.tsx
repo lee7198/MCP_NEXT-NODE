@@ -39,7 +39,7 @@ export default function ThemeSelector() {
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="col-span-3 space-y-4">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-zinc-100">
         테마 설정
       </h3>

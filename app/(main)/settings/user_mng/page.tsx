@@ -144,14 +144,6 @@ export default function User_mng() {
         </div>
       </div>
       <div className="overflow-auto rounded-lg bg-white shadow dark:bg-zinc-800 dark:shadow-gray-900/20">
-        {/* Grid Header */}
-        <div className="grid grid-cols-8 gap-4 bg-gray-50 p-4 text-xs font-medium tracking-wider text-gray-500 uppercase dark:bg-zinc-700 dark:text-zinc-400">
-          <div className="col-span-2">이름</div>
-          <div className="col-span-2">이메일</div>
-          <div>사용유무</div>
-          <div>마지막 접속</div>
-          <div className="col-span-2">작업</div>
-        </div>
         {isAddingUser && (
           <AddUserForm
             onAdd={handleAddUser}

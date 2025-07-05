@@ -49,7 +49,7 @@ export default function AIResponseItem({
       {thinkMessage && (
         <>
           <button
-            className="active:bg-gray-20 flex w-full cursor-pointer flex-row items-center justify-between rounded-lg border border-gray-300 px-2 py-1 font-bold lg:w-56"
+            className="active:bg-gray-20 flex w-full cursor-pointer flex-row items-center justify-between rounded-lg border border-gray-300 px-2 py-1 font-bold lg:w-56 dark:border-zinc-500"
             onClick={() => setIsThinkMessageOpen(!isThinkMessageOpen)}
           >
             <div className="text-sm">🤖 AI가 생각한 내용</div>
@@ -79,7 +79,7 @@ export default function AIResponseItem({
         <div className="flex w-full items-center justify-between px-2 pt-1">
           <div className="text-xs">{timeAgo.format(new Date(CREATED_AT))}</div>
           <div
-            className="cursor-pointer px-1 py-0.5 active:bg-gray-200"
+            className="cursor-pointer rounded-sm px-1 py-0.5 active:bg-gray-200"
             onClick={handleCopy}
           >
             {isCopied ? (

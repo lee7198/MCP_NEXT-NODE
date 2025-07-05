@@ -1,5 +1,7 @@
+import React from 'react';
 import { UserListRes } from './api';
 
+// 사용자 관리 관련 타입
 export interface UserFormData {
   USERNAME: string;
   EMAIL: string;
@@ -23,6 +25,7 @@ export interface AddUserFormProps {
   onCancel: () => void;
 }
 
+// MCP 도구 관리 관련 타입
 export interface McpToolRes {
   TOOLNAME: string;
   COMMENT: string;

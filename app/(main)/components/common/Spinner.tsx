@@ -11,7 +11,7 @@ export default function Spinner({
     <div role="status">
       <svg
         aria-hidden="true"
-        className={`h-${size} w-${size} animate-spin text-gray-200 dark:text-zinc-600 ${color}`}
+        className={`h-${size} w-${size} animate-spin text-gray-200 dark:text-zinc-200 ${color}`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

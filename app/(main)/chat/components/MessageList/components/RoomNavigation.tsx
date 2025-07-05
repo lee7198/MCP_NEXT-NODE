@@ -72,7 +72,7 @@ export default function RoomNavigation({
           </div>
           {/* history list */}
           {!openNav && isLgAndUp ? undefined : (
-            <div className="relative max-h-[calc(100svh-15rem)] divide-gray-300 overflow-auto lg:h-full">
+            <div className="relative max-h-[calc(100svh-25rem)] divide-gray-300 overflow-auto md:max-h-[calc(100svh-15rem)]">
               <div className="flex flex-col overflow-y-scroll">
                 {isRoomSuccess
                   ? rooms.map((item) => {
@@ -82,21 +82,29 @@ export default function RoomNavigation({
                       return (
                         <div className="py-1" key={item.roomId}>
                           <div
-                            className={`grid cursor-pointer grid-cols-13 grid-rows-2 rounded-lg px-2 py-1 ${selectRoom === item.roomId ? 'bg-gray-800 text-white hover:bg-gray-600 dark:bg-zinc-200 dark:text-black dark:hover:bg-zinc-400' : 'hover:bg-gray-100 dark:hover:bg-zinc-700'}`}
+                            className={`grid cursor-pointer grid-cols-13 grid-rows-2 rounded-lg px-2 py-1 ${
+                              selectRoom === item.roomId
+                                ? 'bg-zinc-700 text-white hover:bg-gray-600 dark:bg-zinc-200 dark:text-black dark:hover:bg-zinc-400'
+                                : 'hover:bg-gray-100 dark:hover:bg-zinc-700'
+                            }`}
                             onClick={() => setSelectRoom(item.roomId)}
                           >
-                            <div className="col-span-11 truncate text-sm leading-3.5 whitespace-nowrap">
+                            <div className="col-span-11 truncate text-xs leading-3.5 whitespace-nowrap">
                               {item.content}
                             </div>
 
-                            <div className="col-span-11 flex gap-1 text-xs leading-3.5">
+                            <div className="col-span-11 flex justify-around gap-1 text-xs leading-3.5">
                               <span className="font-bold">{date}</span>
-                              <span>[{item.roomId}]</span>
+                              <span
+                                className={`${selectRoom === item.roomId ? '' : 'bg-gray-100 text-gray-600 dark:bg-zinc-700 dark:text-gray-300'} rounded-xs text-[0.65rem]`}
+                              >
+                                {item.roomId}
+                              </span>
                             </div>
 
                             <div className="col-span-2 col-start-12 row-span-2 row-start-1 flex items-center justify-end">
                               <div
-                                className={`flex size-6 items-center justify-center rounded-full text-center text-xs font-bold ${selectRoom === item.roomId ? 'bg-gray-300 text-black dark:bg-zinc-800 dark:text-white' : 'bg-gray-500 text-white dark:bg-zinc-100 dark:text-black'}`}
+                                className={`flex size-6 items-center justify-center rounded-full text-center text-xs font-bold ${selectRoom === item.roomId ? 'bg-gray-200 text-black dark:bg-zinc-800 dark:text-white' : 'bg-gray-500 text-white dark:bg-zinc-400 dark:text-black'}`}
                               >
                                 {item.count}
                               </div>

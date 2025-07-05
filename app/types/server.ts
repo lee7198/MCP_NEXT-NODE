@@ -1,4 +1,4 @@
-import { ServerStatus } from './components';
+import { ServerStatus } from './common';
 
 export interface SaveServerForm {
   SERVERNAME: string;

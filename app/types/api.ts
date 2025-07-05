@@ -1,23 +1,12 @@
 import { ChatResponse } from 'ollama';
 
-// API 응답 및 에러 처리 관련 타입 정의
-export interface ApiResponse<T> {
-  data: T;
-  error?: string;
-}
-
-export interface ApiError {
-  message: string;
-  status: number;
-}
-
+// 채팅 관련 API 타입
 export interface SaveChatRes {
   id: number;
   success: boolean;
   CONTENT: string;
   USER_ID: string;
   MCP_SERVER?: string;
-  // total_duration: number;
 }
 
 export interface AIChatRes extends ChatResponse {
@@ -25,6 +14,7 @@ export interface AIChatRes extends ChatResponse {
   USER_ID: string;
 }
 
+// 서버 관련 API 타입
 export interface ServerRes {
   SERVERNAME: string;
   RESPONSED_AT: Date;
@@ -36,19 +26,12 @@ export interface ServerDetail {
   RESPONSED_AT: Date;
 }
 
+// MCP 관련 API 타입
 export interface McpRes {
   TOOLNAME: string;
   TOOL_COMMENT: string;
   SERVERNAME: string;
   USE_YON: 'Y' | 'N';
-}
-
-export interface UserListRes {
-  USERNAME: string;
-  EMAIL: string;
-  USE_YON: 'Y' | 'N';
-  LAST_LOGIN_AT: Date;
-  ROLE: string;
 }
 
 export interface McpParamsRes {
@@ -57,4 +40,13 @@ export interface McpParamsRes {
   ARGUMENT: string;
   ORDER_NO: number;
   COMMENT: string;
+}
+
+// 사용자 관련 API 타입
+export interface UserListRes {
+  USERNAME: string;
+  EMAIL: string;
+  USE_YON: 'Y' | 'N';
+  LAST_LOGIN_AT: Date;
+  ROLE: string;
 }

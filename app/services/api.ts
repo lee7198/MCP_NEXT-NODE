@@ -216,7 +216,7 @@ export const server_management = {
 };
 
 export const mcp_management = {
-  getMcpTools: async () => {
+  getMcpTools: async (): Promise<McpToolRes[]> => {
     const response = await fetch(`${API_BASE_URL}/mcp/get-mcp-tools`);
     if (!response.ok) {
       throw new Error('MCP 정보 조회 실패');

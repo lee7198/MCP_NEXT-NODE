@@ -7,11 +7,13 @@ import UserInfo from './common/UserInfo';
 import Image from 'next/image';
 import { GoogleLogoIcon } from '@phosphor-icons/react/dist/ssr';
 import { signIn, signOut, useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 
 const Header = React.memo(function Header() {
   const { data: session, status } = useSession();
   const [openHover, setOpenHover] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     setMounted(true);
@@ -50,15 +52,21 @@ const Header = React.memo(function Header() {
         ) : session?.user ? (
           <>
             <div className="flex gap-4 uppercase">
-              {pages.map((item) => (
-                <Link
-                  key={item.path}
-                  href={item.path}
-                  className="cursor-pointer text-gray-900 hover:text-gray-600 dark:text-zinc-100 dark:hover:text-gray-300"
-                >
-                  {item.name}
-                </Link>
-              ))}
+              {pages.map((item) => {
+                const isActive =
+                  item.path === '/'
+                    ? pathname === '/'
+                    : pathname.startsWith(item.path);
+                return (
+                  <Link
+                    key={item.path}
+                    href={item.path}
+                    className={`cursor-pointer text-gray-900 hover:text-gray-600 dark:text-zinc-100 dark:hover:text-gray-300 ${isActive ? 'font-black underline underline-offset-4' : ''}`}
+                  >
+                    {item.name}
+                  </Link>
+                );
+              })}
             </div>
             <div className="relative flex items-center gap-2">
               <button

@@ -2,7 +2,9 @@ import React from 'react';
 import { Message, ChatReq, DurationData, RoomInfo } from './message';
 import { ClientInfo } from './socket';
 import { McpRes, ServerRes, McpParamsRes } from './api';
+import { ServerStatus, PingStatus } from './common';
 
+// 채팅 관련 컴포넌트 타입
 export interface ChatMessageProps {
   message: Message;
   reqState: AIRequestState;
@@ -18,10 +20,6 @@ export interface ChatInputProps {
   mcpParams?: McpParamsRes[];
   isMcpParamsPending: boolean;
   openNav: boolean;
-}
-
-export interface DateDividerProps {
-  date?: string;
 }
 
 export interface MessageListProps {
@@ -44,8 +42,37 @@ export interface AIRequestState {
   isAIResSave: boolean;
 }
 
-export type ServerStatus = 'offline' | 'loading' | 'success';
-export type PingStatus = 'idle' | 'loading' | 'success';
+export interface MessageInputProps {
+  message: string;
+  setMessage: (message: string) => void;
+  onSendMessage: () => void;
+  isDisabled: boolean;
+  textareaRef: React.RefObject<HTMLTextAreaElement | null>;
+  boxHeight: number;
+}
+
+// 네비게이션 관련 컴포넌트 타입
+export interface DateDividerProps {
+  date?: string;
+}
+
+export interface DateNavigationProps {
+  messages: Message[];
+  onDateClick: (date: string) => void;
+}
+
+export interface RoomNavigationProps {
+  rooms: RoomInfo[];
+  isRoomSuccess: boolean;
+  isRoomLoading: boolean;
+  openNav: boolean;
+  setOpenNav: React.Dispatch<React.SetStateAction<boolean>>;
+  selectRoom: string;
+  setSelectRoom: React.Dispatch<React.SetStateAction<string>>;
+  onNewChat: () => void;
+}
+
+// 서버 관련 컴포넌트 타입
 export interface StatusPingProps {
   status: ServerStatus;
   size?: number;
@@ -78,6 +105,12 @@ export interface ServerListProps {
   handleTestPing: (serverName: string) => void;
 }
 
+export interface ServerStatusProps {
+  isPending: boolean;
+  isSuccess: boolean;
+}
+
+// MCP 관련 컴포넌트 타입
 export interface McpToolProps {
   serverId: string;
   isGetMcps: boolean;
@@ -102,38 +135,9 @@ export interface McpSettingsModalProps {
   isMcpParamsPending: boolean;
 }
 
-export interface ServerStatusProps {
-  isPending: boolean;
-  isSuccess: boolean;
-}
-
-export interface MessageInputProps {
-  message: string;
-  setMessage: (message: string) => void;
-  onSendMessage: () => void;
-  isDisabled: boolean;
-  textareaRef: React.RefObject<HTMLTextAreaElement | null>;
-  boxHeight: number;
-}
-
+// 차트 관련 컴포넌트 타입
 export interface ResponseTimeChartProps {
   data: DurationData[];
   selectedUsername: string;
   isDataPending: boolean;
-}
-
-export interface DateNavigationProps {
-  messages: Message[];
-  onDateClick: (date: string) => void;
-}
-
-export interface RoomNavigationProps {
-  rooms: RoomInfo[];
-  isRoomSuccess: boolean;
-  isRoomLoading: boolean;
-  openNav: boolean;
-  setOpenNav: React.Dispatch<React.SetStateAction<boolean>>;
-  selectRoom: string;
-  setSelectRoom: React.Dispatch<React.SetStateAction<string>>;
-  onNewChat: () => void;
 }
