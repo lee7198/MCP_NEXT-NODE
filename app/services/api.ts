@@ -12,6 +12,7 @@ import {
   ServerDetail,
   ServerRes,
   UserListRes,
+  UserPromptResponse,
 } from '@/app/types';
 import { ChatResponse } from 'ollama';
 import { SaveServerForm } from '../types/server';
@@ -157,6 +158,16 @@ export const message_management = {
       `${API_BASE_URL}/message/get-rooms?userId=${userId}`
     );
     if (!res.ok) throw new Error('채팅방 목록 조회 실패');
+
+    return res.json();
+  },
+
+  // 사용자 프롬프트 조회
+  getMyPrompt: async (userId: string): Promise<Array<UserPromptResponse>> => {
+    const res = await fetch(
+      `${API_BASE_URL}/message/get-my-prompt?userId=${userId}`
+    );
+    if (!res.ok) throw new Error('프롬프트 목록 조회 실패');
 
     return res.json();
   },

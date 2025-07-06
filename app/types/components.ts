@@ -1,5 +1,11 @@
 import React from 'react';
-import { Message, ChatReq, DurationData, RoomInfo } from './message';
+import {
+  Message,
+  ChatReq,
+  DurationData,
+  RoomInfo,
+  UserPromptResponse,
+} from './message';
 import { ClientInfo } from './socket';
 import { McpRes, ServerRes, McpParamsRes } from './api';
 import { ServerStatus, PingStatus } from './common';
@@ -140,4 +146,11 @@ export interface ResponseTimeChartProps {
   data: DurationData[];
   selectedUsername: string;
   isDataPending: boolean;
+}
+
+export interface PromptFavoritesModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  prompts?: UserPromptResponse[];
+  setMessage: (msg: string) => void;
 }

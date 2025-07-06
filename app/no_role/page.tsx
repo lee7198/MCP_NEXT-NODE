@@ -24,10 +24,14 @@ export default function Role() {
     retry: false,
   });
 
+  // 권한이 있는 유저가 접근했을 때만 메인 페이지로 이동
   useEffect(() => {
-    if (!data?.success) router.push('/');
-  }, [data]);
+    if (data?.success) {
+      router.push('/');
+    }
+  }, [data, router]);
 
+  // 로딩 중이거나 세션이 없을 때는 로딩 표시
   if (isPending || !session) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-zinc-900">
@@ -56,7 +60,7 @@ export default function Role() {
           </button>
           <button
             onClick={() => signOut()}
-            className="flex cursor-pointer items-center gap-2 rounded-md border px-4 py-1 hover:bg-zinc-700 hover:text-white"
+            className="flex cursor-pointer items-center gap-2 rounded-md border bg-gray-800 px-4 py-1 text-white hover:bg-gray-600 dark:bg-white dark:text-black dark:hover:bg-zinc-400"
           >
             <SignOutIcon />
             로그아웃

@@ -1,14 +1,5 @@
 import { useEffect, useState } from 'react';
-
-type Breakpoint = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-
-interface BreakpointConfig {
-  'sm': number;
-  'md': number;
-  'lg': number;
-  'xl': number;
-  '2xl': number;
-}
+import { Breakpoint, BreakpointConfig } from '@/app/types';
 
 // Tailwind CSS 기본 브레이크포인트 (px 단위)
 const breakpoints: BreakpointConfig = {

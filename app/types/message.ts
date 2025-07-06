@@ -65,3 +65,10 @@ export interface MessagesResponse {
   hasMore: boolean;
   nextCursor?: string;
 }
+
+// 사용자 프롬프트 응답 타입
+export interface UserPromptResponse {
+  TITLE: string;
+  PROMPT: string;
+  CREATED_AT: Date;
+}

@@ -1,4 +1,10 @@
 import React from 'react';
+import {
+  GridHeaderProps,
+  LoadingSkeletonProps,
+  EditableInputProps,
+  ActionButtonProps,
+} from '@/app/types';
 
 // 공통 그리드 스타일 상수들
 export const GRID_STYLES = {
@@ -35,11 +41,6 @@ export const getGridRowClass = (totalColumns: number = 8): string =>
   `grid grid-cols-${totalColumns} gap-4 p-4 hover:bg-gray-100 dark:hover:bg-zinc-700`;
 
 // 공통 그리드 헤더 컴포넌트
-interface GridHeaderProps {
-  columns: Array<{ label: string; span?: number }>;
-  totalColumns?: number;
-}
-
 export const GridHeader: React.FC<GridHeaderProps> = ({
   columns,
   totalColumns = 8,
@@ -58,11 +59,6 @@ export const GridHeader: React.FC<GridHeaderProps> = ({
 };
 
 // 공통 로딩 스켈레톤 컴포넌트
-interface LoadingSkeletonProps {
-  columns: Array<{ span?: number }>;
-  totalColumns?: number;
-}
-
 export const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
   columns,
   totalColumns = 8,
@@ -80,12 +76,6 @@ export const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
 };
 
 // 공통 입력 필드 컴포넌트
-interface EditableInputProps {
-  value: string;
-  onChange: (value: string) => void;
-  className?: string;
-}
-
 export const EditableInput: React.FC<EditableInputProps> = ({
   value,
   onChange,
@@ -100,14 +90,6 @@ export const EditableInput: React.FC<EditableInputProps> = ({
     />
   );
 };
-
-// 공통 액션 버튼 컴포넌트
-interface ActionButtonProps {
-  onClick: () => void;
-  variant?: 'primary' | 'danger';
-  children: React.ReactNode;
-  className?: string;
-}
 
 export const ActionButton: React.FC<ActionButtonProps> = ({
   onClick,

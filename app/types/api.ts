@@ -1,5 +1,23 @@
 import { ChatResponse } from 'ollama';
 
+// NextAuth 타입 확장
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+      accessToken?: string;
+    };
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    accessToken?: string;
+  }
+}
+
 // 채팅 관련 API 타입
 export interface SaveChatRes {
   id: number;

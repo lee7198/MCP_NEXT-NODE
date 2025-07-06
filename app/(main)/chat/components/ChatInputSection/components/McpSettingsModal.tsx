@@ -47,12 +47,12 @@ export default function McpSettingsModal({
       className="absolute bottom-12 z-20 max-w-96 rounded-lg bg-white p-4 shadow-2xl dark:bg-zinc-800 dark:shadow-zinc-900/50"
     >
       <div className="mb-2 flex items-start justify-between">
-        <h3 className="text-lg text-gray-900 dark:text-zinc-100">
+        <h3 className="font-bold text-gray-900 dark:text-zinc-100">
           선택가능한 서버
         </h3>
         <div className="flex gap-2">
           <button
-            className="cursor-pointer rounded-full bg-gray-200 px-1 text-sm text-gray-700 hover:bg-gray-300 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600"
+            className="cursor-pointer rounded-full bg-gray-200 px-1 text-xs text-gray-700 hover:bg-gray-300 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600"
             onClick={onClearSelection}
           >
             선택 취소

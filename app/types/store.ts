@@ -5,3 +5,13 @@ export interface UserState {
   setUserId: (userId: string) => void;
   setLoading: (isLoading: boolean) => void;
 }
+
+// 테마 관련 타입 정의
+export type Theme = 'light' | 'dark' | 'system';
+
+export interface ThemeState {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+  isHydrated: boolean;
+  setHydrated: (hydrated: boolean) => void;
+}

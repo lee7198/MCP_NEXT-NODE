@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
   aiModel_management,
   mcp_management,
+  message_management,
   server_management,
 } from '@/app/services/api';
 import { useSocket } from '@/app/hooks/useSocket';
@@ -13,7 +14,8 @@ import { useSocket } from '@/app/hooks/useSocket';
 import McpSettingsModal from './components/McpSettingsModal';
 import ServerStatusPing from './components/ServerStatusPing';
 import MessageInput from './components/MessageInput';
-import { CaretDownIcon } from '@phosphor-icons/react/dist/ssr';
+import { CaretDownIcon, StarIcon } from '@phosphor-icons/react/dist/ssr';
+import PromptFavoritesModal from './components/PromptFavoritesModal';
 
 export default function ChatInputSection({
   onSendMessage,
@@ -34,6 +36,7 @@ export default function ChatInputSection({
     Record<string, ServerStatus>
   >({});
   const { clients, mcpResponse } = useSocket();
+  const [isPromptFavoritesOpen, setIsPromptFavoritesOpen] = useState(false);
 
   const { data: servers } = useQuery({
     queryKey: ['server_config'],
@@ -50,6 +53,12 @@ export default function ChatInputSection({
     queryKey: ['model_server'],
     queryFn: () => aiModel_management.getModelPing(),
     refetchInterval: 5000,
+  });
+
+  const { data: prompts } = useQuery({
+    queryKey: ['prompts'],
+    queryFn: () => message_management.getMyPrompt(USER_ID),
+    enabled: !!USER_ID,
   });
 
   useEffect(() => {
@@ -116,7 +125,7 @@ export default function ChatInputSection({
       className={`z-50 col-span-16 mx-auto h-auto w-full px-4 xl:max-w-6xl xl:px-4 ${openNav ? 'lg:col-span-12 lg:col-start-5 lg:w-full lg:pl-0 xl:col-span-13 xl:col-start-4' : 'lg:col-span-15 lg:col-start-2 lg:w-full lg:pl-4'}`}
     >
       <div className="= relative flex h-auto w-full flex-col items-center rounded-t-xl border border-b-0 border-gray-300 bg-white dark:border-zinc-600 dark:bg-zinc-800">
-        <div className="relative flex h-auto w-full gap-4 px-2 py-2">
+        <div className="relative flex h-auto w-full gap-3 px-2 py-2">
           <button
             onClick={() => setIsMcpSettingsOpen(!isMcpSettingsOpen)}
             className={`cursor-pointer rounded-md px-2 text-sm hover:opacity-70 ${selectServer ? 'border bg-green-500 text-black' : 'border border-gray-300 bg-white text-gray-900 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100'} `}
@@ -137,6 +146,20 @@ export default function ChatInputSection({
             serverStatuses={serverStatuses}
             mcps={mcps}
             isMcpParamsPending={isMcpParamsPending}
+          />
+
+          <button
+            className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-2 text-sm text-gray-900 hover:opacity-70 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100"
+            onClick={() => setIsPromptFavoritesOpen(true)}
+          >
+            <StarIcon weight="fill" color="#ffce60" />
+            프롬프트즐겨찾기
+          </button>
+          <PromptFavoritesModal
+            isOpen={isPromptFavoritesOpen}
+            onClose={() => setIsPromptFavoritesOpen(false)}
+            prompts={prompts}
+            setMessage={setMessage}
           />
 
           <ServerStatusPing isPending={isModelPing} isSuccess={isSuccess} />

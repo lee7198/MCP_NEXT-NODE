@@ -1,12 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-interface UserState {
-  userId: string | null;
-  isLoading: boolean;
-  setUserId: (userId: string) => void;
-  setLoading: (isLoading: boolean) => void;
-}
+import { UserState } from '@/app/types';
 
 export const useUserStore = create<UserState>()(
   persist(

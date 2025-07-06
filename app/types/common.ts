@@ -38,3 +38,38 @@ export interface PaginatedResponse<T> {
   nextCursor?: string;
   total?: number;
 }
+
+// 반응형 디자인 관련 타입
+export type Breakpoint = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+
+export interface BreakpointConfig {
+  'sm': number;
+  'md': number;
+  'lg': number;
+  'xl': number;
+  '2xl': number;
+}
+
+// UI 컴포넌트 관련 타입
+export interface GridHeaderProps {
+  columns: Array<{ label: string; span?: number }>;
+  totalColumns?: number;
+}
+
+export interface LoadingSkeletonProps {
+  columns: Array<{ span?: number }>;
+  totalColumns?: number;
+}
+
+export interface EditableInputProps {
+  value: string;
+  onChange: (value: string) => void;
+  className?: string;
+}
+
+export interface ActionButtonProps {
+  onClick: () => void;
+  variant?: 'primary' | 'danger';
+  children: React.ReactNode;
+  className?: string;
+}

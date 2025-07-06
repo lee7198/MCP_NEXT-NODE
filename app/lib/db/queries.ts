@@ -1,7 +1,12 @@
 import { getOracleConnection } from '@/app/lib/db/connection';
 import oracledb from 'oracledb';
 import { createUniqueRoomId } from '@/app/lib/db/room';
-import { DurationData, RoomInfo, UserListRes } from '@/app/types';
+import {
+  DurationData,
+  RoomInfo,
+  UserListRes,
+  UserPromptResponse,
+} from '@/app/types';
 import { McpToolRes } from '@/app/types';
 import { McpParamsRes } from '@/app/types/api';
 
@@ -364,6 +369,36 @@ ORDER BY ar.CREATED_AT DESC`;
     } catch (err) {
       console.error('채팅방 조회 중 오류 발생:', err);
       throw new Error('채팅방 조회에 실패했습니다.');
+    } finally {
+      await connection.close();
+    }
+  },
+  async getMyPrompt(userId: string): Promise<Array<UserPromptResponse>> {
+    const connection = await getOracleConnection();
+    try {
+      const sql = `
+        SELECT 
+          TITLE,
+          PROMPT, 
+          CREATED_AT
+        FROM MCP_TOOL_FAVORITE_PROMPT
+        WHERE USER_ID = :userId
+        ORDER BY ORDER_NO
+      `;
+      const result = await connection.execute(
+        sql,
+        { userId },
+        {
+          outFormat: oracledb.OUT_FORMAT_OBJECT,
+        }
+      );
+      if (!result.rows || result.rows.length === 0) {
+        return [];
+      }
+      return result.rows;
+    } catch (err) {
+      console.error('프롬프트 조회 중 오류 발생:', err);
+      throw new Error('프롬프트 조회에 실패했습니다.');
     } finally {
       await connection.close();
     }

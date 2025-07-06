@@ -15,6 +15,7 @@ export default function UserAuthCheckProvider({
   const [isChecking, setIsChecking] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [lastCheckedEmail, setLastCheckedEmail] = useState<string | null>(null);
+  const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
 
   // 세션 상태를 메모이제이션하여 불필요한 리렌더링 방지
   const sessionState = useMemo(
@@ -69,6 +70,7 @@ export default function UserAuthCheckProvider({
       }
     } finally {
       setIsChecking(false);
+      setHasCheckedAuth(true);
     }
   };
 
@@ -81,12 +83,7 @@ export default function UserAuthCheckProvider({
     checkUser();
   }, [sessionState.email, sessionState.isAuthenticated, pathname]);
 
-  // /no_role 페이지에서는 로딩 표시하지 않음
-  if (pathname === '/no_role') {
-    return <>{children}</>;
-  }
-
-  // 로딩 중일 때는 로딩 표시
+  // 세션이 로딩 중이거나 권한 체크 중일 때는 로딩 표시
   if (sessionState.isLoading || isChecking) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -95,9 +92,23 @@ export default function UserAuthCheckProvider({
     );
   }
 
-  // 미승인된 사용자인 경우 빈 화면 (리다이렉트 중)
-  if (sessionState.isAuthenticated && !isAuthorized) {
+  // 인증되지 않은 사용자는 로그인 페이지로 리다이렉트
+  if (!sessionState.isAuthenticated) {
     return null;
+  }
+
+  // 권한 체크가 완료되지 않았고, /no_role 페이지가 아닌 경우 로딩 표시
+  if (!hasCheckedAuth && pathname !== '/no_role') {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="border-primary size-16 animate-spin rounded-full border-4 border-t-transparent"></div>
+      </div>
+    );
+  }
+
+  // 권한이 없는 사용자가 /no_role 페이지가 아닌 곳에 접근하려고 할 때
+  if (hasCheckedAuth && !isAuthorized && pathname !== '/no_role') {
+    return null; // 리다이렉트 중이므로 빈 화면
   }
 
   return <>{children}</>;

@@ -45,12 +45,12 @@ export default function MessageInput({
         className={`flex items-end transition-all duration-300 ${
           message
             ? 'ml-0 h-full w-14 scale-100 opacity-100'
-            : 'pointer-events-none ml-0 w-0 scale-90 opacity-0'
+            : 'pointer-events-none ml-0 h-full w-0 scale-90 opacity-0'
         } ${isDisabled ? 'cursor-not-allowed opacity-50' : ''}`}
       >
         <button
           type="submit"
-          className={`bg-main hover:bg-main/80 h-full w-full grow-0 cursor-pointer rounded-lg px-4 py-4 text-white focus:outline-none ${isDisabled ? 'w-0 opacity-0' : 'opacity-100'}`}
+          className={`flex h-full w-full grow-0 cursor-pointer items-center justify-center rounded-lg bg-gray-900 px-4 py-4 text-white hover:bg-gray-700 focus:outline-none dark:bg-zinc-200 dark:text-black ${isDisabled ? 'w-0 opacity-0' : 'opacity-100'}`}
           tabIndex={message ? 0 : -1}
           disabled={!message.trim() || isDisabled}
         >
