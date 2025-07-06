@@ -1,7 +1,8 @@
 import oracledb from 'oracledb';
 
 export const generateRoomId = (length = 7) => {
-  const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const chars =
+    '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let id = '';
   const array = new Uint8Array(length);
   crypto.getRandomValues(array);

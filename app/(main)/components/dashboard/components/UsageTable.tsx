@@ -45,10 +45,7 @@ export default function UsageTable({ data }: UsageTableProps) {
             ))
           ) : (
             <tr>
-              <td
-                colSpan={2}
-                className="py-4 text-center text-gray-500"
-              >
+              <td colSpan={2} className="py-4 text-center text-gray-500">
                 데이터가 없습니다
               </td>
             </tr>

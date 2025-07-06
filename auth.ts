@@ -44,6 +44,10 @@ const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
     maxAge: 3 * 24 * 60 * 60, // 3 days
+    updateAge: 24 * 60 * 60, // 24 hours - 세션 업데이트 주기 단축
+  },
+  jwt: {
+    maxAge: 3 * 24 * 60 * 60, // 3 days
   },
   pages: {
     signIn: '/login',

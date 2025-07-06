@@ -53,7 +53,7 @@ export default function ResponseTimeChart({
       },
       background: '#fff0',
     },
-    colors: ['#6366f1'],
+    colors: ['#6366f1', '#f59e0b', '#10b981', '#ef4444', '#a05195', '#f472b6'],
     stroke: {
       curve: 'smooth',
     },
@@ -89,7 +89,7 @@ export default function ResponseTimeChart({
       },
       labels: {
         formatter: (value) => {
-          return value.toLocaleString();
+          return value != null ? value.toLocaleString() : '0';
         },
         style: {
           colors: isDark ? '#f3f4f6' : '#374151', // gray-100 for dark, gray-700 for light
@@ -103,7 +103,7 @@ export default function ResponseTimeChart({
       },
       y: {
         formatter: (value) => {
-          return `${value.toLocaleString()} ms`;
+          return value != null ? `${value.toLocaleString()} ms` : '0 ms';
         },
       },
     },
@@ -115,6 +115,21 @@ export default function ResponseTimeChart({
       palette: 'palette1',
     },
   };
+  const allSeries = Array.from(
+    new Set(filteredData.map((item) => item.USERNAME))
+  )
+    .map((username) => {
+      const userData = filteredData.filter(
+        (item) => item.USERNAME === username
+      );
+      return {
+        name: username,
+        data: userData.map((item) => Math.round(item.TOTAL_DURATION / 1000000)),
+        count: userData.length,
+      };
+    })
+    .sort((a, b) => b.count - a.count)
+    .map(({ name, data }) => ({ name, data }));
 
   const series = [
     {
@@ -136,7 +151,12 @@ export default function ResponseTimeChart({
 
   return (
     typeof window !== 'undefined' && (
-      <Chart options={chartOptions} series={series} type="area" height={350} />
+      <Chart
+        options={chartOptions}
+        type="area"
+        series={selectedUsername === 'all' ? allSeries : series}
+        height={350}
+      />
     )
   );
 }

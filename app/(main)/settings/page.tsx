@@ -31,12 +31,12 @@ export default function Setting() {
         시스템 설정
       </h1>
 
-      <div className="grid grid-cols-1 gap-4 py-8 sm:grid-cols-2 lg:grid-cols-6">
+      <div className="grid grid-cols-3 gap-4 py-8 lg:grid-cols-6">
         {menuList.map((item) => (
           <Link
             href={item.path}
             key={item.name}
-            className="grid cursor-pointer grid-cols-5 items-center rounded-lg border border-gray-300 bg-white p-4 transition-colors hover:bg-gray-100 lg:col-span-2 dark:border-zinc-600 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+            className="col-span-3 grid cursor-pointer grid-cols-5 items-center rounded-lg border border-gray-300 bg-white p-4 transition-colors hover:bg-gray-100 lg:col-span-2 dark:border-zinc-600 dark:bg-zinc-800 dark:hover:bg-zinc-700"
           >
             <div className="text-gray-900 dark:text-zinc-100">{item.icon}</div>
             <div className="col-span-4 text-xl font-bold text-gray-900 dark:text-zinc-100">

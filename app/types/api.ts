@@ -7,6 +7,7 @@ export interface SaveChatRes {
   CONTENT: string;
   USER_ID: string;
   MCP_SERVER?: string;
+  roomId?: string;
 }
 
 export interface AIChatRes extends ChatResponse {

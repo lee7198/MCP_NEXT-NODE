@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     }
 
     const rooms = await message_query_management.getRooms(userId);
-    console.log(rooms);
+
     return NextResponse.json(rooms);
   } catch (err) {
     console.error('채팅방 조회 실패:', err);

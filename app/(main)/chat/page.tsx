@@ -175,9 +175,9 @@ export default function Chat() {
     setIsMounted(true);
   }, []);
 
-  useEffect(() => {
-    console.log('LOADING...');
-  }, [isMessagesLoading]);
+  // useEffect(() => {
+  //   console.log('LOADING...');
+  // }, [isMessagesLoading]);
 
   useEffect(() => {
     // agent 서버 선택하면 미리 fetch
