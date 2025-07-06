@@ -380,7 +380,8 @@ ORDER BY ar.CREATED_AT DESC`;
         SELECT 
           TITLE,
           PROMPT, 
-          CREATED_AT
+          CREATED_AT,
+          ORDER_NO
         FROM MCP_TOOL_FAVORITE_PROMPT
         WHERE USER_ID = :userId
         ORDER BY ORDER_NO

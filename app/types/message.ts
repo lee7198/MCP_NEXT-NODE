@@ -71,4 +71,5 @@ export interface UserPromptResponse {
   TITLE: string;
   PROMPT: string;
   CREATED_AT: Date;
+  ORDER_NO: number;
 }

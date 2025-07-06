@@ -3,6 +3,7 @@ import {
   HardDrivesIcon,
   UsersIcon,
   RobotIcon,
+  ChatCircleTextIcon,
 } from '@phosphor-icons/react/ssr';
 import Link from 'next/link';
 import ThemeSelector from './components/ThemeSelector';
@@ -24,6 +25,11 @@ export default function Setting() {
       path: '/settings/mcp_mng',
       icon: <RobotIcon size={36} />,
     },
+    {
+      name: 'PROMPT 관리',
+      path: '/settings/prompt_mng',
+      icon: <ChatCircleTextIcon size={36} />,
+    },
   ];
   return (
     <div className="container mx-auto bg-gray-50 p-6 dark:bg-zinc-900">
@@ -44,6 +50,11 @@ export default function Setting() {
             </div>
           </Link>
         ))}
+        {/* grid 채우기용 */}
+        <div
+          className={`${menuList.length % 3 > 0 ? 'lg:col-span-' + (3 - (menuList.length % 3)) * 2 : 'hidden'}`}
+        />
+
         <ThemeSelector />
       </div>
     </div>

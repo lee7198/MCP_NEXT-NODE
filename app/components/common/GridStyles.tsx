@@ -40,6 +40,12 @@ export const getColSpanClass = (span: number): string => `col-span-${span}`;
 export const getGridRowClass = (totalColumns: number = 8): string =>
   `grid grid-cols-${totalColumns} gap-4 p-4 hover:bg-gray-100 dark:hover:bg-zinc-700`;
 
+export const getGridRowClass2 = (totalColumns: number = 8): string =>
+  `grid grid-cols-${totalColumns} gap-4 p-4 bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/30`;
+
+export const getGridRowClass3 = (totalColumns: number = 8): string =>
+  `grid grid-cols-${totalColumns} gap-4 p-4 bg-red-100 hover:bg-red-200 dark:bg-red-900/30`;
+
 // 공통 그리드 헤더 컴포넌트
 export const GridHeader: React.FC<GridHeaderProps> = ({
   columns,
@@ -68,7 +74,7 @@ export const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
       {columns.map((column, index) => (
         <div
           key={index}
-          className={`col-span-${column.span || 1} my-1 h-4 w-24 animate-pulse rounded-lg bg-gray-300 dark:bg-zinc-600`}
+          className={`col-span-${column.span || 1} my-1 h-4 w-1/2 animate-pulse rounded-lg bg-gray-300 dark:bg-zinc-600`}
         />
       ))}
     </div>
