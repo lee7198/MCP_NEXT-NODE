@@ -24,7 +24,7 @@ export default function MessageItem({
     <div className="flex flex-row items-start justify-end gap-1">
       <div className="flex max-w-4/5 flex-col items-end justify-end gap-0.5 overflow-hidden">
         <div
-          className={`rounded-lg bg-gray-200 px-2 py-1 text-gray-800 ${isLoading ? 'animate-pulse' : ''}`}
+          className={`rounded-l-lg rounded-b-lg bg-gray-200 px-2 py-1 text-gray-800 ${isLoading ? 'animate-pulse' : ''}`}
         >
           <div
             className={`${!isExpanded && lines.length > 7 ? 'max-h-64 overflow-hidden' : ''}`}

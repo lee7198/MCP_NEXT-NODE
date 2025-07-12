@@ -28,7 +28,7 @@ import { initReqState } from '@/app/lib/common';
 import { useSession } from 'next-auth/react';
 import ChatInputSection from '@/app/(main)/chat/components/ChatInputSection';
 import { useSocket } from '@/app/hooks/useSocket';
-import RoomNavigation from './components/MessageList/components/RoomNavigation';
+import RoomNavigation from './components/MessageList/components/RoomNavigation/index';
 
 export default function Chat() {
   const [isMounted, setIsMounted] = useState(false);
@@ -215,7 +215,7 @@ export default function Chat() {
       />
 
       <div
-        className={`relative col-span-16 flex min-h-full flex-col gap-6 overflow-y-scroll bg-gray-50 px-4 transition-all duration-300 dark:bg-zinc-900 ${
+        className={`relative top-0 col-span-16 flex min-h-[calc(100%_+_1rem)] flex-col gap-6 overflow-y-scroll bg-gray-50 px-4 pb-4 transition-all duration-300 dark:bg-zinc-900 ${
           openNav
             ? 'lg:col-span-12 lg:pr-4 lg:pl-0 xl:col-span-13 xl:px-0 2xl:col-start-4'
             : 'lg:col-span-15 lg:col-start-2'

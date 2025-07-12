@@ -10,11 +10,10 @@ import {
   server_management,
 } from '@/app/services/api';
 import { useSocket } from '@/app/hooks/useSocket';
-
 import McpSettingsModal from './components/McpSettingsModal';
 import ServerStatusPing from './components/ServerStatusPing';
 import MessageInput from './components/MessageInput';
-import { CaretDownIcon, StarIcon } from '@phosphor-icons/react/dist/ssr';
+import { CaretDownIcon, ChatCircleIcon } from '@phosphor-icons/react/dist/ssr';
 import PromptFavoritesModal from './components/PromptFavoritesModal';
 
 export default function ChatInputSection({
@@ -152,7 +151,7 @@ export default function ChatInputSection({
             className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-2 text-sm text-gray-900 hover:opacity-70 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100"
             onClick={() => setIsPromptFavoritesOpen(true)}
           >
-            <StarIcon weight="fill" color="#ffce60" />
+            <ChatCircleIcon weight="fill" className="scale-x-[-1]" />
             프롬프트 즐겨찾기
           </button>
           <PromptFavoritesModal

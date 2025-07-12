@@ -104,6 +104,7 @@ export default function McpFlowSection({
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         fitView
+        draggable={false}
         className="h-full w-full"
       />
     </div>
