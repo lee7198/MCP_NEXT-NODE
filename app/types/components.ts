@@ -5,6 +5,7 @@ import {
   DurationData,
   RoomInfo,
   UserPromptResponse,
+  PromptStatus,
 } from './message';
 import { ClientInfo } from './socket';
 import { McpRes, ServerRes, McpParamsRes } from './api';
@@ -153,4 +154,41 @@ export interface PromptFavoritesModalProps {
   onClose: () => void;
   prompts?: UserPromptResponse[];
   setMessage: (msg: string) => void;
+}
+
+export interface PromptTableProps {
+  prompts: UserPromptResponse[] | undefined;
+  isPending: boolean;
+  modifiedPrompts: UserPromptResponse[];
+  editingIdx: number | null;
+  deletingOrderNos: Set<number>;
+  changedItems: Set<number>;
+  animatingOrderNo: number | null;
+  animationDirection: 'up' | 'down' | null;
+  onMoveUp: (index: number) => void;
+  onMoveDown: (index: number) => void;
+  onEditClick: (idx: number) => void;
+  onPromptChange: (idx: number, value: string) => void;
+  onEditCancel: () => void;
+  onApplyChanges: () => void;
+  onDeleteClick: (orderNo: number) => void;
+  onDeleteCancel: (orderNo: number) => void;
+  isAdding: boolean;
+  addMutate: { isPending: boolean };
+  onAddCancel: () => void;
+  onAdd: (prompt: Partial<PromptStatus>) => void;
+}
+
+export interface PromptHeaderProps {
+  isAdding: boolean;
+  editingIdx: number | null;
+  changedItems: Set<number>;
+  deletingOrderNos: Set<number>;
+  onAddClick: () => void;
+  onCancel: () => void;
+  onSave: () => void;
+}
+
+export interface ContainerWrapperProps {
+  children: React.ReactNode;
 }

@@ -77,7 +77,7 @@ export default function Servers() {
   }, [clients]);
 
   return (
-    <div className="container mx-auto flex flex-col gap-12 bg-gray-50 p-6 dark:bg-zinc-900">
+    <>
       <div>
         <div className="mb-4 flex items-center justify-between">
           <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-zinc-100">
@@ -106,6 +106,6 @@ export default function Servers() {
           clients={clients}
         />
       </div>
-    </div>
+    </>
   );
 }

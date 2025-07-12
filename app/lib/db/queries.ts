@@ -379,7 +379,7 @@ ORDER BY ar.CREATED_AT DESC`;
       const sql = `
         SELECT 
           TITLE,
-          PROMPT, 
+          DBMS_LOB.SUBSTR(PROMPT, 4000, 1) as PROMPT, 
           CREATED_AT,
           ORDER_NO
         FROM MCP_TOOL_FAVORITE_PROMPT
@@ -400,6 +400,47 @@ ORDER BY ar.CREATED_AT DESC`;
     } catch (err) {
       console.error('프롬프트 조회 중 오류 발생:', err);
       throw new Error('프롬프트 조회에 실패했습니다.');
+    } finally {
+      await connection.close();
+    }
+  },
+
+  // user prompt 저장
+  async saveUserPrompt(
+    promptName: string,
+    promptContent: string,
+    userId: string
+  ) {
+    const connection = await getOracleConnection();
+    try {
+      // ORDER_NO를 구함 (가장 큰 값 + 1)
+      const orderResult = await connection.execute(
+        `SELECT NVL(MAX(ORDER_NO), 0) + 1 AS NEXT_ORDER FROM MCP_TOOL_FAVORITE_PROMPT WHERE USER_ID = :userId`,
+        { userId },
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+      const nextOrder =
+        orderResult.rows &&
+        orderResult.rows[0] &&
+        orderResult.rows[0].NEXT_ORDER
+          ? orderResult.rows[0].NEXT_ORDER
+          : 1;
+
+      await connection.execute(
+        `INSERT INTO MCP_TOOL_FAVORITE_PROMPT (USER_ID, TITLE, PROMPT, CREATED_AT, ORDER_NO)
+       VALUES (:userId, :title, :prompt, SYSDATE, :orderNo)`,
+        {
+          userId,
+          title: promptName,
+          prompt: promptContent,
+          orderNo: nextOrder,
+        },
+        { autoCommit: true }
+      );
+      return { success: true };
+    } catch (err) {
+      console.error('프롬프트 저장 중 오류 발생:', err);
+      throw new Error('프롬프트 저장에 실패했습니다.');
     } finally {
       await connection.close();
     }

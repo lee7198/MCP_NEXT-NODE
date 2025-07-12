@@ -57,7 +57,7 @@ export default function ChatInputSection({
 
   const { data: prompts } = useQuery({
     queryKey: ['prompts'],
-    queryFn: () => message_management.getMyPrompt(USER_ID),
+    queryFn: () => message_management.getUserPrompt(USER_ID),
     enabled: !!USER_ID,
   });
 

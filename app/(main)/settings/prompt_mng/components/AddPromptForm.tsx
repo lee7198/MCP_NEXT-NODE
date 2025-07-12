@@ -1,33 +1,33 @@
 import React, { useState } from 'react';
-import { AddMcpFormProps, McpToolRes } from '@/app/types';
+import { AddPromptFormProps, PromptStatus } from '@/app/types';
 import Spinner from '@/app/(main)/components/common/Spinner';
 import { toast } from 'react-toastify';
 
-export const AddMcpForm: React.FC<AddMcpFormProps> = ({
+export const AddPromptForm: React.FC<AddPromptFormProps> = ({
   onAdd,
   onCancel,
-  isSaving = false,
+  isSaving,
 }) => {
-  const [newTool, setNewTool] = useState<Partial<McpToolRes>>({
-    TOOLNAME: '',
-    COMMENT: '',
+  const [newPrompt, setNewPrompt] = useState<PromptStatus>({
+    promptContent: '',
+    promptName: '',
   });
   const [errors, setErrors] = useState<{
-    TOOLNAME?: string;
-    COMMENT?: string;
+    promptName?: string;
+    promptContent?: string;
   }>({});
 
   const validateForm = () => {
-    const newErrors: { TOOLNAME?: string; COMMENT?: string } = {};
+    const newErrors: { promptName?: string; promptContent?: string } = {};
 
-    if (!newTool.TOOLNAME?.trim()) {
-      newErrors.TOOLNAME = 'Tool 이름을 입력해주세요.';
-      toast.error(newErrors.TOOLNAME);
+    if (!newPrompt.promptName.trim()) {
+      newErrors.promptName = '프롬프트 이름을 입력해주세요.';
+      toast.error(newErrors.promptName);
     }
 
-    if (!newTool.COMMENT?.trim()) {
-      newErrors.COMMENT = 'Tool 설명을 입력해주세요.';
-      toast.error(newErrors.COMMENT);
+    if (!newPrompt.promptContent.trim()) {
+      newErrors.promptContent = '프롬프트 내용을 입력해주세요.';
+      toast.error(newErrors.promptContent);
     }
 
     setErrors(newErrors);
@@ -36,12 +36,12 @@ export const AddMcpForm: React.FC<AddMcpFormProps> = ({
 
   const handleSubmit = () => {
     if (validateForm()) {
-      onAdd(newTool);
+      onAdd(newPrompt);
     }
   };
 
-  const handleInputChange = (field: keyof McpToolRes, value: string) => {
-    setNewTool((prev) => ({ ...prev, [field]: value }));
+  const handleInputChange = (field: keyof PromptStatus, value: string) => {
+    setNewPrompt((prev) => ({ ...prev, [field]: value }));
     // 입력 시 해당 필드의 에러 메시지 제거
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
@@ -49,35 +49,37 @@ export const AddMcpForm: React.FC<AddMcpFormProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-8 gap-4 p-4">
-      <div className="col-span-2">
+    <div className="grid grid-cols-12 gap-4 p-4">
+      <div className="col-span-3">
         <input
           type="text"
-          value={newTool.TOOLNAME}
-          onChange={(e) => handleInputChange('TOOLNAME', e.target.value)}
-          placeholder="Tool 이름"
+          value={newPrompt.promptName}
+          onChange={(e) => handleInputChange('promptName', e.target.value)}
+          placeholder="Prompt Name"
           className={`w-full rounded-md border px-2 text-sm placeholder-gray-500 disabled:animate-pulse disabled:bg-gray-200 dark:placeholder-gray-400 ${
-            errors.TOOLNAME
+            errors.promptName
               ? 'border-red-500 bg-red-50 text-red-900 dark:border-red-400 dark:bg-red-900/20 dark:text-red-100'
               : 'border-gray-300 bg-white text-gray-900 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100'
           }`}
           disabled={isSaving}
         />
       </div>
-      <div className="col-span-4">
-        <input
-          type="text"
-          value={newTool.COMMENT}
-          onChange={(e) => handleInputChange('COMMENT', e.target.value)}
-          placeholder="설명"
-          className={`w-full rounded-md border px-2 text-sm placeholder-gray-500 disabled:animate-pulse disabled:bg-gray-200 dark:placeholder-gray-400 ${
-            errors.COMMENT
+      <div className="col-span-7">
+        <textarea
+          value={newPrompt.promptContent}
+          onChange={(e) => handleInputChange('promptContent', e.target.value)}
+          placeholder="Prompt 내용을 작성 해주세요."
+          rows={3}
+          maxLength={3900}
+          className={`w-full resize-none rounded-md border px-2 py-1 text-sm placeholder-gray-500 disabled:animate-pulse disabled:bg-gray-200 dark:placeholder-gray-400 ${
+            errors.promptContent
               ? 'border-red-500 bg-red-50 text-red-900 dark:border-red-400 dark:bg-red-900/20 dark:text-red-100'
               : 'border-gray-300 bg-white text-gray-900 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100'
           }`}
           disabled={isSaving}
         />
       </div>
+
       <div className="col-span-2 flex justify-between gap-2">
         {isSaving ? (
           <div className="flex w-full items-center justify-center">

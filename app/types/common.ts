@@ -53,6 +53,7 @@ export interface BreakpointConfig {
 // UI 컴포넌트 관련 타입
 export interface GridHeaderProps {
   columns: Array<{ label: string; span?: number }>;
+  // 12까지 밖에 그리드 표현이 안됨
   totalColumns?: number;
 }
 

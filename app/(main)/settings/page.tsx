@@ -8,7 +8,7 @@ import {
 import Link from 'next/link';
 import ThemeSelector from './components/ThemeSelector';
 
-export default function Setting() {
+export default function Home() {
   const menuList = [
     {
       name: '사용자 관리',

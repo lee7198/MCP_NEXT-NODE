@@ -13,6 +13,7 @@ import {
   ServerRes,
   UserListRes,
   UserPromptResponse,
+  SaveUserPromptRequest,
 } from '@/app/types';
 import { ChatResponse } from 'ollama';
 import { SaveServerForm } from '../types/server';
@@ -163,11 +164,32 @@ export const message_management = {
   },
 
   // 사용자 프롬프트 조회
-  getMyPrompt: async (userId: string): Promise<Array<UserPromptResponse>> => {
+  getUserPrompt: async (userId: string): Promise<Array<UserPromptResponse>> => {
     const res = await fetch(
-      `${API_BASE_URL}/message/get-my-prompt?userId=${userId}`
+      `${API_BASE_URL}/message/get-user-prompt?userId=${userId}`
     );
     if (!res.ok) throw new Error('프롬프트 목록 조회 실패');
+
+    return res.json();
+  },
+
+  // 사용자 프롬프트 추가
+  addUserPrompt: async ({
+    promptName,
+    promptContent,
+    userId,
+  }: SaveUserPromptRequest) => {
+    const res = await fetch(`${API_BASE_URL}/message/save-user-prompt`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        promptName,
+        promptContent,
+        userId,
+      }),
+    });
+
+    if (!res.ok) throw new Error('프롬프트 추가 실패');
 
     return res.json();
   },

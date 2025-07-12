@@ -73,3 +73,13 @@ export interface UserPromptResponse {
   CREATED_AT: Date;
   ORDER_NO: number;
 }
+
+// 사용자 프롬프트 저장용도
+export interface PromptStatus {
+  promptName: string;
+  promptContent: string;
+}
+
+export interface SaveUserPromptRequest extends PromptStatus {
+  userId: string;
+}

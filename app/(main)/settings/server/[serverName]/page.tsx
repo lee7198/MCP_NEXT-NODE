@@ -106,7 +106,7 @@ export default function ServerDetailPage({ params }: ServerDetailPageProps) {
   }, []);
 
   return (
-    <div className="container mx-auto bg-gray-50 px-4 py-8 dark:bg-zinc-900">
+    <>
       <Link
         href="/settings/servers"
         className="mb-6 inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-gray-100"
@@ -157,6 +157,6 @@ export default function ServerDetailPage({ params }: ServerDetailPageProps) {
           />
         </div>
       </div>
-    </div>
+    </>
   );
 }

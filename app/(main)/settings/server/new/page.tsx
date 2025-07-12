@@ -42,7 +42,7 @@ export default function New() {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <>
       <h1 className="mb-4 text-2xl font-bold">신규 서버 등록</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -103,6 +103,6 @@ export default function New() {
           </button>
         </div>
       </form>
-    </div>
+    </>
   );
 }

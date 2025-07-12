@@ -110,7 +110,7 @@ export default function Mcp_mng() {
   };
 
   return (
-    <div className="container mx-auto bg-gray-50 p-6 dark:bg-zinc-900">
+    <>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-zinc-100">
           <Link
@@ -158,24 +158,7 @@ export default function Mcp_mng() {
           setEditedTools={setEditedTools}
           isPending={isPending}
         />
-
-        {/* <GridSystem
-          headerList={{
-            'TOOL 이름': 'TOOLNAME',
-            '설명': 'COMMENT',
-            '작업': 'TASK',
-          }}
-          data={
-            isSuccess
-              ? mcpTools.map((item) => [
-                  <td>{item.TOOLNAME}</td>,
-                  <td>{item.COMMENT}</td>,
-                  <div>hello</div>,
-                ])
-              : []
-          }
-        /> */}
       </div>
-    </div>
+    </>
   );
 }
