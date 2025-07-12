@@ -13,8 +13,8 @@ export default function RoomList({
   onDelete,
 }: RoomListProps) {
   return (
-    <div className="relative max-h-[calc(100svh-25rem)] divide-gray-300 overflow-auto md:max-h-[calc(100svh-15rem)]">
-      <div className="flex flex-col overflow-y-scroll">
+    <div className="room-list-container relative h-full max-h-[calc(100svh-22rem)] divide-gray-300 overflow-auto md:max-h-full">
+      <div className="flex flex-col overflow-y-scroll [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-gray-800/0 dark:[&::-webkit-scrollbar-thumb]:bg-gray-800/0 [&::-webkit-scrollbar-track]:bg-gray-800/0 dark:[&::-webkit-scrollbar-track]:bg-gray-800/0">
         {isRoomSuccess
           ? rooms.map((item) => (
               <RoomItem

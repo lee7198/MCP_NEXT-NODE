@@ -4,7 +4,7 @@ import {
   BookmarkSimpleIcon,
   TrashIcon,
 } from '@phosphor-icons/react/dist/ssr';
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { normalizeDate } from '../lib';
 
 export default function RoomItem({
@@ -16,9 +16,27 @@ export default function RoomItem({
   openMenuId,
   onToggleMenu,
 }: RoomItemProps) {
+  const menuRef = useRef<HTMLDivElement>(null);
+  const [menuPosition, setMenuPosition] = useState<'top' | 'bottom'>('bottom');
+
   const date = normalizeDate(
     new Date(room.createdAt).toISOString().split('T')[0]
   );
+
+  // 메뉴 위치 계산
+  useEffect(() => {
+    if (openMenuId === room.roomId && menuRef.current) {
+      const rect = menuRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+
+      // 메뉴가 화면 하단에 가까우면 위쪽으로 표시
+      if (rect.bottom + 80 > viewportHeight - 20) {
+        setMenuPosition('top');
+      } else {
+        setMenuPosition('bottom');
+      }
+    }
+  }, [openMenuId, room.roomId]);
 
   return (
     <div className="w-full py-1">
@@ -67,7 +85,7 @@ export default function RoomItem({
         </div>
 
         {/* 추가 기능 메뉴 */}
-        <div className="menu-container relative">
+        <div className="menu-container relative" ref={menuRef}>
           <button
             className="flex cursor-pointer items-center rounded py-1 hover:bg-zinc-900/10 dark:hover:bg-zinc-100/10"
             onClick={(e) => {
@@ -80,7 +98,11 @@ export default function RoomItem({
 
           {/* Float 메뉴 */}
           {openMenuId === room.roomId && (
-            <div className="absolute top-6 right-0 z-50 min-w-32 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-zinc-600 dark:bg-zinc-800">
+            <div
+              className={`absolute right-0 z-50 min-w-32 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-zinc-600 dark:bg-zinc-800 ${
+                menuPosition === 'top' ? 'bottom-6' : 'top-6'
+              }`}
+            >
               <button
                 className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm hover:bg-gray-100 dark:text-white dark:hover:bg-zinc-700"
                 onClick={(e) => {

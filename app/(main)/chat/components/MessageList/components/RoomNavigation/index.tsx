@@ -53,7 +53,7 @@ export default function RoomNavigation({
     },
   });
 
-  // 메뉴 외부 클릭 시 메뉴 닫기
+  // 메뉴 외부 클릭 및 외부 스크롤 시 메뉴 닫기
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
@@ -62,9 +62,20 @@ export default function RoomNavigation({
       }
     };
 
+    const handleScroll = (event: Event) => {
+      const target = event.target as Element;
+      // RoomList 컴포넌트 내부에서 스크롤이 발생한 경우에만 메뉴 닫기
+      if (target.closest('.room-list-container')) {
+        setOpenMenuId(null);
+      }
+    };
+
     document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('scroll', handleScroll, true); // capture phase로 이벤트 리스너 추가
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('scroll', handleScroll, true);
     };
   }, []);
 
@@ -87,7 +98,7 @@ export default function RoomNavigation({
 
   return (
     <div
-      className={`absolute z-50 w-52 transition-none lg:top-auto lg:left-auto lg:row-span-2 lg:w-full lg:pb-4 ${
+      className={`room-navigation-container absolute z-50 w-52 transition-none lg:top-auto lg:left-auto lg:row-span-2 lg:w-full lg:pb-4 ${
         openNav
           ? 'top-4 left-4 lg:relative lg:col-span-4 lg:p-4 xl:col-span-3'
           : 'top-4 -left-64 w-64 lg:relative lg:col-span-1 lg:pt-4 lg:pl-4'
@@ -97,7 +108,7 @@ export default function RoomNavigation({
         <MobileToggleButton openNav={openNav} setOpenNav={setOpenNav} />
 
         <div
-          className={`flex flex-col gap-2 p-2 lg:p-4 ${
+          className={`flex h-full flex-col gap-2 p-2 lg:p-4 ${
             openNav ? '' : 'lg:items-center lg:justify-start lg:p-4'
           }`}
         >
