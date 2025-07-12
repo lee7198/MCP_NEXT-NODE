@@ -7,7 +7,7 @@ import {
   EditableInput,
   ActionButton,
   getColSpanClass,
-  getGridRowClass,
+  getGridRowClassDefault,
 } from '@/app/components/common/GridStyles';
 import { formatISOToKorean } from '@/app/lib/common';
 
@@ -47,7 +47,7 @@ export const UserTable: React.FC<UserTableProps> = ({
           return (
             <div
               key={user.EMAIL}
-              className={getGridRowClass(
+              className={getGridRowClassDefault(
                 columns.reduce((acc, col) => acc + col.span, 0)
               )}
             >

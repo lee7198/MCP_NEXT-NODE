@@ -74,6 +74,7 @@ export interface RoomNavigationProps {
   isRoomSuccess: boolean;
   isRoomLoading: boolean;
   openNav: boolean;
+  userId: string;
   setOpenNav: React.Dispatch<React.SetStateAction<boolean>>;
   selectRoom: string;
   setSelectRoom: React.Dispatch<React.SetStateAction<string>>;
@@ -193,4 +194,36 @@ export interface PromptHeaderProps {
 
 export interface ContainerWrapperProps {
   children: React.ReactNode;
+}
+
+export interface NavigationHeaderProps {
+  openNav: boolean;
+  setOpenNav: (open: boolean) => void;
+  onNewChat: () => void;
+}
+
+export interface MobileToggleButtonProps {
+  openNav: boolean;
+  setOpenNav: (open: boolean) => void;
+}
+
+export interface RoomItemProps {
+  room: RoomInfo;
+  isSelected: boolean;
+  onSelect: (roomId: string) => void;
+  onToggleFavorite: (roomId: string) => void;
+  onDelete: (roomId: string) => void;
+  openMenuId: string | null;
+  onToggleMenu: (roomId: string) => void;
+}
+
+export interface RoomListProps {
+  rooms: RoomInfo[];
+  isRoomSuccess: boolean;
+  selectRoom: string;
+  setSelectRoom: (roomId: string) => void;
+  openMenuId: string | null;
+  setOpenMenuId: (roomId: string | null) => void;
+  onToggleFavorite: (roomId: string) => void;
+  onDelete: (roomId: string) => void;
 }

@@ -207,6 +207,7 @@ export default function Chat() {
         isRoomLoading={isRoomLoading}
         isRoomSuccess={isRoomSuccess}
         openNav={openNav}
+        userId={userId!}
         setOpenNav={setOpenNav}
         selectRoom={selectRoom}
         setSelectRoom={setSelectRoom}

@@ -316,28 +316,34 @@ ORDER BY ar.CREATED_AT DESC`;
     try {
       const sql = `
         SELECT 
-          M.ROOM_ID, 
-          DBMS_LOB.SUBSTR(M.CONTENT, 4000, 1) AS CONTENT, 
-          M.CREATED_AT, 
-          C.COUNT_ROOMS
+            M.ROOM_ID, 
+            DBMS_LOB.SUBSTR(M.CONTENT, 4000, 1) AS CONTENT, 
+            M.CREATED_AT, 
+            C.COUNT_ROOMS,
+            CASE 
+                WHEN F.ROOM_ID IS NOT NULL THEN 'Y'
+                ELSE 'N'
+            END AS FAVORITE
         FROM (
-          SELECT 
-            ROOM_ID,
-            USER_ID,
-            CONTENT,
-            CREATED_AT,
-            ROW_NUMBER() OVER (PARTITION BY ROOM_ID ORDER BY CREATED_AT DESC) AS RN
-          FROM CHAT_MESSAGES
-          WHERE USER_ID = :userId
+            SELECT 
+                ROOM_ID,
+                USER_ID,
+                CONTENT,
+                CREATED_AT,
+                ROW_NUMBER() OVER (PARTITION BY ROOM_ID ORDER BY CREATED_AT DESC) AS RN
+            FROM CHAT_MESSAGES
+            WHERE USER_ID = :userId
         ) M
         JOIN (
-          SELECT ROOM_ID, COUNT(*) AS COUNT_ROOMS
-          FROM CHAT_MESSAGES
-          WHERE USER_ID = :userId
-          GROUP BY ROOM_ID
+            SELECT ROOM_ID, COUNT(*) AS COUNT_ROOMS
+            FROM CHAT_MESSAGES
+            WHERE USER_ID = :userId
+            GROUP BY ROOM_ID
         ) C ON M.ROOM_ID = C.ROOM_ID
+        LEFT JOIN CHAT_FAVORITES F 
+            ON M.ROOM_ID = F.ROOM_ID AND F.USER_ID = :userId
         WHERE M.RN = 1
-        ORDER BY M.CREATED_AT DESC
+        ORDER BY F.ROOM_ID, M.CREATED_AT DESC
       `;
 
       const result = await connection.execute(
@@ -359,11 +365,13 @@ ORDER BY ar.CREATED_AT DESC`;
           CONTENT: string;
           CREATED_AT: Date;
           COUNT_ROOMS: number;
+          FAVORITE: string;
         }) => ({
           roomId: row.ROOM_ID,
           content: row.CONTENT,
           createdAt: row.CREATED_AT,
           count: row.COUNT_ROOMS,
+          favorite: row.FAVORITE === 'Y',
         })
       );
     } catch (err) {
@@ -513,6 +521,150 @@ ORDER BY ar.CREATED_AT DESC`;
     } catch (err) {
       console.error('프롬프트 삭제 중 오류 발생:', err);
       throw new Error('프롬프트 삭제에 실패했습니다.');
+    } finally {
+      await connection.close();
+    }
+  },
+  async getFavoritesRoom(userId: string) {
+    const connection = await getOracleConnection();
+    try {
+      const sql = `
+        SELECT 
+          ROOM_ID
+        FROM CHAT_FAVORITES
+        WHERE USER_ID = :userId;
+      `;
+      const result = await connection.execute(
+        sql,
+        { userId },
+        {
+          outFormat: oracledb.OUT_FORMAT_OBJECT,
+        }
+      );
+      if (!result.rows || result.rows.length === 0) {
+        return [];
+      }
+      return result.rows;
+    } catch (err) {
+      console.error('즐겨찾기 조회 중 오류 발생:', err);
+      throw new Error('즐겨찾기 조회에 실패했습니다.');
+    } finally {
+      await connection.close();
+    }
+  },
+
+  async saveFavoritesRoom(userId: string, roomId: string) {
+    const connection = await getOracleConnection();
+    try {
+      // 이미 즐겨찾기에 추가된 방인지 확인
+      const checkSql = `
+        SELECT COUNT(*) AS COUNT
+        FROM CHAT_FAVORITES
+        WHERE USER_ID = :userId AND ROOM_ID = :roomId
+      `;
+      const checkResult = await connection.execute(
+        checkSql,
+        { userId, roomId },
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+      if (checkResult.rows && checkResult.rows[0].COUNT > 0) {
+        throw new Error('이미 즐겨찾기에 추가된 방입니다.');
+      }
+
+      // 즐겨찾기 추가
+      const insertSql = `
+        INSERT INTO CHAT_FAVORITES (USER_ID, ROOM_ID, CREATED_AT)
+        VALUES (:userId, :roomId, CURRENT_DATE)
+      `;
+      await connection.execute(
+        insertSql,
+        { userId, roomId },
+        { autoCommit: true }
+      );
+      return { success: true };
+    } catch (err) {
+      console.error('즐겨찾기 방 저장 중 오류 발생:', err);
+      throw new Error('즐겨찾기 방 저장에 실패했습니다.');
+    } finally {
+      await connection.close();
+    }
+  },
+
+  async deleteFavoritesRoom(userId: string, roomId: string) {
+    const connection = await getOracleConnection();
+    try {
+      // 즐겨찾기에서 삭제
+      const deleteSql = `
+        DELETE FROM CHAT_FAVORITES
+        WHERE USER_ID = :userId AND ROOM_ID = :roomId
+      `;
+      const result = await connection.execute(
+        deleteSql,
+        { userId, roomId },
+        { autoCommit: true }
+      );
+
+      if (result.rowsAffected === 0) {
+        throw new Error('즐겨찾기에 등록되지 않은 방입니다.');
+      }
+
+      return { success: true };
+    } catch (err) {
+      console.error('즐겨찾기 방 삭제 중 오류 발생:', err);
+      throw new Error('즐겨찾기 방 삭제에 실패했습니다.');
+    } finally {
+      await connection.close();
+    }
+  },
+
+  async deleteChatRoom(userId: string, roomId: string) {
+    const connection = await getOracleConnection();
+    try {
+      // 먼저 해당 roomId의 메시지들이 존재하는지 확인
+      const checkSql = `
+        SELECT COUNT(*) AS COUNT
+        FROM CHAT_MESSAGES
+        WHERE USER_ID = :userId AND ROOM_ID = :roomId
+      `;
+      const checkResult = await connection.execute(
+        checkSql,
+        { userId, roomId },
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+
+      if (checkResult.rows && checkResult.rows[0].COUNT === 0) {
+        throw new Error('삭제할 채팅방이 존재하지 않습니다.');
+      }
+
+      // AI_RESPONSES에서도 관련된 응답들 삭제 (외래키 때문에 선행 삭제 필요)
+      const deleteAIResponsesSql = `
+        DELETE FROM AI_RESPONSES
+        WHERE MESSAGE_ID IN (
+          SELECT ID FROM CHAT_MESSAGES 
+          WHERE USER_ID = :userId AND ROOM_ID = :roomId
+        )
+      `;
+      await connection.execute(
+        deleteAIResponsesSql,
+        { userId, roomId },
+        { autoCommit: true }
+      );
+
+      // CHAT_MESSAGES에서 해당 roomId의 메시지들 삭제
+      const deleteMessagesSql = `
+        DELETE FROM CHAT_MESSAGES
+        WHERE USER_ID = :userId AND ROOM_ID = :roomId
+      `;
+      await connection.execute(
+        deleteMessagesSql,
+        { userId, roomId },
+        { autoCommit: true }
+      );
+
+      return { success: true };
+    } catch (err) {
+      console.error('채팅방 삭제 중 오류 발생:', err);
+      throw new Error('채팅방 삭제에 실패했습니다.');
     } finally {
       await connection.close();
     }

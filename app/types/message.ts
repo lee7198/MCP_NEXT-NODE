@@ -50,6 +50,7 @@ export interface RoomInfo {
   content: string;
   createdAt: Date;
   count: string;
+  favorite: boolean;
 }
 
 // 통계 데이터 타입

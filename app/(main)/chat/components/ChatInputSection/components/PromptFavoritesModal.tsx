@@ -45,7 +45,7 @@ const PromptFavoritesModal: React.FC<PromptFavoritesModalProps> = ({
             프롬프트 즐겨찾기
           </h3>
           <Link href="/settings/prompt_mng" className="text-sm hover:underline">
-            설정메뉴
+            설정메뉴→
           </Link>
         </div>
         <button

@@ -240,6 +240,69 @@ export const message_management = {
 
     return res.json();
   },
+
+  // 즐겨찾기 저장
+  saveFavorite: async ({
+    userId,
+    roomId,
+  }: {
+    userId: string;
+    roomId: string;
+  }) => {
+    const res = await fetch(`${API_BASE_URL}/message/save-favorites-room`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId,
+        roomId,
+      }),
+    });
+    if (!res.ok) throw new Error('즐겨찾기 추가 실패');
+
+    return res.json();
+  },
+
+  // 즐겨찾기 삭제
+  deleteFavorite: async ({
+    userId,
+    roomId,
+  }: {
+    userId: string;
+    roomId: string;
+  }) => {
+    const res = await fetch(`${API_BASE_URL}/message/delete-favorites-room`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId,
+        roomId,
+      }),
+    });
+    if (!res.ok) throw new Error('즐겨찾기 삭제 실패');
+
+    return res.json();
+  },
+
+  // 채팅방 삭제
+  deleteChatRoom: async ({
+    userId,
+    roomId,
+  }: {
+    userId: string;
+    roomId: string;
+  }) => {
+    const res = await fetch(`${API_BASE_URL}/message/delete-chat-room`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId,
+        roomId,
+      }),
+    });
+    if (!res.ok) throw new Error('채팅방 삭제 실패');
+
+    return res.json();
+  },
 };
 
 export const server_management = {

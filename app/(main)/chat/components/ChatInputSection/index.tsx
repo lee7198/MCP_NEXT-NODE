@@ -153,7 +153,7 @@ export default function ChatInputSection({
             onClick={() => setIsPromptFavoritesOpen(true)}
           >
             <StarIcon weight="fill" color="#ffce60" />
-            프롬프트즐겨찾기
+            프롬프트 즐겨찾기
           </button>
           <PromptFavoritesModal
             isOpen={isPromptFavoritesOpen}

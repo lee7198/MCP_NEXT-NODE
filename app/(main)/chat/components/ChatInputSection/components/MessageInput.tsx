@@ -50,7 +50,7 @@ export default function MessageInput({
       >
         <button
           type="submit"
-          className={`flex h-full w-full grow-0 cursor-pointer items-center justify-center rounded-lg bg-gray-900 px-4 py-4 text-white hover:bg-gray-700 focus:outline-none dark:bg-zinc-200 dark:text-black ${isDisabled ? 'w-0 opacity-0' : 'opacity-100'}`}
+          className={`flex h-full w-full grow-0 cursor-pointer items-center justify-center rounded-lg bg-gray-900 px-4 py-4 text-white hover:bg-gray-700 focus:outline-none dark:bg-zinc-200 dark:text-black dark:hover:bg-zinc-300 ${isDisabled ? 'w-0 opacity-0' : 'opacity-100'}`}
           tabIndex={message ? 0 : -1}
           disabled={!message.trim() || isDisabled}
         >
