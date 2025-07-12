@@ -382,7 +382,7 @@ ORDER BY ar.CREATED_AT DESC`;
           DBMS_LOB.SUBSTR(PROMPT, 4000, 1) as PROMPT, 
           CREATED_AT,
           ORDER_NO
-        FROM MCP_TOOL_FAVORITE_PROMPT
+        FROM MCP_USER_PROMPT
         WHERE USER_ID = :userId
         ORDER BY ORDER_NO
       `;
@@ -413,9 +413,20 @@ ORDER BY ar.CREATED_AT DESC`;
   ) {
     const connection = await getOracleConnection();
     try {
+      // 중복 체크: 같은 userId와 promptName이 이미 존재하는지 확인
+      const duplicateCheck = await connection.execute(
+        `SELECT COUNT(*) as count FROM MCP_USER_PROMPT WHERE USER_ID = :userId AND TITLE = :title`,
+        { userId, title: promptName },
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+
+      if (duplicateCheck.rows && duplicateCheck.rows[0].COUNT > 0) {
+        throw new Error('이미 존재하는 프롬프트 이름입니다.');
+      }
+
       // ORDER_NO를 구함 (가장 큰 값 + 1)
       const orderResult = await connection.execute(
-        `SELECT NVL(MAX(ORDER_NO), 0) + 1 AS NEXT_ORDER FROM MCP_TOOL_FAVORITE_PROMPT WHERE USER_ID = :userId`,
+        `SELECT COUNT(*) + 1 AS NEXT_ORDER FROM MCP_USER_PROMPT WHERE USER_ID = :userId`,
         { userId },
         { outFormat: oracledb.OUT_FORMAT_OBJECT }
       );
@@ -427,7 +438,7 @@ ORDER BY ar.CREATED_AT DESC`;
           : 1;
 
       await connection.execute(
-        `INSERT INTO MCP_TOOL_FAVORITE_PROMPT (USER_ID, TITLE, PROMPT, CREATED_AT, ORDER_NO)
+        `INSERT INTO MCP_USER_PROMPT (USER_ID, TITLE, PROMPT, CREATED_AT, ORDER_NO)
        VALUES (:userId, :title, :prompt, SYSDATE, :orderNo)`,
         {
           userId,
@@ -440,7 +451,68 @@ ORDER BY ar.CREATED_AT DESC`;
       return { success: true };
     } catch (err) {
       console.error('프롬프트 저장 중 오류 발생:', err);
-      throw new Error('프롬프트 저장에 실패했습니다.');
+      throw err instanceof Error
+        ? err
+        : new Error('프롬프트 저장에 실패했습니다.');
+    } finally {
+      await connection.close();
+    }
+  },
+
+  // user prompt 수정
+  async updateUserPrompt(prompt: UserPromptResponse, userId: string) {
+    const connection = await getOracleConnection();
+    try {
+      await connection.execute(
+        `UPDATE MCP_USER_PROMPT SET PROMPT = :promptContent, ORDER_NO = :orderNo WHERE USER_ID = :userId AND TITLE = :promptName`,
+        {
+          promptContent: prompt.PROMPT,
+          promptName: prompt.TITLE,
+          orderNo: prompt.ORDER_NO,
+          userId,
+        },
+        { autoCommit: true }
+      );
+      return { success: true };
+    } catch (err) {
+      console.error('프롬프트 수정 중 오류 발생:', err);
+      throw new Error('프롬프트 수정에 실패했습니다.');
+    } finally {
+      await connection.close();
+    }
+  },
+
+  // user prompt 삭제
+  async deleteUserPrompt(promptName: number, userId: string) {
+    const connection = await getOracleConnection();
+    try {
+      // 삭제할 항목보다 orderNo가 큰 항목들의 orderNo를 1씩 감소
+      // await connection.execute(
+      //   `UPDATE MCP_USER_PROMPT SET ORDER_NO = ORDER_NO - 1 WHERE USER_ID = :userId AND ORDER_NO > (SELECT ORDER_NO FROM MCP_USER_PROMPT WHERE TITLE = :promptName AND USER_ID = :userId)`,
+      //   {
+      //     userId,
+      //     promptName,
+      //   },
+      //   { autoCommit: false }
+      // );
+
+      // 해당 항목 삭제
+      await connection.execute(
+        `DELETE FROM MCP_USER_PROMPT WHERE TITLE = :promptName AND USER_ID = :userId`,
+        {
+          promptName,
+          userId,
+        },
+        { autoCommit: false }
+      );
+
+      // 변경사항 commit
+      await connection.commit();
+
+      return { success: true };
+    } catch (err) {
+      console.error('프롬프트 삭제 중 오류 발생:', err);
+      throw new Error('프롬프트 삭제에 실패했습니다.');
     } finally {
       await connection.close();
     }

@@ -4,12 +4,14 @@ import React from 'react';
 import Link from 'next/link';
 import { CaretLeftIcon } from '@phosphor-icons/react/dist/ssr';
 import { PromptHeaderProps } from '@/app/types';
+import Spinner from '@/app/(main)/components/common/Spinner';
 
 export function PromptHeader({
   isAdding,
   editingIdx,
   changedItems,
   deletingOrderNos,
+  isSaving,
   onAddClick,
   onCancel,
   onSave,
@@ -30,25 +32,34 @@ export function PromptHeader({
       </h1>
       <div>
         {hasChanges ? (
-          <div className="flex gap-2">
-            <button
-              onClick={onCancel}
-              className="cursor-pointer rounded-md border px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-200"
-            >
-              취소
-            </button>
-            <button
-              onClick={onSave}
-              className="cursor-pointer rounded-md border bg-gray-600 px-4 py-2 text-xs font-medium text-white hover:bg-gray-800 dark:bg-zinc-700 dark:hover:bg-zinc-600"
-            >
-              저장
-            </button>
-          </div>
+          isSaving ? (
+            <Spinner size={8} />
+          ) : (
+            <div className="flex gap-2">
+              <button
+                onClick={onCancel}
+                className="cursor-pointer rounded-md border px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-200 dark:border-zinc-500 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              >
+                취소
+              </button>
+              <button
+                onClick={onSave}
+                disabled={isSaving}
+                className={`cursor-pointer rounded-md border px-4 py-2 text-xs font-medium dark:border-zinc-600 ${
+                  isSaving
+                    ? 'cursor-not-allowed bg-gray-400 text-gray-200 dark:bg-zinc-300'
+                    : 'bg-zinc-600 text-white hover:bg-gray-800 dark:bg-zinc-100 dark:text-zinc-800 dark:hover:bg-zinc-200'
+                }`}
+              >
+                {isSaving ? '저장 중...' : '저장'}
+              </button>
+            </div>
+          )
         ) : (
           !isAdding && (
             <button
               onClick={onAddClick}
-              className="cursor-pointer rounded-md border bg-gray-600 px-4 py-2 text-xs font-medium text-white hover:bg-gray-800 dark:bg-zinc-700 dark:hover:bg-zinc-600"
+              className="cursor-pointer rounded-md border px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-200 dark:border-zinc-500 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
             >
               Prompt 추가
             </button>

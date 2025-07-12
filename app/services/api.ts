@@ -189,7 +189,54 @@ export const message_management = {
       }),
     });
 
-    if (!res.ok) throw new Error('프롬프트 추가 실패');
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || '프롬프트 추가 실패');
+    }
+
+    return res.json();
+  },
+
+  // 사용자 프롬프트 수정
+  updateUserPrompt: async ({
+    prompt,
+    userId,
+  }: {
+    prompt: UserPromptResponse;
+    userId: string;
+  }) => {
+    const res = await fetch(`${API_BASE_URL}/message/update-user-prompt`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt,
+        userId,
+      }),
+    });
+
+    if (!res.ok) throw new Error('프롬프트 수정 실패');
+
+    return res.json();
+  },
+
+  // 사용자 프롬프트 삭제
+  deleteUserPrompt: async ({
+    promptName,
+    userId,
+  }: {
+    promptName: string;
+    userId: string;
+  }) => {
+    const res = await fetch(`${API_BASE_URL}/message/delete-user-prompt`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        promptName,
+        userId,
+      }),
+    });
+
+    if (!res.ok) throw new Error('프롬프트 삭제 실패');
 
     return res.json();
   },

@@ -74,6 +74,19 @@ export interface UserPromptResponse {
   ORDER_NO: number;
 }
 
+// 프롬프트 변경 상태 타입
+export type PromptChangeStatus = 'modified' | 'deleted' | undefined;
+
+// 변경 상태가 포함된 프롬프트 타입
+export interface PromptWithChangeStatus {
+  original: UserPromptResponse; // 원본
+  changedPrompt: UserPromptResponse; // 수정본
+  changeStatus?: PromptChangeStatus;
+  isEditing?: boolean;
+  isAnimating?: boolean;
+  animationDirection?: 'up' | 'down' | null;
+}
+
 // 사용자 프롬프트 저장용도
 export interface PromptStatus {
   promptName: string;

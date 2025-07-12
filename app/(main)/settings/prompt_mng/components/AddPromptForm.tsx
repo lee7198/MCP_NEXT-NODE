@@ -37,6 +37,7 @@ export const AddPromptForm: React.FC<AddPromptFormProps> = ({
   const handleSubmit = () => {
     if (validateForm()) {
       onAdd(newPrompt);
+      // 성공 시에만 입력값 초기화 (부모에서 onSuccess 콜백으로 처리)
     }
   };
 
@@ -56,7 +57,7 @@ export const AddPromptForm: React.FC<AddPromptFormProps> = ({
           value={newPrompt.promptName}
           onChange={(e) => handleInputChange('promptName', e.target.value)}
           placeholder="Prompt Name"
-          className={`w-full rounded-md border px-2 text-sm placeholder-gray-500 disabled:animate-pulse disabled:bg-gray-200 dark:placeholder-gray-400 ${
+          className={`w-full rounded-md border px-2 text-sm placeholder-gray-500 disabled:animate-pulse disabled:bg-gray-200 dark:placeholder-gray-400 dark:disabled:bg-zinc-800 ${
             errors.promptName
               ? 'border-red-500 bg-red-50 text-red-900 dark:border-red-400 dark:bg-red-900/20 dark:text-red-100'
               : 'border-gray-300 bg-white text-gray-900 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100'
@@ -71,10 +72,10 @@ export const AddPromptForm: React.FC<AddPromptFormProps> = ({
           placeholder="Prompt 내용을 작성 해주세요."
           rows={3}
           maxLength={3900}
-          className={`w-full resize-none rounded-md border px-2 py-1 text-sm placeholder-gray-500 disabled:animate-pulse disabled:bg-gray-200 dark:placeholder-gray-400 ${
+          className={`w-full resize-none rounded-md border px-2 py-1 text-sm placeholder-gray-500 disabled:animate-pulse disabled:bg-gray-200 dark:placeholder-gray-400 dark:disabled:bg-zinc-800 ${
             errors.promptContent
               ? 'border-red-500 bg-red-50 text-red-900 dark:border-red-400 dark:bg-red-900/20 dark:text-red-100'
-              : 'border-gray-300 bg-white text-gray-900 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100'
+              : 'border-gray-300 bg-white text-gray-900 dark:border-zinc-700 dark:bg-zinc-700 dark:text-zinc-100 dark:ring-zinc-700'
           }`}
           disabled={isSaving}
         />
@@ -96,7 +97,7 @@ export const AddPromptForm: React.FC<AddPromptFormProps> = ({
             </button>
             <button
               onClick={handleSubmit}
-              className="w-full cursor-pointer rounded-md bg-gray-600 px-2 py-1 text-xs text-white hover:bg-gray-800 disabled:bg-gray-100 disabled:hover:bg-gray-600 dark:bg-zinc-700 dark:hover:bg-zinc-600"
+              className="w-full cursor-pointer rounded-md bg-gray-600 px-2 py-1 text-xs text-white hover:bg-gray-800 disabled:bg-gray-100 disabled:hover:bg-gray-600 dark:bg-zinc-200 dark:text-black dark:hover:bg-zinc-100"
               disabled={isSaving}
             >
               추가

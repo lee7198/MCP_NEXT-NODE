@@ -6,6 +6,7 @@ import {
   RoomInfo,
   UserPromptResponse,
   PromptStatus,
+  PromptWithChangeStatus,
 } from './message';
 import { ClientInfo } from './socket';
 import { McpRes, ServerRes, McpParamsRes } from './api';
@@ -159,7 +160,7 @@ export interface PromptFavoritesModalProps {
 export interface PromptTableProps {
   prompts: UserPromptResponse[] | undefined;
   isPending: boolean;
-  modifiedPrompts: UserPromptResponse[];
+  promptsWithStatus: PromptWithChangeStatus[];
   editingIdx: number | null;
   deletingOrderNos: Set<number>;
   changedItems: Set<number>;
@@ -167,12 +168,12 @@ export interface PromptTableProps {
   animationDirection: 'up' | 'down' | null;
   onMoveUp: (index: number) => void;
   onMoveDown: (index: number) => void;
-  onEditClick: (idx: number) => void;
-  onPromptChange: (idx: number, value: string) => void;
+  onEditClick: (title: string) => void;
+  onPromptChange: (title: string, value: string) => void;
   onEditCancel: () => void;
-  onApplyChanges: () => void;
-  onDeleteClick: (orderNo: number) => void;
-  onDeleteCancel: (orderNo: number) => void;
+  onApplyChanges: (title: string) => void;
+  onDeleteClick: (title: string) => void;
+  onDeleteCancel: (title: string) => void;
   isAdding: boolean;
   addMutate: { isPending: boolean };
   onAddCancel: () => void;
@@ -184,6 +185,7 @@ export interface PromptHeaderProps {
   editingIdx: number | null;
   changedItems: Set<number>;
   deletingOrderNos: Set<number>;
+  isSaving?: boolean;
   onAddClick: () => void;
   onCancel: () => void;
   onSave: () => void;

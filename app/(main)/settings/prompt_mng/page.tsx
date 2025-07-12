@@ -10,13 +10,14 @@ export default function Prompt_Mng() {
   const {
     prompts,
     isPending,
-    modifiedPrompts,
+    promptsWithStatus,
     editingIdx,
     deletingOrderNos,
     changedItems,
     animatingOrderNo,
     animationDirection,
     addMutate,
+    saveChangesMutate,
     handleMoveUp,
     handleMoveDown,
     handleEditClick,
@@ -36,6 +37,7 @@ export default function Prompt_Mng() {
         editingIdx={editingIdx}
         changedItems={changedItems}
         deletingOrderNos={deletingOrderNos}
+        isSaving={saveChangesMutate.isPending}
         onAddClick={() => setIsAdding(true)}
         onCancel={handleCancelAll}
         onSave={handleSaveChanges}
@@ -44,7 +46,7 @@ export default function Prompt_Mng() {
       <PromptTable
         prompts={prompts}
         isPending={isPending}
-        modifiedPrompts={modifiedPrompts}
+        promptsWithStatus={promptsWithStatus}
         editingIdx={editingIdx}
         deletingOrderNos={deletingOrderNos}
         changedItems={changedItems}
@@ -62,8 +64,11 @@ export default function Prompt_Mng() {
         addMutate={addMutate}
         onAddCancel={() => setIsAdding(false)}
         onAdd={(prompt) => {
-          addMutate.mutate(prompt);
-          setIsAdding(false);
+          addMutate.mutate(prompt, {
+            onSuccess: () => {
+              setIsAdding(false);
+            },
+          });
         }}
       />
     </>

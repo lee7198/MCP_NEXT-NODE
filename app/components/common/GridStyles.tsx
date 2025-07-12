@@ -37,14 +37,15 @@ export const GRID_STYLES = {
 // 유틸리티 함수들
 export const getColSpanClass = (span: number): string => `col-span-${span}`;
 
-export const getGridRowClass = (totalColumns: number = 8): string =>
-  `grid grid-cols-${totalColumns} gap-4 p-4 hover:bg-gray-100 dark:hover:bg-zinc-700`;
+export const getGridRowClassDefault = (totalColumns: number = 8): string =>
+  `grid grid-cols-${totalColumns} gap-4 p-4 hover:bg-gray-100 dark:hover:bg-zinc-600`;
 
-export const getGridRowClass2 = (totalColumns: number = 8): string =>
-  `grid grid-cols-${totalColumns} gap-4 p-4 bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/30`;
+export const getGridRowClassChanged = (totalColumns: number = 8): string =>
+  `grid grid-cols-${totalColumns} gap-4 p-4 bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/30 dark:hover:bg-amber-900/50`;
 
-export const getGridRowClass3 = (totalColumns: number = 8): string =>
-  `grid grid-cols-${totalColumns} gap-4 p-4 bg-red-100 hover:bg-red-200 dark:bg-red-900/30`;
+// 삭제 row
+export const getGridRowClassDeleted = (totalColumns: number = 8): string =>
+  `grid grid-cols-${totalColumns} gap-4 p-4 bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50`;
 
 // 공통 그리드 헤더 컴포넌트
 export const GridHeader: React.FC<GridHeaderProps> = ({
