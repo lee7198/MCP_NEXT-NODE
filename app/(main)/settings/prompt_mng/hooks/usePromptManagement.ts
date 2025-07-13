@@ -83,6 +83,11 @@ export function usePromptManagement() {
       if (modifiedPrompts.length > 0) {
         const updatePromises: Promise<unknown>[] = [];
         modifiedPrompts.forEach((prompt) => {
+          console.log(
+            prompt.original.ORDER_NO,
+            ' > ',
+            prompt.changedPrompt.ORDER_NO
+          );
           updatePromises.push(
             message_management.updateUserPrompt({
               prompt: prompt.changedPrompt,
@@ -356,7 +361,7 @@ export function usePromptManagement() {
     );
   };
 
-  // 프롬프트 삭제/삭제 취소
+  // 프롬프트 삭제
   const handleDeleteClick = (title: string) => {
     setPromptsWithStatus((prev) => {
       return prev.map((p) => {
@@ -389,9 +394,16 @@ export function usePromptManagement() {
 
           // 원본 순서와 현재 순서가 다르면 modified로 설정
           if (originalIndex !== currentIndex && currentIndex !== -1) {
+            console.log(
+              '삭제 후 index 조정 ',
+              originalIndex + 1,
+              ' -> ',
+              currentIndex + 1
+            );
             return {
               ...p,
               changeStatus: 'modified' as PromptChangeStatus,
+              changedPrompt: { ...p.changedPrompt, ORDER_NO: currentIndex + 1 },
             };
           }
         }
@@ -424,9 +436,9 @@ export function usePromptManagement() {
             (item) => item.changedPrompt.TITLE === p.changedPrompt.TITLE
           );
 
-          // 원본 순서와 현재 순서가 같으면 modified 상태 제거
+          // 원본 순서와 현재 순서가 같으면 modified 상태 제거 & 되돌리기
           if (originalIndex === currentIndex && currentIndex !== -1) {
-            return { ...p, changeStatus: undefined };
+            return { ...p, changeStatus: undefined, changedPrompt: p.original };
           }
         }
         return p;
