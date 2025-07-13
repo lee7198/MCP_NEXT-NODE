@@ -158,6 +158,12 @@ export default function Chat() {
     staleTime: 0,
   });
 
+  const { data: prompts } = useQuery({
+    queryKey: ['prompts'],
+    queryFn: () => message_management.getUserPrompt(userId!),
+    enabled: !!userId,
+  });
+
   // not mcp ai 메세지용
   const handleSendMessage = async (req: ChatReq) => {
     try {
@@ -236,6 +242,7 @@ export default function Chat() {
             reqState={reqState}
             setReqState={setReqState}
             lastMessageRef={lastMessageRef}
+            prompts={prompts?.map((item) => item.PROMPT) ?? []}
           />
         )}
         {isFetchingNextPage && (
@@ -255,6 +262,7 @@ export default function Chat() {
         mcpParams={mcpParams}
         isMcpParamsPending={isMcpParamsPending}
         openNav={openNav}
+        prompts={prompts ?? []}
       />
     </div>
   );

@@ -40,12 +40,7 @@ export default function UserAuthCheckProvider({
     setIsChecking(true);
     try {
       const response = await fetch(
-        `/api/common/check_user?email=${sessionState.email}`,
-        {
-          // 캐시 설정으로 성능 향상
-          cache: 'force-cache',
-          next: { revalidate: 300 }, // 5분간 캐시
-        }
+        `/api/common/check_user?email=${sessionState.email}`
       );
 
       const data = await response.json();
@@ -90,6 +85,12 @@ export default function UserAuthCheckProvider({
         <div className="border-primary size-16 animate-spin rounded-full border-4 border-t-transparent"></div>
       </div>
     );
+  }
+
+  const publicPaths = ['/']; // 공개 경로 추가
+
+  if (!sessionState.isAuthenticated && publicPaths.includes(pathname)) {
+    return <>{children}</>;
   }
 
   // 인증되지 않은 사용자는 로그인 페이지로 리다이렉트

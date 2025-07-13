@@ -544,7 +544,10 @@ export const common_management = {
   },
 
   checkUser: async (email: string): Promise<{ success: boolean }> => {
-    const res = await fetch(`/api/common/check_user?email=${email}`);
+    const res = await fetch(`/api/common/check_user?email=${email}`, {
+      cache: 'no-store', // 항상 서버에서 최신 데이터 요청
+    });
+
     if (!res.ok) throw new Error('유저 정보 확인 실패');
     return res.json();
   },

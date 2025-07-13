@@ -12,10 +12,25 @@ import {
 } from '@/app/types';
 import { toast } from 'react-toastify';
 
-// 프롬프트 관리 커스텀 훅
+/**
+ * 프롬프트 관리 커스텀 훅
+ *
+ * 사용자 프롬프트의 CRUD 작업과 상태 관리를 담당합니다.
+ * - 프롬프트 목록 조회, 추가, 수정, 삭제
+ * - 프롬프트 순서 변경 (드래그 앤 드롭 대신 버튼 클릭)
+ * - 변경사항 추적 및 일괄 저장
+ * - 애니메이션 효과 관리
+ */
 export function usePromptManagement() {
   const { data: session } = useSession();
 
+  /**
+   * 프롬프트 목록의 순서를 재계산합니다.
+   * 삭제된 항목을 제외하고 1부터 순차적으로 ORDER_NO를 할당합니다.
+   *
+   * @param list - 순서를 재계산할 프롬프트 목록
+   * @returns 순서가 재계산된 프롬프트 목록
+   */
   const recomputeOrder = (
     list: PromptWithChangeStatus[]
   ): PromptWithChangeStatus[] => {
@@ -30,6 +45,13 @@ export function usePromptManagement() {
     });
   };
 
+  /**
+   * 프롬프트의 변경 상태를 새로 계산합니다.
+   * 원본과 변경본을 비교하여 수정 여부를 판단합니다.
+   *
+   * @param list - 상태를 새로 계산할 프롬프트 목록
+   * @returns 변경 상태가 업데이트된 프롬프트 목록
+   */
   const refreshStatus = (
     list: PromptWithChangeStatus[]
   ): PromptWithChangeStatus[] =>
@@ -40,12 +62,16 @@ export function usePromptManagement() {
         p.changedPrompt.ORDER_NO !== p.original.ORDER_NO;
       return { ...p, changeStatus: modified ? 'modified' : undefined };
     });
-  // 프롬프트 상태(원본, 변경본, 상태 등 포함)
+
+  // 프롬프트 상태 관리 (원본, 변경본, 편집/애니메이션 상태 포함)
   const [promptsWithStatus, setPromptsWithStatus] = useState<
     PromptWithChangeStatus[]
   >([]);
 
-  // 프롬프트 목록 조회
+  /**
+   * 사용자 프롬프트 목록을 조회합니다.
+   * 세션이 있을 때만 쿼리가 실행됩니다.
+   */
   const {
     data: prompts,
     isPending,
@@ -56,7 +82,10 @@ export function usePromptManagement() {
     enabled: !!session?.user.email,
   });
 
-  // 프롬프트 추가
+  /**
+   * 새로운 프롬프트를 추가하는 뮤테이션
+   * 성공 시 목록을 새로고침하고 성공 메시지를 표시합니다.
+   */
   const addMutate = useMutation({
     mutationFn: (prompt: Partial<PromptStatus>) => {
       const newPrompt: SaveUserPromptRequest = {
@@ -74,7 +103,10 @@ export function usePromptManagement() {
     },
   });
 
-  // 프롬프트 변경/삭제 저장
+  /**
+   * 변경사항을 일괄 저장하는 뮤테이션
+   * 삭제된 프롬프트와 수정된 프롬프트를 각각 처리합니다.
+   */
   const saveChangesMutate = useMutation({
     mutationFn: async () => {
       if (!session?.user.email) {
@@ -108,11 +140,6 @@ export function usePromptManagement() {
       if (modifiedPrompts.length > 0) {
         const updatePromises: Promise<unknown>[] = [];
         modifiedPrompts.forEach((prompt) => {
-          console.log(
-            prompt.original.ORDER_NO,
-            ' > ',
-            prompt.changedPrompt.ORDER_NO
-          );
           updatePromises.push(
             message_management.updateUserPrompt({
               prompt: prompt.changedPrompt,
@@ -132,7 +159,12 @@ export function usePromptManagement() {
     },
   });
 
-  // 프롬프트 순서 위로 이동
+  /**
+   * 프롬프트를 위로 이동시킵니다.
+   * 삭제된 항목을 건너뛰고 이전 항목과 위치를 교환합니다.
+   *
+   * @param index - 이동할 프롬프트의 인덱스
+   */
   const handleMoveUp = (index: number) => {
     setPromptsWithStatus((prev) => {
       if (index <= 0) return prev;
@@ -146,7 +178,10 @@ export function usePromptManagement() {
       [items[index], items[prevIdx]] = [items[prevIdx], items[index]];
 
       const ordered = recomputeOrder(items);
-      const updated = refreshStatus(ordered).map((p) => ({ ...p, isEditing: false }));
+      const updated = refreshStatus(ordered).map((p) => ({
+        ...p,
+        isEditing: false,
+      }));
 
       const movedTitle = updated[prevIdx].changedPrompt.TITLE;
       updated[prevIdx].isAnimating = true;
@@ -166,14 +201,22 @@ export function usePromptManagement() {
     });
   };
 
-  // 프롬프트 순서 아래로 이동
+  /**
+   * 프롬프트를 아래로 이동시킵니다.
+   * 삭제된 항목을 건너뛰고 다음 항목과 위치를 교환합니다.
+   *
+   * @param index - 이동할 프롬프트의 인덱스
+   */
   const handleMoveDown = (index: number) => {
     setPromptsWithStatus((prev) => {
       const items = [...prev];
       if (index >= items.length - 1) return prev;
 
       let nextIdx = index + 1;
-      while (nextIdx < items.length && items[nextIdx].changeStatus === 'deleted') {
+      while (
+        nextIdx < items.length &&
+        items[nextIdx].changeStatus === 'deleted'
+      ) {
         nextIdx++;
       }
       if (nextIdx >= items.length) return prev;
@@ -181,7 +224,10 @@ export function usePromptManagement() {
       [items[index], items[nextIdx]] = [items[nextIdx], items[index]];
 
       const ordered = recomputeOrder(items);
-      const updated = refreshStatus(ordered).map((p) => ({ ...p, isEditing: false }));
+      const updated = refreshStatus(ordered).map((p) => ({
+        ...p,
+        isEditing: false,
+      }));
 
       const movedTitle = updated[nextIdx].changedPrompt.TITLE;
       updated[nextIdx].isAnimating = true;
@@ -201,7 +247,12 @@ export function usePromptManagement() {
     });
   };
 
-  // 프롬프트 수정 모드 진입
+  /**
+   * 프롬프트 수정 모드를 활성화합니다.
+   * 삭제된 항목은 수정 모드 진입이 불가능합니다.
+   *
+   * @param title - 수정할 프롬프트의 제목
+   */
   const handleEditClick = (title: string) => {
     setPromptsWithStatus((prev) =>
       prev.map((p) =>
@@ -214,7 +265,13 @@ export function usePromptManagement() {
     );
   };
 
-  // 프롬프트 내용 변경
+  /**
+   * 프롬프트 내용을 변경합니다.
+   * 변경 시 자동으로 상태를 새로 계산합니다.
+   *
+   * @param title - 변경할 프롬프트의 제목
+   * @param value - 새로운 프롬프트 내용
+   */
   const handlePromptChange = (title: string, value: string) => {
     setPromptsWithStatus((prev) => {
       const updated = prev.map((p) =>
@@ -226,7 +283,10 @@ export function usePromptManagement() {
     });
   };
 
-  // 수정 취소(되돌리기)
+  /**
+   * 모든 수정사항을 취소하고 원본 상태로 되돌립니다.
+   * 편집 모드와 애니메이션 상태도 초기화합니다.
+   */
   const handleEditCancel = () => {
     setPromptsWithStatus((prev) =>
       prev.map((p) => ({
@@ -240,7 +300,11 @@ export function usePromptManagement() {
     );
   };
 
-  // 수정 적용(수정모드 해제)
+  /**
+   * 수정사항을 적용하고 편집 모드를 해제합니다.
+   *
+   * @param title - 적용할 프롬프트의 제목
+   */
   const handleApplyChanges = (title: string) => {
     setPromptsWithStatus((prev) =>
       prev.map((p) =>
@@ -249,12 +313,21 @@ export function usePromptManagement() {
     );
   };
 
-  // 프롬프트 삭제
+  /**
+   * 프롬프트를 삭제 상태로 표시합니다.
+   * 실제 삭제는 저장 버튼 클릭 시 수행됩니다.
+   *
+   * @param title - 삭제할 프롬프트의 제목
+   */
   const handleDeleteClick = (title: string) => {
     setPromptsWithStatus((prev) => {
       const items = prev.map((p) =>
         p.changedPrompt.TITLE === title
-          ? { ...p, changeStatus: 'deleted', isEditing: false }
+          ? {
+              ...p,
+              changeStatus: 'deleted' as PromptChangeStatus,
+              isEditing: false,
+            }
           : p
       );
       const ordered = recomputeOrder(items);
@@ -262,7 +335,12 @@ export function usePromptManagement() {
     });
   };
 
-  // 삭제 취소
+  /**
+   * 프롬프트 삭제를 취소합니다.
+   * 삭제 상태를 해제하고 순서를 재계산합니다.
+   *
+   * @param title - 삭제 취소할 프롬프트의 제목
+   */
   const handleDeleteCancel = (title: string) => {
     setPromptsWithStatus((prev) => {
       const items = prev.map((p) =>
@@ -273,7 +351,10 @@ export function usePromptManagement() {
     });
   };
 
-  // 전체 변경 취소(초기화)
+  /**
+   * 모든 변경사항을 취소하고 초기 상태로 되돌립니다.
+   * 서버에서 받은 원본 데이터로 상태를 초기화합니다.
+   */
   const handleCancelAll = () => {
     if (prompts) {
       setPromptsWithStatus(
@@ -289,12 +370,18 @@ export function usePromptManagement() {
     }
   };
 
-  // 변경사항 저장
+  /**
+   * 변경사항을 서버에 저장합니다.
+   * 삭제된 항목과 수정된 항목을 일괄 처리합니다.
+   */
   const handleSaveChanges = () => {
     saveChangesMutate.mutate();
   };
 
-  // 최초 데이터 로딩/변경 시 상태 초기화
+  /**
+   * 프롬프트 데이터가 로드되거나 변경될 때 상태를 초기화합니다.
+   * 각 프롬프트에 대해 원본과 변경본을 동일하게 설정합니다.
+   */
   useEffect(() => {
     if (prompts) {
       setPromptsWithStatus(
@@ -310,11 +397,7 @@ export function usePromptManagement() {
     }
   }, [prompts]);
 
-  useEffect(() => {
-    console.log(promptsWithStatus);
-  }, [promptsWithStatus]);
-
-  // 변경/삭제된 항목 추출
+  // 변경/삭제된 항목들의 정보를 추출
   const changedItems = promptsWithStatus
     .filter((p) => p.changeStatus === 'modified')
     .map((p) => p.changedPrompt.ORDER_NO);
@@ -328,7 +411,11 @@ export function usePromptManagement() {
   const animationDirection =
     promptsWithStatus.find((p) => p.isAnimating)?.animationDirection || null;
 
-  // 훅에서 반환하는 값들
+  /**
+   * 훅에서 반환하는 값들
+   *
+   * @returns 프롬프트 관리에 필요한 모든 상태와 핸들러 함수들
+   */
   return {
     prompts,
     isPending,

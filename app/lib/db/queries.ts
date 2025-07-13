@@ -1249,7 +1249,7 @@ export const common_query_management = {
         { outFormat: oracledb.OUT_FORMAT_OBJECT }
       );
 
-      if (checkResult.rows && checkResult.rows[0].COUNT === 0) {
+      if (checkResult.rows[0].COUNT === 0) {
         throw new Error('등록된 유저가 아닙니다.');
       }
 

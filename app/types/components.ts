@@ -28,6 +28,7 @@ export interface ChatInputProps {
   mcpParams?: McpParamsRes[];
   isMcpParamsPending: boolean;
   openNav: boolean;
+  prompts: UserPromptResponse[];
 }
 
 export interface MessageListProps {
@@ -37,6 +38,7 @@ export interface MessageListProps {
   reqState: AIRequestState;
   setReqState: React.Dispatch<React.SetStateAction<AIRequestState>>;
   lastMessageRef: (node: HTMLDivElement) => void;
+  prompts: string[];
 }
 
 export interface AIResponseChatProps {

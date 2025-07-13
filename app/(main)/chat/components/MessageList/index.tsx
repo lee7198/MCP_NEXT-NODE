@@ -12,6 +12,7 @@ export default function MessageList({
   userId,
   messagesEndRef,
   reqState,
+  prompts,
   setReqState,
   lastMessageRef,
 }: MessageListProps) {
@@ -52,7 +53,7 @@ export default function MessageList({
   // }, []);
 
   if (!messages || messages.length === 0) {
-    return <GuideMessage />;
+    return <GuideMessage prompts={prompts} />;
   }
 
   return (

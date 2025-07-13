@@ -6,7 +6,6 @@ import { useQuery } from '@tanstack/react-query';
 import {
   aiModel_management,
   mcp_management,
-  message_management,
   server_management,
 } from '@/app/services/api';
 import { useSocket } from '@/app/hooks/useSocket';
@@ -25,6 +24,7 @@ export default function ChatInputSection({
   mcpParams,
   isMcpParamsPending,
   openNav,
+  prompts,
 }: ChatInputProps) {
   const [message, setMessage] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -54,11 +54,11 @@ export default function ChatInputSection({
     refetchInterval: 5000,
   });
 
-  const { data: prompts } = useQuery({
-    queryKey: ['prompts'],
-    queryFn: () => message_management.getUserPrompt(USER_ID),
-    enabled: !!USER_ID,
-  });
+  // const { data: prompts } = useQuery({
+  //   queryKey: ['prompts'],
+  //   queryFn: () => message_management.getUserPrompt(USER_ID),
+  //   enabled: !!USER_ID,
+  // });
 
   useEffect(() => {
     if (servers) {
