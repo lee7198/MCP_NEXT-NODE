@@ -15,6 +15,31 @@ import { toast } from 'react-toastify';
 // 프롬프트 관리 커스텀 훅
 export function usePromptManagement() {
   const { data: session } = useSession();
+
+  const recomputeOrder = (
+    list: PromptWithChangeStatus[]
+  ): PromptWithChangeStatus[] => {
+    let order = 1;
+    return list.map((p) => {
+      if (p.changeStatus === 'deleted') return p;
+      const newPrompt = {
+        ...p,
+        changedPrompt: { ...p.changedPrompt, ORDER_NO: order++ },
+      };
+      return newPrompt;
+    });
+  };
+
+  const refreshStatus = (
+    list: PromptWithChangeStatus[]
+  ): PromptWithChangeStatus[] =>
+    list.map((p) => {
+      if (p.changeStatus === 'deleted') return p;
+      const modified =
+        p.changedPrompt.PROMPT !== p.original.PROMPT ||
+        p.changedPrompt.ORDER_NO !== p.original.ORDER_NO;
+      return { ...p, changeStatus: modified ? 'modified' : undefined };
+    });
   // 프롬프트 상태(원본, 변경본, 상태 등 포함)
   const [promptsWithStatus, setPromptsWithStatus] = useState<
     PromptWithChangeStatus[]
@@ -109,202 +134,71 @@ export function usePromptManagement() {
 
   // 프롬프트 순서 위로 이동
   const handleMoveUp = (index: number) => {
-    if (index === 0) return; // 첫 번째 항목은 위로 이동 불가
-    // 배열 복사 (불변성 유지)
-    const newPrompts = [...promptsWithStatus];
-    // 현재 항목과 이전 항목 복사
-    const currentItem = { ...newPrompts[index] };
-    const prevItem = { ...newPrompts[index - 1] };
-    // changedPrompt 기준으로 ORDER_NO(순서) 교환
-    const tempOrder = currentItem.changedPrompt.ORDER_NO;
-    currentItem.changedPrompt.ORDER_NO = prevItem.changedPrompt.ORDER_NO;
-    prevItem.changedPrompt.ORDER_NO = tempOrder;
-    // 실제 배열 내 위치도 교환
-    newPrompts[index] = prevItem;
-    newPrompts[index - 1] = currentItem;
+    setPromptsWithStatus((prev) => {
+      if (index <= 0) return prev;
+      const items = [...prev];
+      let prevIdx = index - 1;
+      while (prevIdx >= 0 && items[prevIdx].changeStatus === 'deleted') {
+        prevIdx--;
+      }
+      if (prevIdx < 0) return prev;
 
-    // 삭제된 항목을 제외한 전체 순서가 원본과 동일한지 확인
-    const visiblePrompts = newPrompts.filter(
-      (p) => p.changeStatus !== 'deleted'
-    );
-    const isOrderSameAsOriginal = visiblePrompts.every((p, idx) => {
-      const originalIndex =
-        prompts?.findIndex(
-          (original) => original.ORDER_NO === p.original.ORDER_NO
-        ) ?? -1;
-      return originalIndex === idx;
+      [items[index], items[prevIdx]] = [items[prevIdx], items[index]];
+
+      const ordered = recomputeOrder(items);
+      const updated = refreshStatus(ordered).map((p) => ({ ...p, isEditing: false }));
+
+      const movedTitle = updated[prevIdx].changedPrompt.TITLE;
+      updated[prevIdx].isAnimating = true;
+      updated[prevIdx].animationDirection = 'up';
+
+      setTimeout(() => {
+        setPromptsWithStatus((cur) =>
+          cur.map((p) =>
+            p.changedPrompt.TITLE === movedTitle
+              ? { ...p, isAnimating: false, animationDirection: null }
+              : p
+          )
+        );
+      }, 200);
+
+      return updated;
     });
-
-    // 전체 순서가 원본과 동일하면 모든 항목의 modified 상태 제거
-    if (isOrderSameAsOriginal) {
-      newPrompts.forEach((p) => {
-        if (p.changeStatus === 'modified') {
-          p.changeStatus = undefined;
-        }
-        // deleted 상태는 절대 변경하지 않음
-      });
-    } else {
-      // 개별 항목별로 상태 설정 (순서 표시 로직과 동일하게)
-      const visiblePrompts = newPrompts.filter(
-        (p) => p.changeStatus !== 'deleted'
-      );
-
-      // 현재 항목의 원본 순서와 현재 순서 비교
-      const currentOriginalIndex =
-        prompts?.findIndex(
-          (original) => original.ORDER_NO === currentItem.original.ORDER_NO
-        ) ?? -1;
-      const currentCurrentIndex = visiblePrompts.findIndex(
-        (p) => p.changedPrompt.ORDER_NO === currentItem.changedPrompt.ORDER_NO
-      );
-
-      // 이전 항목의 원본 순서와 현재 순서 비교
-      const prevOriginalIndex =
-        prompts?.findIndex(
-          (original) => original.ORDER_NO === prevItem.original.ORDER_NO
-        ) ?? -1;
-      const prevCurrentIndex = visiblePrompts.findIndex(
-        (p) => p.changedPrompt.ORDER_NO === prevItem.changedPrompt.ORDER_NO
-      );
-
-      // deleted 상태는 절대 변경하지 않음
-      if (currentItem.changeStatus !== 'deleted') {
-        if (
-          currentOriginalIndex === currentCurrentIndex &&
-          currentCurrentIndex !== -1
-        ) {
-          currentItem.changeStatus = undefined;
-        } else {
-          currentItem.changeStatus = 'modified';
-        }
-      }
-
-      if (prevItem.changeStatus !== 'deleted') {
-        if (prevOriginalIndex === prevCurrentIndex && prevCurrentIndex !== -1) {
-          prevItem.changeStatus = undefined;
-        } else {
-          prevItem.changeStatus = 'modified';
-        }
-      }
-    }
-
-    setPromptsWithStatus(newPrompts);
-    // 애니메이션 효과 부여 (위로 이동)
-    currentItem.isAnimating = true;
-    currentItem.animationDirection = 'up';
-    setTimeout(() => {
-      setPromptsWithStatus((prev) =>
-        prev.map((p) =>
-          p.changedPrompt.ORDER_NO === currentItem.changedPrompt.ORDER_NO
-            ? { ...p, isAnimating: false, animationDirection: null }
-            : p
-        )
-      );
-    }, 200);
-    // 모든 항목의 수정모드 해제
-    setPromptsWithStatus((prev) =>
-      prev.map((p) => ({ ...p, isEditing: false }))
-    );
   };
 
   // 프롬프트 순서 아래로 이동
   const handleMoveDown = (index: number) => {
-    if (index === promptsWithStatus.length - 1) return; // 마지막 항목은 아래로 이동 불가
-    // 배열 복사 (불변성 유지)
-    const newPrompts = [...promptsWithStatus];
-    // 현재 항목과 다음 항목 복사
-    const currentItem = { ...newPrompts[index] };
-    const nextItem = { ...newPrompts[index + 1] };
-    // changedPrompt 기준으로 ORDER_NO(순서) 교환
-    const tempOrder = currentItem.changedPrompt.ORDER_NO;
-    currentItem.changedPrompt.ORDER_NO = nextItem.changedPrompt.ORDER_NO;
-    nextItem.changedPrompt.ORDER_NO = tempOrder;
-    // 실제 배열 내 위치도 교환
-    newPrompts[index] = nextItem;
-    newPrompts[index + 1] = currentItem;
+    setPromptsWithStatus((prev) => {
+      const items = [...prev];
+      if (index >= items.length - 1) return prev;
 
-    // 삭제된 항목을 제외한 전체 순서가 원본과 동일한지 확인
-    const visiblePrompts = newPrompts.filter(
-      (p) => p.changeStatus !== 'deleted'
-    );
-    const isOrderSameAsOriginal = visiblePrompts.every((p, idx) => {
-      const originalIndex =
-        prompts?.findIndex(
-          (original) => original.ORDER_NO === p.original.ORDER_NO
-        ) ?? -1;
-      return originalIndex === idx;
+      let nextIdx = index + 1;
+      while (nextIdx < items.length && items[nextIdx].changeStatus === 'deleted') {
+        nextIdx++;
+      }
+      if (nextIdx >= items.length) return prev;
+
+      [items[index], items[nextIdx]] = [items[nextIdx], items[index]];
+
+      const ordered = recomputeOrder(items);
+      const updated = refreshStatus(ordered).map((p) => ({ ...p, isEditing: false }));
+
+      const movedTitle = updated[nextIdx].changedPrompt.TITLE;
+      updated[nextIdx].isAnimating = true;
+      updated[nextIdx].animationDirection = 'down';
+
+      setTimeout(() => {
+        setPromptsWithStatus((cur) =>
+          cur.map((p) =>
+            p.changedPrompt.TITLE === movedTitle
+              ? { ...p, isAnimating: false, animationDirection: null }
+              : p
+          )
+        );
+      }, 200);
+
+      return updated;
     });
-
-    // 전체 순서가 원본과 동일하면 모든 항목의 modified 상태 제거
-    if (isOrderSameAsOriginal) {
-      newPrompts.forEach((p) => {
-        if (p.changeStatus === 'modified') {
-          p.changeStatus = undefined;
-        }
-        // deleted 상태는 절대 변경하지 않음
-      });
-    } else {
-      // 개별 항목별로 상태 설정 (순서 표시 로직과 동일하게)
-      const visiblePrompts = newPrompts.filter(
-        (p) => p.changeStatus !== 'deleted'
-      );
-
-      // 현재 항목의 원본 순서와 현재 순서 비교
-      const currentOriginalIndex =
-        prompts?.findIndex(
-          (original) => original.ORDER_NO === currentItem.original.ORDER_NO
-        ) ?? -1;
-      const currentCurrentIndex = visiblePrompts.findIndex(
-        (p) => p.changedPrompt.ORDER_NO === currentItem.changedPrompt.ORDER_NO
-      );
-
-      // 다음 항목의 원본 순서와 현재 순서 비교
-      const nextOriginalIndex =
-        prompts?.findIndex(
-          (original) => original.ORDER_NO === nextItem.original.ORDER_NO
-        ) ?? -1;
-      const nextCurrentIndex = visiblePrompts.findIndex(
-        (p) => p.changedPrompt.ORDER_NO === nextItem.changedPrompt.ORDER_NO
-      );
-
-      // deleted 상태는 절대 변경하지 않음
-      if (currentItem.changeStatus !== 'deleted') {
-        if (
-          currentOriginalIndex === currentCurrentIndex &&
-          currentCurrentIndex !== -1
-        ) {
-          currentItem.changeStatus = undefined;
-        } else {
-          currentItem.changeStatus = 'modified';
-        }
-      }
-
-      if (nextItem.changeStatus !== 'deleted') {
-        if (nextOriginalIndex === nextCurrentIndex && nextCurrentIndex !== -1) {
-          nextItem.changeStatus = undefined;
-        } else {
-          nextItem.changeStatus = 'modified';
-        }
-      }
-    }
-
-    setPromptsWithStatus(newPrompts);
-    // 애니메이션 효과 부여 (아래로 이동)
-    currentItem.isAnimating = true;
-    currentItem.animationDirection = 'down';
-    setTimeout(() => {
-      setPromptsWithStatus((prev) =>
-        prev.map((p) =>
-          p.changedPrompt.ORDER_NO === currentItem.changedPrompt.ORDER_NO
-            ? { ...p, isAnimating: false, animationDirection: null }
-            : p
-        )
-      );
-    }, 200);
-    // 모든 항목의 수정모드 해제
-    setPromptsWithStatus((prev) =>
-      prev.map((p) => ({ ...p, isEditing: false }))
-    );
   };
 
   // 프롬프트 수정 모드 진입
@@ -322,20 +216,14 @@ export function usePromptManagement() {
 
   // 프롬프트 내용 변경
   const handlePromptChange = (title: string, value: string) => {
-    setPromptsWithStatus((prev) =>
-      prev.map((p) =>
+    setPromptsWithStatus((prev) => {
+      const updated = prev.map((p) =>
         p.changedPrompt.TITLE === title
-          ? {
-              ...p,
-              changedPrompt: { ...p.changedPrompt, PROMPT: value },
-              changeStatus:
-                value === p.original.PROMPT
-                  ? undefined
-                  : ('modified' as PromptChangeStatus),
-            }
+          ? { ...p, changedPrompt: { ...p.changedPrompt, PROMPT: value } }
           : p
-      )
-    );
+      );
+      return refreshStatus(updated);
+    });
   };
 
   // 수정 취소(되돌리기)
@@ -364,85 +252,24 @@ export function usePromptManagement() {
   // 프롬프트 삭제
   const handleDeleteClick = (title: string) => {
     setPromptsWithStatus((prev) => {
-      return prev.map((p) => {
-        if (p.changedPrompt.TITLE === title) {
-          // 삭제 처리할 항목
-          return {
-            ...p,
-            changeStatus:
-              p.changeStatus === 'deleted'
-                ? undefined
-                : ('deleted' as PromptChangeStatus),
-            isEditing: false,
-          };
-        } else if (p.changeStatus !== 'deleted') {
-          // 삭제된 항목 아래에 있는 항목들은 순서가 바뀌므로 modified로 설정
-          const originalIndex =
-            prompts?.findIndex(
-              (original) => original.ORDER_NO === p.original.ORDER_NO
-            ) ?? -1;
-
-          // 삭제된 항목을 제외한 현재 순서 계산
-          const visiblePrompts = prev.filter(
-            (item) =>
-              item.changedPrompt.TITLE !== title &&
-              item.changeStatus !== 'deleted'
-          );
-          const currentIndex = visiblePrompts.findIndex(
-            (item) => item.changedPrompt.TITLE === p.changedPrompt.TITLE
-          );
-
-          // 원본 순서와 현재 순서가 다르면 modified로 설정
-          if (originalIndex !== currentIndex && currentIndex !== -1) {
-            console.log(
-              '삭제 후 index 조정 ',
-              originalIndex + 1,
-              ' -> ',
-              currentIndex + 1
-            );
-            return {
-              ...p,
-              changeStatus: 'modified' as PromptChangeStatus,
-              changedPrompt: { ...p.changedPrompt, ORDER_NO: currentIndex + 1 },
-            };
-          }
-        }
-        return p;
-      });
+      const items = prev.map((p) =>
+        p.changedPrompt.TITLE === title
+          ? { ...p, changeStatus: 'deleted', isEditing: false }
+          : p
+      );
+      const ordered = recomputeOrder(items);
+      return refreshStatus(ordered);
     });
   };
 
   // 삭제 취소
   const handleDeleteCancel = (title: string) => {
     setPromptsWithStatus((prev) => {
-      return prev.map((p) => {
-        if (p.changedPrompt.TITLE === title) {
-          // 삭제 취소할 항목
-          return { ...p, changeStatus: undefined };
-        } else if (p.changeStatus === 'modified') {
-          // 삭제 취소로 인해 순서가 원래대로 돌아간 항목들 확인
-          const originalIndex =
-            prompts?.findIndex(
-              (original) => original.ORDER_NO === p.original.ORDER_NO
-            ) ?? -1;
-
-          // 삭제 취소된 항목을 포함한 현재 순서 계산
-          const visiblePrompts = prev.filter(
-            (item) =>
-              item.changeStatus !== 'deleted' ||
-              item.changedPrompt.TITLE === title
-          );
-          const currentIndex = visiblePrompts.findIndex(
-            (item) => item.changedPrompt.TITLE === p.changedPrompt.TITLE
-          );
-
-          // 원본 순서와 현재 순서가 같으면 modified 상태 제거 & 되돌리기
-          if (originalIndex === currentIndex && currentIndex !== -1) {
-            return { ...p, changeStatus: undefined, changedPrompt: p.original };
-          }
-        }
-        return p;
-      });
+      const items = prev.map((p) =>
+        p.changedPrompt.TITLE === title ? { ...p, changeStatus: undefined } : p
+      );
+      const ordered = recomputeOrder(items);
+      return refreshStatus(ordered);
     });
   };
 
