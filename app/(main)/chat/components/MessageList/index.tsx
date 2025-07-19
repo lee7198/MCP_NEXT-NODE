@@ -15,7 +15,8 @@ export default function MessageList({
   prompts,
   setReqState,
   lastMessageRef,
-}: MessageListProps) {
+  setMessage,
+}: MessageListProps & { setMessage?: (msg: string) => void }) {
   const dateRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // 날짜별로 메시지 그룹화 (DateNavigation과 동일한 정규화 방식 사용)
@@ -53,7 +54,7 @@ export default function MessageList({
   // }, []);
 
   if (!messages || messages.length === 0) {
-    return <GuideMessage prompts={prompts} />;
+    return <GuideMessage prompts={prompts} onPromptClick={setMessage} />;
   }
 
   return (

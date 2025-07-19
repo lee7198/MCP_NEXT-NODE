@@ -25,8 +25,9 @@ export default function ChatInputSection({
   isMcpParamsPending,
   openNav,
   prompts,
+  message,
+  setMessage,
 }: ChatInputProps) {
-  const [message, setMessage] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [boxHeight, setBoxHeight] = useState(1);
   const [isMcpSettingsOpen, setIsMcpSettingsOpen] = useState(false);
@@ -151,7 +152,7 @@ export default function ChatInputSection({
             className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-2 text-sm text-gray-900 hover:opacity-70 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-100"
             onClick={() => setIsPromptFavoritesOpen(true)}
           >
-            <ChatCircleIcon weight="fill" className="scale-x-[-1]" />
+            <ChatCircleIcon className="scale-x-[-1]" />
             프롬프트 즐겨찾기
           </button>
           <PromptFavoritesModal

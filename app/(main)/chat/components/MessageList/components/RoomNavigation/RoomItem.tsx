@@ -99,7 +99,7 @@ export default function RoomItem({
           {/* Float 메뉴 */}
           {openMenuId === room.roomId && (
             <div
-              className={`absolute right-0 z-50 min-w-32 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-zinc-600 dark:bg-zinc-800 ${
+              className={`absolute right-0 z-50 min-w-32 rounded-lg border border-gray-200 bg-white text-black shadow-lg dark:border-zinc-600 dark:bg-zinc-800 dark:text-white ${
                 menuPosition === 'top' ? 'bottom-6' : 'top-6'
               }`}
             >

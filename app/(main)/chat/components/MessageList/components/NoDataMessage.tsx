@@ -11,7 +11,13 @@ export default function NoDataMessage() {
   );
 }
 
-export function GuideMessage({ prompts }: { prompts: string[] }) {
+export function GuideMessage({
+  prompts,
+  onPromptClick,
+}: {
+  prompts: string[];
+  onPromptClick?: (msg: string) => void;
+}) {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-12 pr-4">
       <div className="rounded-lg bg-white px-6 py-3 text-center font-semibold text-gray-700 shadow dark:bg-zinc-800 dark:text-white">
@@ -23,7 +29,8 @@ export function GuideMessage({ prompts }: { prompts: string[] }) {
           {prompts.slice(0, 3).map((item, idx) => (
             <button
               key={idx}
-              className="aspect-[1.333] cursor-pointer truncate rounded-xl border bg-gray-50 p-2 hover:bg-gray-200 dark:border-zinc-400 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+              className="aspect-[1.333] w-full cursor-pointer truncate rounded-xl border bg-gray-50 p-2 text-left *:w-full hover:bg-gray-200 dark:border-zinc-400 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+              onClick={() => onPromptClick && onPromptClick(item)}
             >
               {MultiToSpan({ input: item })}
             </button>

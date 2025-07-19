@@ -42,6 +42,7 @@ export default function Chat() {
   const { sendMessageWithMCP } = useSocket();
   const [selectServer, setSelectServer] = useState('');
   const [selectRoom, setSelectRoom] = useState('');
+  const [message, setMessage] = useState('');
 
   const userId = session?.user?.email;
 
@@ -243,6 +244,7 @@ export default function Chat() {
             setReqState={setReqState}
             lastMessageRef={lastMessageRef}
             prompts={prompts?.map((item) => item.PROMPT) ?? []}
+            setMessage={setMessage} // 추가
           />
         )}
         {isFetchingNextPage && (
@@ -263,6 +265,8 @@ export default function Chat() {
         isMcpParamsPending={isMcpParamsPending}
         openNav={openNav}
         prompts={prompts ?? []}
+        message={message}
+        setMessage={setMessage}
       />
     </div>
   );
